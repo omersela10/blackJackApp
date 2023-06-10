@@ -8,7 +8,6 @@ public class Card {
     private boolean isAce;
 
     
-    
     // Constructor
     public Card(int newValue, boolean isAceCard, String newIconPath) {
 
@@ -47,6 +46,7 @@ public class Card {
 	public boolean equals(Object o) {
 		
 		if(o instanceof Card) {
+			// Casting
 			Card otherCard = (Card)o;
 			return otherCard.getValue() == this.getValue();
 		}
