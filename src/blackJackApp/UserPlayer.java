@@ -1,11 +1,17 @@
 package blackJackApp;
 
+import java.util.*;
+
 public class UserPlayer extends User implements Player {
 
+	// Data Members
+	private List<Hand> hands;
 	
 	public UserPlayer(User anyUser) {
+		
 		super(anyUser);
-		// TODO Auto-generated constructor stub
+		this.hands = new ArrayList<Hand>();
+		
 	}
 
 	@Override

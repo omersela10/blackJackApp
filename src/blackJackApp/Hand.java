@@ -20,6 +20,11 @@ public class Hand {
 	// Constructor
 	public Hand(int newBetMoney){
 		
+		this.initializeHand(newBetMoney);
+	}
+
+	private void initializeHand(int newBetMoney) {
+		
 		// Create 2 cards
 		this.cards = new ArrayList<Card>();
 		Card firstCard = CreateCard.genarateCard();
@@ -31,19 +36,23 @@ public class Hand {
 		// Set Money
 		this.betMoney = newBetMoney;
 		
+		// Update sum of cards
 		this.setSumOfCard();
 		this.setSumOfCardsWithAce();
+		
+		// Check if can split
 		this.canSplit = firstCard.equals(secondCard);
-		this.setStates();
+		this.InitializeStates();
 	}
-
-	private void setStates() {
+	
+	// Set the States
+	private void InitializeStates() {
 		
 		this.afterSplit = new AfterSplitState(this);
 		this.firstChoice = new FirstChoiceState(this);
 		this.secondChoice = new SecondChoiceState(this);
 		this.endOfRoundHand = new EndHandRoundState(this);
-		
+	
 		this.theState = this.getFirstChoice();
 	}
 
