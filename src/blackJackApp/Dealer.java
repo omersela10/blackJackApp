@@ -22,19 +22,9 @@ public class Dealer {
 	}
 	
 	// Getters
-	public String GetDealerName() {
+	public String getDealerName() {
 		return this.dealerName;
 	}
-	
-	public Hand getDealerHand() {
-		return dealerHand;
-	}
-	
-	// Setters:
-	public void SetDealerHand(Hand newHand) {
-		this.dealerHand = newHand;
-	}
-	
 	public Card getFirstCard() {
 		return this.dealerHand.getCards().get(0);
 	}
@@ -45,5 +35,21 @@ public class Dealer {
 	public List<Card> getDealerCards(){
 		return this.dealerHand.getCards();
 	}
+
+	
+	public int getSumOfDealerCards() {
+		
+		return this.getDealerHand().getSumOfPlayingCards();
+	}
+	public Hand getDealerHand() {
+		return dealerHand;
+	}
+	
+	// Setters:
+	public void SetDealerHand(Hand newHand) {
+		this.dealerHand = newHand;
+	}
+	
+	
 			
 }

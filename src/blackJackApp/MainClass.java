@@ -8,7 +8,7 @@ public class MainClass {
 
 		   Player newPlayer = new GuestPlayer();
 		   
-		   Table newTable = new Table(200);
+		   Table newTable = OneHundredDollarTable.getInstance();
 		   newTable.addPlayer(newPlayer);
 		   newTable.addPlayer(new UserPlayer(new User("ahigad", 2000, 0, 0)));
 		   newTable.betPlayer(newPlayer);

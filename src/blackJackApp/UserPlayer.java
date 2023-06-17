@@ -41,14 +41,16 @@ public class UserPlayer extends Player{
 		
 		// Ask for place:
 		String userInput = JOptionPane.showInputDialog("Insert place between 1-4");
-		if(userInput == null || userInput.isBlank() == true) {
-			JOptionPane.showInputDialog("Invalid input");
+		if(userInput == null || userInput.isBlank() == true || userInput.matches("[0-9]*") == false) {
+			JOptionPane.showMessageDialog(null, "Invalid input");
+			return null;
 		}
 		
 		int place = Integer.parseInt(userInput) - 1;
 		
 		if(place < 0 || place > 3) {
-			JOptionPane.showInputDialog("Invalid input");
+			JOptionPane.showMessageDialog(null, "Invalid input");
+			return null;
 		}
 		
 		if(places.get(place) != null) {

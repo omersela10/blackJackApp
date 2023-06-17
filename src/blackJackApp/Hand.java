@@ -155,5 +155,14 @@ public class Hand {
 
 	}
 	
+	// Get the sum of cards
+	public int getSumOfPlayingCards() {
+		
+		if(this.getSumOfCards() > 21 && this.getSumOfCardsWithAce() <= 21) {
+			return this.getSumOfCardsWithAce();
+		}
+		else return Math.max(this.getSumOfCardsWithAce(), this.getSumOfCards());
+	}
+	
 	
 }

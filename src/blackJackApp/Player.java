@@ -44,11 +44,11 @@ public abstract class Player implements HandState {
 		this.theState = this.getFirstChoice();
 	}
 
-	public void bet(int betMoney) {
+	public boolean bet(int betMoney) {
 		
 		if(betMoney > this.getTotalMoney()) {
 			// JOPtion "no enough money"
-			return;
+			return false;
 		}
 		// Set money
 		this.setTotalMoney(this.getTotalMoney() - betMoney);
@@ -63,12 +63,11 @@ public abstract class Player implements HandState {
 		
 		// If has blackJack, set state to endState
 		if(this.getHands().get(0).hasBlackJack() == true) {
-			// Update money
-			int blackJackPrice = (int) 1.5 * this.getHands().get(0).getBetMoney();
-			this.setTotalMoney(this.getTotalMoney() + blackJackPrice);
+	
 			// Update State
 			this.setTheState(new EndHandRoundState(this, this.getHands().get(0)));
 		}
+		return true;
 		
 	}
 	
@@ -112,6 +111,9 @@ public abstract class Player implements HandState {
 	
 	protected HandState getTheState() {
 		return this.theState;
+	}
+	public boolean isPlay() {
+		return this.isPlay;
 	}
 	
 	// Setters
