@@ -4,14 +4,16 @@ public class User {
 
 	// Data Members
 	private String name;
+	private String password;
 	private int totalAmount;
 	private int numberOfWins;
 	private int totalProfit;
 	
 	// Constructor
-	public User(String newName, int newTotalAmount, int anyNumberOfWins, int anyTotalProfit) {
+	public User(String newName, String newPassword, int newTotalAmount, int anyNumberOfWins, int anyTotalProfit) {
 		
 		this.name = newName;
+		this.password = newPassword;
 		this.totalAmount = newTotalAmount;
 		this.numberOfWins = anyNumberOfWins;
 		this.totalProfit = anyTotalProfit;
@@ -20,9 +22,11 @@ public class User {
 	public User(User otherUser) {
 		
 		this.name = otherUser.name;
+		this.password = otherUser.password;
 		this.totalAmount = otherUser.totalAmount;
 		this.numberOfWins = otherUser.numberOfWins;
 		this.totalProfit = otherUser.totalProfit;
+	
 	}
 
 	// Getters
