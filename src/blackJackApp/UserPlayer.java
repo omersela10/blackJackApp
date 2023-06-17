@@ -41,7 +41,7 @@ public class UserPlayer extends Player{
 		
 		// Ask for place:
 		String userInput = JOptionPane.showInputDialog("Insert place between 1-4");
-		if(userInput.isBlank() || userInput == null) {
+		if(userInput == null || userInput.isBlank() == true) {
 			JOptionPane.showInputDialog("Invalid input");
 		}
 		

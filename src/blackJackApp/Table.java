@@ -61,7 +61,7 @@ public class Table {
 	public void betPlayer(Player anyPlayer) {
 		
 		String inputBet = JOptionPane.showInputDialog("Insert money for play");
-		if(inputBet.isBlank() || inputBet == null || inputBet.matches("\\d+") == false) {
+		if(inputBet == null || inputBet.isBlank() || inputBet.matches("\\d+") == false) {
 			JOptionPane.showInputDialog("Invalid input");
 		}
 		

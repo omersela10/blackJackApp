@@ -12,6 +12,7 @@ public class MainClass {
 		   newTable.addPlayer(newPlayer);
 		   newTable.addPlayer(new UserPlayer(new User("ahigad", 2000, 0, 0)));
 		   newTable.betPlayer(newPlayer);
+		   System.out.println("");
 	    
 	   }
 }
