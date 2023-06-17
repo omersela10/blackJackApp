@@ -2,9 +2,9 @@ package blackJackApp;
 
 public interface HandState {
 
-	void split();
-	void surrender();
-	void stand();
-	void hit();
-	void doubleDown();
+	String split();
+	String surrender();
+	String stand();
+	String hit();
+	String doubleDown();
 }

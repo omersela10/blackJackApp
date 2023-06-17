@@ -2,9 +2,12 @@ package blackJackApp;
 
 public class EndHandRoundState implements HandState {
 	
+	// Data Members
 	private Player thePlayer;
 	private Hand currentHand;
+	private static final String CANTPLAY = "Can't Play";
 	
+	// Constructor
 	public EndHandRoundState(Player newPlayer, Hand newHand) {
 		
 		this.thePlayer = newPlayer;
@@ -12,33 +15,31 @@ public class EndHandRoundState implements HandState {
 	}
 
 	@Override
-	public void split() {
-		// JOption Can't Play
-		return;
+	public String split() {
+	
+		return CANTPLAY;
 	}
 
 	@Override
-	public void surrender() {
-		// JOption Can't Play
+	public String surrender() {
+		return CANTPLAY;
 		
 	}
 
 	@Override
-	public void stand() {
-		// JOption Can't Play
+	public String stand() {
+		return CANTPLAY;
+	}
+
+	@Override
+	public String hit() {
+		return CANTPLAY;
 		
 	}
 
 	@Override
-	public void hit() {
-		// JOption Can't Play
-		
-	}
-
-	@Override
-	public void doubleDown() {
-		// JOption Can't Play
-		
+	public String doubleDown() {
+		return CANTPLAY;
 	}
 
 	

@@ -134,31 +134,31 @@ public abstract class Player implements HandState {
 	
 	// Playing functions
 	@Override
-	public void split() {
-		this.theState.split();
+	public String split() {
+		return this.theState.split();
 	}
 
 	@Override
-	public void surrender() {
-		this.theState.surrender();
+	public String surrender() {
+		return this.theState.surrender();
 		
 	}
 
 	@Override
-	public void stand() {
-		this.theState.stand();
+	public String stand() {
+		return this.theState.stand();
 		
 	}
 
 	@Override
-	public void hit() {
-		this.theState.hit();
+	public String hit() {
+		return this.theState.hit();
 		
 	}
 
 	@Override
-	public void doubleDown() {
-		this.theState.doubleDown();
+	public String doubleDown() {
+		return this.theState.doubleDown();
 		
 	}
 

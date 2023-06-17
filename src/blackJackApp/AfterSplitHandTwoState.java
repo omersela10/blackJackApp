@@ -2,10 +2,12 @@ package blackJackApp;
 
 public class AfterSplitHandTwoState implements HandState {
 
+	// Data Members
 	private Player thePlayer;
 	private Hand currentHand;
 	private boolean afterHit = false;
 	
+	// Constructor
 	public AfterSplitHandTwoState(Player newPlayer, Hand newHand) {
 		
 		this.thePlayer = newPlayer;
@@ -13,32 +15,33 @@ public class AfterSplitHandTwoState implements HandState {
 	}
 
 	@Override
-	public void split() {
-		// JOPtiond."Cannot split twice";
-		return;
+	public String split() {
+		
+		return "Cannot split twice";
 
 	}
 
 	@Override
-	public void surrender() {
-		// JOPtiond."Cannot surrender";
-		return;
+	public String surrender() {
+		
+		return "Cannot surrender";
 	}
 
 	@Override
-	public void stand() {
+	public String stand() {
  
 		// Update State
 		this.thePlayer.setTheState(new EndHandRoundState(this.thePlayer, this.currentHand));
+		return "Stand";
 	}
 
 	@Override
-	public void hit() {
+	public String hit() {
 	
 		if(this.currentHand.getSumOfCards() >= 21 || this.currentHand.getSumOfCardsWithAce() >= 21) {
 			
 			// JOption : Cant Hit
-			return;
+			return "Can't hit";
 		}
 		
 		// Get More Card
@@ -53,15 +56,15 @@ public class AfterSplitHandTwoState implements HandState {
 		}
 		
 		// Else, stay in current state
-		
+		return "Hitted";
 	}
 
 	@Override
-	public void doubleDown() {
+	public String doubleDown() {
 		
 		if(this.afterHit == true || this.enoughMoneyForSplitOrDouble() == false) {
-			// jOption cant double
-			return;
+		
+			return "Can't Double";
 		}
 
 		// Update total money
@@ -73,7 +76,7 @@ public class AfterSplitHandTwoState implements HandState {
 		// Update State
 		this.thePlayer.setTheState(new EndHandRoundState(this.thePlayer, this.currentHand));
 		
-		
+		return "Double down";
 	}
 	
 	// Helper method for check enough money for split or double

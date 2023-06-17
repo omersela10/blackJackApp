@@ -1,5 +1,6 @@
 package blackJackApp;
 
+import javax.swing.JOptionPane;
 
 public class FirstChoiceState implements HandState{
 
@@ -27,11 +28,11 @@ public class FirstChoiceState implements HandState{
 	}
 	
 	@Override
-	public void split() {
+	public String split() {
 		
 		if(this.currentHand.canSplit() == false || enoughMoneyForSplitOrDouble() == false) {
-			//JOption "CANT SPLIT"
-			return;
+			
+			return "Can't split because either or no pair or enough money";
 		}
 		
 		// Update total money
@@ -55,10 +56,11 @@ public class FirstChoiceState implements HandState{
 		
 		// Update Player State to first hand playing
 		this.thePlayer.setTheState(this.thePlayer.getAfterSplitHand1());
+		return "Splited";
 	}
 
 	@Override
-	public void surrender() {
+	public String surrender() {
 		
 		// Update money
 		this.thePlayer.setTotalMoney(this.thePlayer.getTotalMoney() - this.currentHand.getBetMoney()/2);
@@ -67,24 +69,24 @@ public class FirstChoiceState implements HandState{
 		// Update State
 		this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
 		this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
+		return "Surrender";
 	}
 
 	@Override
-	public void stand() {
+	public String stand() {
 		
 		// Update State
 		this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
 		this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
-		
+		return "Stand";
 	}
 
 	@Override
-	public void hit() {
+	public String hit() {
 		
 		if(this.currentHand.hasBlackJack() == true) {
 			
-			// JOption : Cant Hit
-			return;
+			return "Can't hit";
 		}
 		
 		// Get More Card
@@ -97,22 +99,22 @@ public class FirstChoiceState implements HandState{
 				this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
 				this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
 				
-				return;
+				
 		}
-		
-		// Update State
-		this.thePlayer.setSecondChoice(this.thePlayer.getHandState());
-		this.thePlayer.setTheState(this.thePlayer.getSecondChoice());
-	
+		else {
+			// Update State
+			this.thePlayer.setSecondChoice(this.thePlayer.getHandState());
+			this.thePlayer.setTheState(this.thePlayer.getSecondChoice());
+		}
+		return "Hitted";
 		
 	}
 
 	@Override
-	public void doubleDown() {
+	public String doubleDown() {
 
 		if(this.enoughMoneyForSplitOrDouble() == false) {
-			//JOption "No enough money for double"
-			return;
+			return "No enough money for double";
 		}
 		
 		// Update total money
@@ -124,7 +126,7 @@ public class FirstChoiceState implements HandState{
 		// Update State
 		this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
 		this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
-		
+		return "Double down";
 	}
 
 }

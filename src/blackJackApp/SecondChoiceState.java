@@ -1,10 +1,12 @@
 package blackJackApp;
 
 public class SecondChoiceState implements HandState {
-	
+
+	// Data Members
 	private Player thePlayer;
 	private Hand currentHand;
 	
+	// Constructor
 	public SecondChoiceState(Player newPlayer, Hand newHand) {
 		
 		this.thePlayer = newPlayer;
@@ -13,48 +15,44 @@ public class SecondChoiceState implements HandState {
 
 
 	@Override
-	public void split() {
+	public String split() {
 
-		// JOPtiond."Cannot split twice";
-		return;
-		
+		return "Cannot split";
 	}
 
 	@Override
-	public void surrender() {
-		// JOPtiond."Cannot Surrender";
-		return;
+	public String surrender() {
+		return "Cannot Surrender";
 	}
 
 	@Override
-	public void stand() {
+	public String stand() {
 		
 		// Update State
 		this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
 		this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
+		return "Stand";
 		
 	}
 
 	@Override
-	public void hit() {
+	public String hit() {
 		
 		if(this.currentHand.getSumOfCards() >= 21 || this.currentHand.getSumOfCardsWithAce() >= 21) {
-			
-			// JOption : Cant Hit
-			return;
+	
+			return "Can't Hit";
 		}
 		
 		// Get More Card
 		this.currentHand.getMoreCard();
 		
+		return "Hitted";
 	}
 
 	@Override
-	public void doubleDown() {
-		
-		// JOPtiond."Cannot Double";
-		return;
-		
+	public String doubleDown() {
+
+		return "Cannot Double";
 	}
 
 }
