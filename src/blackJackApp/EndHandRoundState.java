@@ -2,39 +2,42 @@ package blackJackApp;
 
 public class EndHandRoundState implements HandState {
 	
-	private Hand myHand;
+	private Player thePlayer;
+	private Hand currentHand;
 	
-	public EndHandRoundState(Hand newHand) {
-		this.myHand = newHand;
+	public EndHandRoundState(Player newPlayer, Hand newHand) {
+		
+		this.thePlayer = newPlayer;
+		this.currentHand = newHand;
 	}
 
 	@Override
 	public void split() {
-		// TODO Auto-generated method stub
-		
+		// JOption Can't Play
+		return;
 	}
 
 	@Override
 	public void surrender() {
-		// TODO Auto-generated method stub
+		// JOption Can't Play
 		
 	}
 
 	@Override
 	public void stand() {
-		// TODO Auto-generated method stub
+		// JOption Can't Play
 		
 	}
 
 	@Override
 	public void hit() {
-		// TODO Auto-generated method stub
+		// JOption Can't Play
 		
 	}
 
 	@Override
 	public void doubleDown() {
-		// TODO Auto-generated method stub
+		// JOption Can't Play
 		
 	}
 

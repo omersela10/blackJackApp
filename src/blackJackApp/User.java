@@ -1,19 +1,17 @@
 package blackJackApp;
 
-public class User {
+public class User{
 
 	// Data Members
 	private String name;
-	private String password;
 	private int totalAmount;
 	private int numberOfWins;
 	private int totalProfit;
 	
 	// Constructor
-	public User(String newName, String newPassword, int newTotalAmount, int anyNumberOfWins, int anyTotalProfit) {
+	public User(String newName, int newTotalAmount, int anyNumberOfWins, int anyTotalProfit) {
 		
 		this.name = newName;
-		this.password = newPassword;
 		this.totalAmount = newTotalAmount;
 		this.numberOfWins = anyNumberOfWins;
 		this.totalProfit = anyTotalProfit;
@@ -22,7 +20,6 @@ public class User {
 	public User(User otherUser) {
 		
 		this.name = otherUser.name;
-		this.password = otherUser.password;
 		this.totalAmount = otherUser.totalAmount;
 		this.numberOfWins = otherUser.numberOfWins;
 		this.totalProfit = otherUser.totalProfit;
@@ -31,19 +28,19 @@ public class User {
 
 	// Getters
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
 	public int getTotalAmount() {
-		return totalAmount;
+		return this.totalAmount;
 	}
 	
 	public int getNumberOfWins() {
-		return numberOfWins;
+		return this.numberOfWins;
 	}
 	
 	public int getTotalProfit() {
-		return totalProfit;
+		return this.totalProfit;
 	}
 	
 	// Setters
@@ -55,20 +52,23 @@ public class User {
 	public void setTotalAmount(int anyTotalAmount) {
 		this.totalAmount = anyTotalAmount;
 	}
-
-
-
+	
 	public void setNumberOfWins(int anyNumberOfWins) {
 		this.numberOfWins = anyNumberOfWins;
 	}
-
-
 
 	public void setTotalProfit(int anyTotalProfit) {
 		this.totalProfit = anyTotalProfit;
 	}
 	
 	
+	@Override
+	public String toString() {
+		
+		return this.name + " have " + this.totalAmount + "$" + 
+		" wins: " + this.numberOfWins + " profit: " + 
+				this.totalProfit + "$" + "/n";
+	}
 	
 	
 }

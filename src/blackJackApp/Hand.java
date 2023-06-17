@@ -10,11 +10,6 @@ public class Hand {
 	private int sumOfCards;
 	private boolean canSplit = false;
 	
-	private HandState firstChoice;
-	private HandState secondChoice;
-	private HandState afterSplit;
-	private HandState endOfRoundHand;
-	
 	private HandState theState;
 	
 	// Constructor
@@ -42,51 +37,15 @@ public class Hand {
 		
 		// Check if can split
 		this.canSplit = firstCard.equals(secondCard);
-		this.InitializeStates();
 	}
 	
-	// Set the States
-	private void InitializeStates() {
+	// Check for BlackJack
+	public boolean hasBlackJack() {
 		
-		this.afterSplit = new AfterSplitState(this);
-		this.firstChoice = new FirstChoiceState(this);
-		this.secondChoice = new SecondChoiceState(this);
-		this.endOfRoundHand = new EndHandRoundState(this);
-	
-		this.theState = this.getFirstChoice();
+		return this.getSumOfCardsWithAce() == 21 && this.getCards().size() == 2;
 	}
 
-	public HandState getFirstChoice() {
-		return firstChoice;
-	}
 
-	public void setFirstChoice(HandState firstChoice) {
-		this.firstChoice = firstChoice;
-	}
-
-	public HandState getSecondChoice() {
-		return secondChoice;
-	}
-
-	public void setSecondChoice(HandState secondChoice) {
-		this.secondChoice = secondChoice;
-	}
-
-	public HandState getAfterSplit() {
-		return afterSplit;
-	}
-
-	public void setAfterSplit(HandState afterSplit) {
-		this.afterSplit = afterSplit;
-	}
-
-	public HandState getEndOfRoundHand() {
-		return endOfRoundHand;
-	}
-
-	public void setEndOfRoundHand(HandState endOfRoundHand) {
-		this.endOfRoundHand = endOfRoundHand;
-	}
 
 	// Getters
 	public List<Card> getCards() {
@@ -164,5 +123,37 @@ public class Hand {
 		this.setSumOfCard();
 		this.setSumOfCardsWithAce();
 	}
+	
+	public List<Hand> createNewHandsAfterSplit() {
+		
+		// Split
+		Card firstCardHand1 = this.getCards().get(0);
+		Card firstCardHand2 = this.getCards().get(1);
+		
+		// Create new Hand
+		Hand secondHand = new Hand(this.getBetMoney());
+		
+		Card secondCardHand1 = secondHand.getCards().get(0);
+		Card secondCardHand2 = secondHand.getCards().get(1);
+		
+		List<Card> cardsHand1 = new ArrayList<Card>();
+		cardsHand1.add(firstCardHand1);
+		cardsHand1.add(secondCardHand1);
+		
+		List<Card> cardsHand2 = new ArrayList<Card>();
+		cardsHand2.add(firstCardHand2);
+		cardsHand2.add(secondCardHand2);
+		
+		// Set the new cards of first hand
+		this.setCards(cardsHand1);
+		
+		List<Hand> newHands = new ArrayList<Hand>();
+		newHands.add(this);
+		newHands.add(secondHand);
+		
+		return newHands;
+
+	}
+	
 	
 }

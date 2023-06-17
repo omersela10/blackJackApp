@@ -2,39 +2,58 @@ package blackJackApp;
 
 public class SecondChoiceState implements HandState {
 	
-	private Hand myHand;
+	private Player thePlayer;
+	private Hand currentHand;
 	
-	public SecondChoiceState(Hand newHand) {
-		this.myHand = newHand;
+	public SecondChoiceState(Player newPlayer, Hand newHand) {
+		
+		this.thePlayer = newPlayer;
+		this.currentHand = newHand;
 	}
+
 
 	@Override
 	public void split() {
-		// TODO Auto-generated method stub
+
+		// JOPtiond."Cannot split twice";
+		return;
 		
 	}
 
 	@Override
 	public void surrender() {
-		// TODO Auto-generated method stub
-		
+		// JOPtiond."Cannot Surrender";
+		return;
 	}
 
 	@Override
 	public void stand() {
-		// TODO Auto-generated method stub
+		
+		// Update State
+		this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
+		this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
 		
 	}
 
 	@Override
 	public void hit() {
-		// TODO Auto-generated method stub
+		
+		if(this.currentHand.getSumOfCards() >= 21 || this.currentHand.getSumOfCardsWithAce() >= 21) {
+			
+			// JOption : Cant Hit
+			return;
+		}
+		
+		// Get More Card
+		this.currentHand.getMoreCard();
 		
 	}
 
 	@Override
 	public void doubleDown() {
-		// TODO Auto-generated method stub
+		
+		// JOPtiond."Cannot Double";
+		return;
 		
 	}
 

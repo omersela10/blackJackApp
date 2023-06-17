@@ -5,7 +5,10 @@ package blackJackApp;
 public class MainClass {
 	   public static void main(String[] args) {
 
-		  Hand newHand = new Hand(200);
+		   Player newPlayer = new GuestPlayer();
+		   
+		   newPlayer.bet(200);
+		   newPlayer.hit();
 		   System.out.println("");
 	    
 	   }
