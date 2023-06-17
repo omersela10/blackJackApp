@@ -23,7 +23,6 @@ public class User{
 		this.totalAmount = otherUser.totalAmount;
 		this.numberOfWins = otherUser.numberOfWins;
 		this.totalProfit = otherUser.totalProfit;
-	
 	}
 
 	// Getters
