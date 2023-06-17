@@ -22,7 +22,7 @@ public abstract class Player implements HandState {
 	protected abstract void setHands(List<Hand> anyHands);
 	protected abstract int getTotalMoney();
 	protected abstract void setTotalMoney(int newAmount);
-	public abstract boolean seat(int place);
+	public abstract String seat(List<Player> places);
 
 	
 	// Constructor
@@ -72,9 +72,16 @@ public abstract class Player implements HandState {
 		
 	}
 	
-	public void up() {
+	// Up Option for player
+	public void up(List<Player> places) {
 		
 		isPlay = false;
+		// Update leaving
+		for(int i = 0; i < places.size(); i++) {
+			if(this.equals(places.get(i)) == true) {
+				places.set(i, null);
+			}
+		}
 		
 	}
 	

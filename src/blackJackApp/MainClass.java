@@ -8,9 +8,10 @@ public class MainClass {
 
 		   Player newPlayer = new GuestPlayer();
 		   
-		   newPlayer.bet(200);
-		   newPlayer.hit();
-		   System.out.println("");
+		   Table newTable = new Table(200);
+		   newTable.addPlayer(newPlayer);
+		   newTable.addPlayer(new UserPlayer(new User("ahigad", 2000, 0, 0)));
+		   newTable.betPlayer(newPlayer);
 	    
 	   }
 }

@@ -2,6 +2,8 @@ package blackJackApp;
 
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 public class UserPlayer extends Player{
 
 	// Data Members
@@ -23,13 +25,6 @@ public class UserPlayer extends Player{
 	}
 
 	
-
-	@Override
-	public void up() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public int getTotalMoney() {
 		return this.user.getTotalAmount();
@@ -42,9 +37,26 @@ public class UserPlayer extends Player{
 	}
 
 	@Override
-	public boolean seat(int place) {
-		// TODO Auto-generated method stub
-		return false;
+	public String seat(List<Player> places) {
+		
+		// Ask for place:
+		String userInput = JOptionPane.showInputDialog("Insert place between 1-4");
+		if(userInput.isBlank() || userInput == null) {
+			JOptionPane.showInputDialog("Invalid input");
+		}
+		
+		int place = Integer.parseInt(userInput) - 1;
+		
+		if(place < 0 || place > 3) {
+			JOptionPane.showInputDialog("Invalid input");
+		}
+		
+		if(places.get(place) != null) {
+			return "Occupied";
+		}
+		// Vacant so seat
+		places.set(place, this);
+		return "Seated in "+ userInput;
 	}
 	
 

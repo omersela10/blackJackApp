@@ -62,20 +62,18 @@ public class GuestPlayer extends Player {
 	}
 
 
-	
-
 	@Override
-	public void up() {
-		// TODO Auto-generated method stub
+	public String seat(List<Player> places) {
 		
-	}
-
-
-
-	@Override
-	public boolean seat(int place) {
-		// TODO Auto-generated method stub
-		return false;
+		for(int i = 0; i < places.size(); i++) {
+			
+			if(places.get(i) == null) {
+				// Vacant so seat
+				places.set(i, this);
+				return "Seated at " + i + "Place";
+			}
+		}
+		return "No Available Seats";
 	}
 
 
