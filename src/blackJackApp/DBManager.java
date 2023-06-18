@@ -379,6 +379,8 @@ public  class DBManager {
 
             // Get the root element
             Element rootElement = document.getDocumentElement();
+            
+            rootElement.appendChild(document.createTextNode("\n"));
 
             // Append the new user element to the root element
             rootElement.appendChild(userElement);
