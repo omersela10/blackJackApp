@@ -43,7 +43,7 @@ public abstract class Table{
 			this.players.add(null);
 		}
 		
-		this.dealer = new Dealer();
+		this.dealer = new Dealer(tableMinBet);
 	}
 	
 	// Getter
@@ -253,7 +253,7 @@ public abstract class Table{
 		
 		else if(blackJackHand == true && dealer.getDealerHand().hasBlackJack() == false) {
 			// Hand has blackjack and dealer didn't
-			return (int) 1.5 * hand.getBetMoney();
+			return (int) 2.5 * hand.getBetMoney();
 		}
 		else if(hand.getSumOfPlayingCards() > dealerSum) {
 			// Dealer has no black jack and hand no. check who higher

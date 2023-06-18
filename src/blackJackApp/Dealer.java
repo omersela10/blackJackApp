@@ -9,14 +9,12 @@ public class Dealer {
 	private final String DEALER = "Dealer";
 	private String dealerName;
 	private Hand dealerHand;
-	private static Integer numberOfDealers = 0;
+
 			
 	// Constructor
-	public Dealer() {
+	public Dealer(int minimumBet) {
 		
-		numberOfDealers += 1;
-		this.dealerName = DEALER + numberOfDealers.toString();
-
+		this.dealerName = DEALER + " " + minimumBet + "$";
 		this.dealerHand = new Hand(0);
 	
 	}
