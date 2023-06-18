@@ -25,12 +25,6 @@ public class GuestPlayer extends Player {
 	}
 	
 	@Override
-	public List<Hand> getHands() {
-		return super.hands;
-	}
-
-
-	@Override
 	public int getTotalMoney() {
 		return this.guestMoney;
 	}
@@ -39,10 +33,6 @@ public class GuestPlayer extends Player {
 		return numberOfGuests;
 	}
 	
-	public void setHands(List<Hand> hands) {
-		this.hands = hands;
-	}
-
 	// Setters
 
 	public void setGuestName(String guestName) {

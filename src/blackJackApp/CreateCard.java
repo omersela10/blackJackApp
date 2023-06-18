@@ -21,31 +21,27 @@ public class CreateCard {
     private static void fillIconsList() {
 
 //        // Get icons path, and fill the list.
-//        String cardsFolderPath = "resources\\cards";
-//        File cardsFolder = new File(cardsFolderPath);
-//        File[] pngIcons = cardsFolder.listFiles();
-//
-//        // Fill the list with png icon paths
-//        for(File icon : pngIcons){
-//            icons.add(icon.getName());
-//        }
+    	  String cardsFolderPath = "resources\\cards";
+          File cardsFolder = new File(cardsFolderPath);
+          File[] pngIcons = cardsFolder.listFiles();
+
+          // Fill the list with png icon paths
+          for(File icon : pngIcons){
+             icons.add(icon.getName());
+          }
     	
     	
     	// Get icons path, and fill the list.
-    	String directoryPath = "resources/cards";
-
-         File cardsFolder = new File(directoryPath);
-         File[] pngIcons = cardsFolder.listFiles();
-
-         // Fill the list with png icon paths
-         if (pngIcons != null) {
-             for (File icon : pngIcons) {
-                 if (icon.isFile() && icon.getName().endsWith(".png")) {
-                     System.out.println(icon.getName());
-                     icons.add(icon.getName());
-                 }
-             }
-         }
+		/*
+		 * String directoryPath = "resources/cards";
+		 * 
+		 * File cardsFolder = new File(directoryPath); File[] pngIcons =
+		 * cardsFolder.listFiles();
+		 * 
+		 * // Fill the list with png icon paths if (pngIcons != null) { for (File icon :
+		 * pngIcons) { if (icon.isFile() && icon.getName().endsWith(".png")) {
+		 * System.out.println(icon.getName()); icons.add(icon.getName()); } } }
+		 */
 
     }
 

@@ -14,11 +14,6 @@ public class UserPlayer extends Player{
 	}
 
 	@Override
-	public List<Hand> getHands() {
-		return super.hands;
-	}
-
-	@Override
 	public void setTotalMoney(int newAmount) {
 		this.user.setTotalAmount(newAmount);
 		
@@ -30,11 +25,7 @@ public class UserPlayer extends Player{
 		return this.user.getTotalAmount();
 	}
 
-	@Override
-	protected void setHands(List<Hand> anyHands) {
-		this.hands = anyHands;
-		
-	}
+
 
 	@Override
 	public String seat(List<Player> places) {
@@ -58,7 +49,7 @@ public class UserPlayer extends Player{
 		}
 		// Vacant so seat
 		places.set(place, this);
-		return "Seated in "+ userInput;
+		return "Seated in " + userInput;
 	}
 	
 

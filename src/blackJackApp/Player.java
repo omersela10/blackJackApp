@@ -5,7 +5,7 @@ import java.util.*;
 public abstract class Player implements HandState {
 	
 	// Data Members
-	protected List<Hand> hands;
+	private List<Hand> hands;
 	protected boolean isPlay;
 	
 	// States
@@ -18,8 +18,6 @@ public abstract class Player implements HandState {
 	protected HandState theState;
 	
 	// Abstract methods
-	protected abstract List<Hand> getHands();
-	protected abstract void setHands(List<Hand> anyHands);
 	protected abstract int getTotalMoney();
 	protected abstract void setTotalMoney(int newAmount);
 	public abstract String seat(List<Player> places);
@@ -32,6 +30,8 @@ public abstract class Player implements HandState {
 
 	}
 	
+
+
 	// Set the States
 	protected void InitializeStates() {
 		
@@ -67,6 +67,7 @@ public abstract class Player implements HandState {
 			// Update State
 			this.setTheState(new EndHandRoundState(this, this.getHands().get(0)));
 		}
+		
 		return true;
 		
 	}
@@ -85,6 +86,10 @@ public abstract class Player implements HandState {
 	}
 	
 	// Getters
+	public List<Hand> getHands() {
+		return hands;
+	}
+	
 	protected HandState getHandState() {
 		return this.theState;
 	}
@@ -141,6 +146,11 @@ public abstract class Player implements HandState {
 		this.endOfRoundHand = endOfRoundHand;
 	}
 	
+	public void setHands(List<Hand> anyHands) {
+		this.hands = anyHands;
+		
+	}
+		
 	// Playing functions
 	@Override
 	public String split() {
