@@ -14,7 +14,7 @@ public class Dealer {
 	// Constructor
 	public Dealer(int minimumBet) {
 		
-		this.dealerName = DEALER + " " + minimumBet + "$";
+		this.dealerName = DEALER + " Of Table " + minimumBet + "$";
 		this.dealerHand = new Hand(0);
 	
 	}

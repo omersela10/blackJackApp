@@ -16,5 +16,7 @@ public class MainClass {
 		//   TableWindow wt = new TableWindow(newTable, newPlayer);
 		   MainWindow mainMenu = new MainWindow(); 
 		   mainMenu.setVisible(true);
+
+
 	   }
 }
