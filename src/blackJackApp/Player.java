@@ -19,6 +19,7 @@ public abstract class Player implements HandState {
 	
 	// Abstract methods
 	protected abstract int getTotalMoney();
+	protected abstract String getPlayerName();
 	protected abstract void setTotalMoney(int newAmount);
 	public abstract String seat(List<Player> places);
 

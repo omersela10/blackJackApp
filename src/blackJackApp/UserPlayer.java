@@ -51,6 +51,11 @@ public class UserPlayer extends Player{
 		places.set(place, this);
 		return "Seated in " + userInput;
 	}
+
+	@Override
+	protected String getPlayerName() {
+		return this.user.getName();
+	}
 	
 
 

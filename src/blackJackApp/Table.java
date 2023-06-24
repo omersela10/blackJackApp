@@ -10,15 +10,14 @@ import javax.swing.JOptionPane;
 public abstract class Table{
 	
 	// Data Members:
-	protected final int MAXIMUMPLAYERS = 4;
-	protected List<Player> players;
-	protected Dealer dealer;
-	
 	private Timer betTimer;
 	private static final int TIMEOUT = 10000;
 	private boolean timeoutExpired;
 	private volatile boolean anyPlayerBet = false;
 	
+	protected final int MAXIMUMPLAYERS = 4;
+	protected List<Player> players;
+	protected Dealer dealer;
 	
 	public abstract int getMinimumBet();
 		
@@ -164,7 +163,7 @@ public abstract class Table{
     public void turnOfDealer() {
     	
     	Card Card2 = this.dealer.getSecondCard();
-    	
+    	// Show
     	try {
     		
 			Thread.sleep(1000);
@@ -233,9 +232,13 @@ public abstract class Table{
 		boolean blackJackHand = hand.hasBlackJack();
 		
 		// TODO: Check all cases and update
-		if(hand.getSumOfPlayingCards() > 21) {
+		if(sumOfHandCards > 21) {
 			// If busted
 			return 0;
+		}
+		else if(blackJackHand == true && dealer.getDealerHand().hasBlackJack() == false) {
+			// If Black Jack and Dealer has'nt
+			 return (int) 2.5 * hand.getBetMoney();
 		}
 		else if(dealerFail == true) {
 			// Dealer Fail or hand has more than dealer
@@ -249,11 +252,6 @@ public abstract class Table{
 		else if(dealer.getDealerHand().hasBlackJack() == true && blackJackHand == true) {
 			// Draw - when both had blackJack
 			return hand.getBetMoney();
-		}
-		
-		else if(blackJackHand == true && dealer.getDealerHand().hasBlackJack() == false) {
-			// Hand has blackjack and dealer didn't
-			return (int) 2.5 * hand.getBetMoney();
 		}
 		else if(hand.getSumOfPlayingCards() > dealerSum) {
 			// Dealer has no black jack and hand no. check who higher
@@ -282,6 +280,8 @@ public abstract class Table{
 		this.turnOfDealer();
 		// Update money when dealer show cards
 		this.updateMoneyOfPlayers();
+		// TODO: Update DB with the new Money
+		// TODO: Update win
 		// finish round, update no one playing
 		this.finishRound();
 	}

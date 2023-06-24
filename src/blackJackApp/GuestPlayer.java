@@ -66,6 +66,12 @@ public class GuestPlayer extends Player {
 		return "No Available Seats";
 	}
 
+	@Override
+	protected String getPlayerName() {
+		
+		return this.getGuestName();
+	}
+
 
 
 
