@@ -24,37 +24,7 @@ public class LeaderboardWindow extends JFrame {
     	
     	usersDB = new DBManager();
     	
-    	setTitle("Leaderboard");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setPreferredSize(new Dimension(800, 600));
-
-        // Create the output area on the right side
-        outputArea = new JTextArea();
-        outputArea.setEditable(false);
-        add(outputArea, BorderLayout.CENTER);
-
-        // Create the buttons on the left side
-        totalWinsButton = new JButton("<html>Show total wins<br>leader board</html>");
-        totalProfitButton = new JButton("<html>Show total profit<br>leader board</html>");
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(2, 1, 10, 10)); // Adjust the spacing between buttons
-        buttonPanel.add(totalWinsButton);
-        buttonPanel.add(totalProfitButton);
-
-        add(buttonPanel, BorderLayout.WEST);
-
-        // Add ActionListener to totalWinsButton
-        totalWinsButton.addActionListener(e -> {
-        	printTotalWinsLeaderBoard(); // Call your desired function for sign up
-        });
-
-        // Add ActionListener to totalProfitButton
-        totalProfitButton.addActionListener(e -> {
-        	printTotalProfitLeaderBoard(); // Call your desired function for log in
-        });
-        
-        pack();
-        setVisible(true);
+    	
     }
 
     private void printTotalProfitLeaderBoard() {
@@ -101,8 +71,44 @@ public class LeaderboardWindow extends JFrame {
     	if(instance == null) {
     		instance = new LeaderboardWindow();
     	}
+    	initialize();
     	
     	return instance;
 
     }
+
+	private static void initialize() {
+	
+		instance.setTitle("Leaderboard");
+		instance.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		instance.setPreferredSize(new Dimension(800, 600));
+
+        // Create the output area on the right side
+		instance.outputArea = new JTextArea();
+		instance.outputArea.setEditable(false);
+		instance.add(instance.outputArea, BorderLayout.CENTER);
+
+        // Create the buttons on the left side
+		instance.totalWinsButton = new JButton("<html>Show total wins<br>leader board</html>");
+		instance.totalProfitButton = new JButton("<html>Show total profit<br>leader board</html>");
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(2, 1, 10, 10)); // Adjust the spacing between buttons
+        buttonPanel.add(instance.totalWinsButton);
+        buttonPanel.add(instance.totalProfitButton);
+
+        instance.add(buttonPanel, BorderLayout.WEST);
+
+        // Add ActionListener to totalWinsButton
+        instance.totalWinsButton.addActionListener(e -> {
+        	instance.printTotalWinsLeaderBoard(); // Call your desired function for sign up
+        });
+
+        // Add ActionListener to totalProfitButton
+        instance.totalProfitButton.addActionListener(e -> {
+        	instance.printTotalProfitLeaderBoard(); // Call your desired function for log in
+        });
+        
+        instance.pack();
+        instance.setVisible(true);
+	}
 }

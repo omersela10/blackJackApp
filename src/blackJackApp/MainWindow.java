@@ -20,23 +20,28 @@ public class MainWindow extends JFrame {
                 g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
-        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setLayout(null); // Set layout manager to null for manual positioning
         add(mainPanel);
 
-        // Create buttons for sign up, log in, and play as guest
+        // Create buttons for sign up, log in, play as guest, and leaderboard
         JButton signUpButton = new JButton("Sign up");
         JButton logInButton = new JButton("Log in");
         JButton playAsGuestButton = new JButton("Play as guest");
         JButton leaderboardButton = new JButton("Leader board");
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false); // Make the panel transparent
-        buttonPanel.add(leaderboardButton);
-        buttonPanel.add(signUpButton);
-        buttonPanel.add(logInButton);
-        buttonPanel.add(playAsGuestButton);
-       
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        // Set the location of the buttons using setBounds
+        int baffer = 380;
+        signUpButton.setBounds(baffer, 500, 120, 30);
+        logInButton.setBounds(baffer+150, 500, 120, 30);
+        playAsGuestButton.setBounds(baffer+300, 500, 120, 30);
+        leaderboardButton.setBounds(50, 700, 120, 30);
+
+        // Add buttons to the mainPanel
+        mainPanel.add(signUpButton);
+        mainPanel.add(logInButton);
+        mainPanel.add(playAsGuestButton);
+        mainPanel.add(leaderboardButton);
+
         
      // Add ActionListener to signUpButton
         signUpButton.addActionListener(e -> {
@@ -63,26 +68,18 @@ public class MainWindow extends JFrame {
     }
 
 	private void signUp() {
-		
-		System.out.println("signUp");
 		SignUpWindow newSignUpWindow = new SignUpWindow();
 	}
 
 	private void logIn() {
-		// TODO Auto-generated method stub
-		System.out.println("logIn");
 		LogInWindow newLogInWindow = new LogInWindow();
 	}
 
 	private void playAsGuest() {
-		// TODO Auto-generated method stub
-		System.out.println("playAsGuest");
 		PlayAsGuestWindow newPlayAsGuestWindow = new PlayAsGuestWindow();
 	}
 
 	private void leaderboard() {
-		// TODO Auto-generated method stub
-		System.out.println("showLeaderboard");
 		LeaderboardWindow newLeaderboardWindow = LeaderboardWindow.getInstance();
 	}
 }
