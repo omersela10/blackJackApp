@@ -9,7 +9,7 @@ public class Dealer {
 	private final String DEALER = "Dealer";
 	private String dealerName;
 	private Hand dealerHand;
-
+	private boolean dealerTurn = false;
 			
 	// Constructor
 	public Dealer(int minimumBet) {
@@ -34,6 +34,9 @@ public class Dealer {
 		return this.dealerHand.getCards();
 	}
 
+	public boolean isDealerTurn() {
+		return this.dealerTurn;
+	}
 	
 	public int getSumOfDealerCards() {
 		
@@ -46,6 +49,9 @@ public class Dealer {
 	// Setters:
 	public void SetDealerHand(Hand newHand) {
 		this.dealerHand = newHand;
+	}
+	public void setDealerTurn(boolean turn) {
+		this.dealerTurn = turn;
 	}
 	
 	

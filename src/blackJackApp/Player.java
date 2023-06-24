@@ -6,7 +6,7 @@ public abstract class Player implements HandState {
 	
 	// Data Members
 	private List<Hand> hands;
-	protected boolean isPlay;
+	protected volatile boolean isPlay;
 	
 	// States
 	protected HandState firstChoice;

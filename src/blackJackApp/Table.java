@@ -5,15 +5,17 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public abstract class Table{
 	
 	// Data Members:
 	private Timer betTimer;
-	private static final int TIMEOUT = 10000;
-	private boolean timeoutExpired;
+	private static final int TIMEOUT = 3000;
 	private volatile boolean anyPlayerBet = false;
+	private static volatile boolean inRound = false;
+	private static volatile boolean timeToBet = false; 
 	
 	protected final int MAXIMUMPLAYERS = 4;
 	protected List<Player> players;
@@ -43,6 +45,7 @@ public abstract class Table{
 		}
 		
 		this.dealer = new Dealer(tableMinBet);
+		
 	}
 	
 	// Getter
@@ -67,7 +70,7 @@ public abstract class Table{
 		
 
 	// Help method for get from player initial bet any create new cards.
-	private boolean betPlayer(Player anyPlayer) {
+	public boolean betPlayer(Player anyPlayer) {
 		
 		String inputBet = JOptionPane.showInputDialog("Insert money for play");
 		if(inputBet == null || inputBet.isBlank() || inputBet.matches("\\d+") == false) {
@@ -120,24 +123,54 @@ public abstract class Table{
 			}
 		}
 	}
-
+	
+	public synchronized boolean inRound() {
+		return this.inRound;
+	}
+	public synchronized boolean getTimeToBet() {
+		return this.timeToBet;
+	}
 	// Start Betting Phase.
-	 private void startBettingPhase() {
+	 public void startBettingPhase(TableWindow tableWindow, JLabel timerLabel, Player anyPlayer) {
 		 
-		 	betTimer = new Timer();
-	        timeoutExpired = false;
+		 if(this.inRound() == true) {
+			 return;
+		 }
+		 
+		 if(getTimeToBet() == false) {
+			 this.setTimeToBet(true);
+		 }
+		 else {
+			 return;
+		 }
+		 
+		 
+		 
+		 betTimer = new Timer();
+		 betTimer.schedule(new TimerTask() {
+		        private int remainingTime = TIMEOUT / 1000; // Convert the timeout value to seconds
 
-	        betTimer.schedule(new TimerTask() {
-	        	
-	            @Override
-	            public void run() {
-	                // Timeout has expired
-	                timeoutExpired = true;
-	                // "Timeout! Betting phase ended.");
-	                // Perform any necessary actions when the timeout occurs
-	                
-	            }
-	        }, TIMEOUT);
+		        @Override
+		        public void run() {
+		        	
+		            // Update the timer label with the remaining time
+		            timerLabel.setText("Time remaining: " + remainingTime + " seconds");
+		            
+		            if (remainingTime == -1) {
+		            	stopBettingPhase();
+		            	timerLabel.setText("No more bet");
+		            	setInRound(true);
+		            	setTimeToBet(false);
+		            	tableWindow.startGame();
+		
+		            }
+		            remainingTime--;
+		       	
+
+		           
+		        }
+		    }, TIMEOUT / 1000, 1000);
+		 	betPlayer(anyPlayer);// Set the delay and period of the timer task to 1 second
 	}
 	 
 	// After round is over, no one is playing until next timeout.
@@ -148,6 +181,7 @@ public abstract class Table{
 				player.isPlay = false;
 			}
 		}
+		this.setInRound(false);
 		
 	}
 
@@ -155,13 +189,8 @@ public abstract class Table{
 	  betTimer.cancel();
    }
 
-    public boolean isTimeoutExpired() {
-        return timeoutExpired;
-    }
-    
     public void turnOfDealer() {
     	
-    	Card Card2 = this.dealer.getSecondCard();
     	// Show
     	try {
     		
@@ -194,21 +223,6 @@ public abstract class Table{
 	}
 
 
-	// Deal Cards after bets are done
-	private void dealCards() {
-		
-		for(Player anyPlayer: this.players) {
-		
-			if(anyPlayer != null) {
-				// Time to bet
-				boolean anyBet = this.betPlayer(anyPlayer);
-				// If any bet, update there is someone who bets
-				if(anyBet == true) {
-					this.anyPlayerBet = true;
-				}
-			}
-		}
-	}
 	
 	// Help method for update money
 	private void checkAndUpdateResultForPlayer(Player player, int dealerSum, boolean dealerFail) {
@@ -269,10 +283,6 @@ public abstract class Table{
 	// Round Routine
 	public void startRound() {
 		
-		// Start the bet Phase and wait for bettings
-		this.startBettingPhase();
-		// Deal Cards
-		this.dealCards();
 		// Players are playing
 		this.playersTurn();
 		// Dealer Turn
@@ -283,6 +293,13 @@ public abstract class Table{
 		// TODO: Update win
 		// finish round, update no one playing
 		this.finishRound();
+	}
+	
+	public synchronized void setInRound(boolean value) {
+		this.inRound = value;
+	}
+	public synchronized void setTimeToBet(boolean value) {
+		this.timeToBet = value;
 	}
 
 }

@@ -61,7 +61,7 @@ public class GuestPlayer extends Player {
 				// Vacant so seat
 				places.set(i, this);
 				this.seatIndex = i;
-				return "Seated at " + i + "Place";
+				return "Seated at " + (i + 1) + " Place";
 			}
 		}
 		return "No Available Seats";

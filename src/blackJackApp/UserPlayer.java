@@ -50,7 +50,7 @@ public class UserPlayer extends Player{
 		// Vacant so seat
 		places.set(place, this);
 		this.seatIndex = place;
-		return "Seated in " + userInput;
+		return "Seated at " + (place + 1) + " Place";
 	}
 
 	@Override

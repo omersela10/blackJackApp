@@ -3,6 +3,7 @@ package blackJackApp;
 import java.awt.*;
 
 import javax.swing.*;
+
 public class PlayerComponent extends JLabel {
 
     private Player thePlayer;
@@ -76,7 +77,7 @@ public class PlayerComponent extends JLabel {
         for (Hand hand : this.thePlayer.getHands()) {
         	
             JLabel handMoneyLabel = new JLabel(Integer.toString(hand.getBetMoney()));
-            handMoneyLabel.setBounds(this.xPlace + i * 50, this.yPlace, 20, 10);
+            handMoneyLabel.setBounds(this.xPlace + i * 50, this.yPlace - 140, 80, 10);
             handMoneyLabel.setForeground(Color.WHITE);
             playerPanel.add(handMoneyLabel);
             
@@ -88,22 +89,24 @@ public class PlayerComponent extends JLabel {
     // This method get Hand and painting it on the screen
     private void updateHandComponent(int numOfHand, Hand hand) {
     	
-        numOfHand = 150 * numOfHand;
+        int placeOfHand = 150 * numOfHand;
         
         String sumOfCards = Integer.toString(hand.getSumOfCards()) + "\\" + Integer.toString(hand.getSumOfCardsWithAce());
         int i = 0;
 
         for (Card card : hand.getCards()) {
         	
-            ImageIcon cardIcon = new ImageIcon(card.getIconPath());
+        	String iconPath = "resources/cards/" + card.getIconPath();
+            ImageIcon cardIcon = new ImageIcon(iconPath);
             JLabel cardIconLabel = new JLabel(cardIcon);
-            cardIconLabel.setBounds(numOfHand + this.xPlace + 20 * i, this.yPlace, cardIcon.getIconWidth(), cardIcon.getIconHeight());
-            playerPanel.add(cardIconLabel, new Integer(1));
+            cardIconLabel.setBounds(placeOfHand + this.xPlace - 15 * i, this.yPlace - 100, cardIcon.getIconWidth(), cardIcon.getIconHeight());
+            cardIconLabel.setForeground(Color.WHITE);
+            this.playerPanel.add(cardIconLabel, new Integer(1));
             i += 1;
         }
         
         JLabel sumOfCardsLabel = new JLabel(sumOfCards);
-        sumOfCardsLabel.setBounds(this.xPlace, this.yPlace + 50, 100, 20);
+        sumOfCardsLabel.setBounds(this.xPlace, this.yPlace - 200, 100, 20);
         sumOfCardsLabel.setForeground(Color.WHITE);
         playerPanel.add(sumOfCardsLabel);
     }

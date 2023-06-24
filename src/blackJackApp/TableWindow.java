@@ -16,29 +16,26 @@ public class TableWindow extends JFrame {
 	private boolean isSeat = false;
 	private static final String tableIcon = "resources/table/background.png";
 	private static final String dealerIcon =  "resources/table/Dealer.png";
+	private int dealerX = 500;
+	private int dealerY = 60;
 	// Pane
 	private JLayeredPane theLayeredPane;
 	//PlayerComponent
 	private PlayerComponent thePlayerComponent;
 	// Buttons
-	private JButton standButton;
-	private JButton hitButton;
-	private JButton surrenderButton;
-	private JButton doubleButton;
-	private JButton splitButton;
-	private JButton seatUpButton;
-	private JButton betButton;
-	private JLabel  playerInfoLabel;
+	private JLabel playerInfoLabel;
 	private JLabel textJLabel;
-	
+	private JLabel timerLabel;
 	// Constructor
 	public TableWindow(Table newTable, Player newPlayer)   {
 		
 		this.theTable = newTable;
 		this.thePlayingPlayer = newPlayer;
+		this.textJLabel = new JLabel();
 		
 		try {
 		     initializeComponents();
+		     initializeTimerLabel();
 		}
 		catch(Exception e) {
 			
@@ -79,7 +76,7 @@ public class TableWindow extends JFrame {
 
         // Create a label for the dealer's name and cards
         JLabel dealerInfoLabel = new JLabel(theTable.dealer.getDealerName());
-        dealerInfoLabel.setBounds(500, 60, 200, 100);
+        dealerInfoLabel.setBounds(dealerX, dealerY, 200, 100);
         
         dealerInfoLabel.setForeground(Color.WHITE);
         this.theLayeredPane.add(dealerInfoLabel, new Integer(1));
@@ -88,73 +85,103 @@ public class TableWindow extends JFrame {
 
         // Create a label to display the dealer icon
         JLabel dealerIconLabel = new JLabel(dealerIcon);
-        dealerIconLabel.setBounds(530, 40, dealerIcon.getIconWidth(), dealerIcon.getIconHeight());
+        dealerIconLabel.setBounds(dealerX + 30, dealerY - 20, dealerIcon.getIconWidth(), dealerIcon.getIconHeight());
         this.theLayeredPane.add(dealerIconLabel, new Integer(1));
 
         // Create buttons for surrender, stand, hit, split, double
-        this.surrenderButton = new JButton("Surrender");
-        this.surrenderButton.setBounds(300, 650, 100, 20);
-        this.theLayeredPane.add(this.surrenderButton, new Integer(1));
+        JButton surrenderButton = new JButton("Surrender");
+        surrenderButton.setBounds(300, 650, 100, 20);
+        this.theLayeredPane.add(surrenderButton, new Integer(1));
         
         surrenderButton.addActionListener(e -> {
             // Code to handle the seat button click event
             
-        	String message = thePlayingPlayer.surrender(); 
+        	String message = "";
+      	    if(thePlayingPlayer.getHandState() == null) {
+             	  message = "Please bet first";
+            }
+            else {
+             	 message = thePlayingPlayer.surrender();
+             } 
         	// Update the table display to reflect the changes
             updateTableDisplay(message); 
         });
         
-        this.standButton = new JButton("Stand");
-        this.standButton.setBounds(410, 650, 100, 20);
-        this.theLayeredPane.add(this.standButton, new Integer(1));
+        JButton standButton = new JButton("Stand");
+        standButton.setBounds(410, 650, 100, 20);
+        this.theLayeredPane.add(standButton, new Integer(1));
         
         standButton.addActionListener(e -> {
             // Code to handle the seat button click event
             
-        	String message = thePlayingPlayer.stand(); 
+        	String message = "";
+  	        if(thePlayingPlayer.getHandState() == null) {
+         	  message = "Please bet first";
+            }
+            else {
+         	  message = thePlayingPlayer.stand();
+            }
         	// Update the table display to reflect the changes
             updateTableDisplay(message); 
         });
         
-        this.hitButton = new JButton("Hit");
-        this.hitButton.setBounds(520, 650, 100, 20);
-        this.theLayeredPane.add(this.hitButton, new Integer(1));
-        splitButton.addActionListener(e -> {
+        JButton hitButton = new JButton("Hit");
+        hitButton.setBounds(520, 650, 100, 20);
+        this.theLayeredPane.add(hitButton, new Integer(1));
+        hitButton.addActionListener(e -> {
             // Code to handle the seat button click event
             
-        	String message = thePlayingPlayer.hit(); 
+        	String message = "";
+        	
+            if(thePlayingPlayer.getHandState() == null) {
+            	message = "Please bet first";
+            }
+            else {
+            	message = thePlayingPlayer.hit();
+            } 
         	// Update the table display to reflect the changes
             updateTableDisplay(message); 
         });
 
-        this.splitButton = new JButton("Split");
-        this.splitButton.setBounds(630, 650, 100, 20);
-        this.theLayeredPane.add(this.splitButton, new Integer(1));
+        JButton splitButton = new JButton("Split");
+        splitButton.setBounds(630, 650, 100, 20);
+        this.theLayeredPane.add(splitButton, new Integer(1));
         
         splitButton.addActionListener(e -> {
             // Code to handle the seat button click event
-            
-        	String message = thePlayingPlayer.split(); 
+    	    String message = "";
+    	    if(thePlayingPlayer.getHandState() == null) {
+           	  message = "Please bet first";
+            }
+            else {
+           	  message = thePlayingPlayer.split();
+            }
         	// Update the table display to reflect the changes
             updateTableDisplay(message); 
         });
         
-        this.doubleButton = new JButton("Double");
-        this.doubleButton.setBounds(740, 650, 100, 20);
-        this.theLayeredPane.add(this.doubleButton, new Integer(1));
+        JButton doubleButton = new JButton("Double");
+        doubleButton.setBounds(740, 650, 100, 20);
+        this.theLayeredPane.add(doubleButton, new Integer(1));
     
         doubleButton.addActionListener(e -> {
             // Code to handle the seat button click event
-            
-        	String message = thePlayingPlayer.doubleDown();
-      
+        	String message = "";
+        	
+            if(thePlayingPlayer.getHandState() == null) {
+            	message = "Please bet first";
+            }
+            else {
+            	message = thePlayingPlayer.doubleDown();
+            }
+        	
         	// Update the table display to reflect the changes
             updateTableDisplay(message); 
         });
 
-        this.seatUpButton = new JButton("Seat or Up");
-        this.seatUpButton.setBounds(1000, 60, 100, 20);
-        this.theLayeredPane.add(this.seatUpButton, new Integer(1));
+        JButton seatUpButton = new JButton("Seat or Up");
+        seatUpButton.setBounds(1000, 60, 100, 20);
+        this.theLayeredPane.add(seatUpButton, new Integer(1));
         
         seatUpButton.addActionListener(e -> {
             // Code to handle the seat button click event
@@ -164,10 +191,22 @@ public class TableWindow extends JFrame {
             updateTableDisplay(message); 
         });
         
-        this.betButton = new JButton("Bet");
-        this.betButton.setBounds(940, 650, 100, 20);
-        this.theLayeredPane.add(this.betButton, new Integer(1));
-      
+        JButton betButton = new JButton("Bet");
+        betButton.setBounds(940, 650, 100, 20);
+        this.theLayeredPane.add(betButton, new Integer(1));
+        
+        betButton.addActionListener(e -> {
+            // Code to handle the seat button click event
+        	if(isSeat == false) {
+        		updateMessage("Please seat before bet");
+        		return;
+        	}
+            theTable.startBettingPhase(this, this.timerLabel, this.thePlayingPlayer);
+           
+            
+           
+       
+        });
         
         // Set the preferred size of the window
         setPreferredSize(new Dimension(1200, 800));
@@ -176,6 +215,12 @@ public class TableWindow extends JFrame {
 
 	}
 	
+	private void initializeTimerLabel() {
+	    timerLabel = new JLabel();
+	    timerLabel.setBounds(800, 10, 200, 30); // Set the desired position and size of the label
+	    timerLabel.setForeground(Color.WHITE); // Set the text color
+	    theLayeredPane.add(timerLabel, new Integer(1)); // Add the label to the layered pane
+	}
 
 	private String seatOrUp() {
 		
@@ -193,30 +238,79 @@ public class TableWindow extends JFrame {
 	public void updateTableDisplay(String message) {
 		
 		// Create and position components for each seated player
-		this.textJLabel = new JLabel(message);
-        this.textJLabel.setBounds(500, 600, 200, 20);
-        this.theLayeredPane.add(this.textJLabel, new Integer(1));
+		this.updateMessage(message);
+		this.updatePlayerComponent();
+		this.updateDelaerComponent();
+		
+	    theLayeredPane.repaint();
+	}
+	
+	private void updatePlayerLabel() {
+		
+		this.theLayeredPane.remove(this.playerInfoLabel);
+		this.playerInfoLabel = new JLabel("Name: " + thePlayingPlayer.getPlayerName() + " | Money: " + thePlayingPlayer.getTotalMoney() + "$");
+		this.playerInfoLabel.setBounds(20, 20, 200, 20);
+		this.playerInfoLabel.setForeground(Color.WHITE);
+	    this.theLayeredPane.add(playerInfoLabel, new Integer(1));
+     
+		
+	}
+
+	private void updateDelaerComponent() {
+
+        String sumOfCards = Integer.toString(theTable.dealer.getDealerHand().getSumOfCards()) + "\\" + Integer.toString(theTable.dealer.getDealerHand().getSumOfCardsWithAce());
+        int i = 0;
+
+        for (Card card : theTable.dealer.getDealerHand().getCards()) {
+        	
+        	String iconPath = "resources/cards/" + card.getIconPath();
+            ImageIcon cardIcon = new ImageIcon(iconPath);
+            JLabel cardIconLabel = new JLabel(cardIcon);
+            cardIconLabel.setBounds(this.dealerX - 15*i + 25, this.dealerY + 60, cardIcon.getIconWidth(), cardIcon.getIconHeight());
+            cardIconLabel.setForeground(Color.WHITE);
+            this.theLayeredPane.add(cardIconLabel, new Integer(1));
+            i += 1;
+         
+            if(theTable.dealer.isDealerTurn() == false) {
+            	break;
+            }
+        }
+       
+	}
+
+	private void updatePlayerComponent() {
+		
 		if(isSeat == true) {
 			
 		    this.thePlayerComponent = new PlayerComponent(this.thePlayingPlayer, this.theLayeredPane, this.thePlayingPlayer.seatIndex);
-			
-			this.theLayeredPane.add(this.thePlayerComponent, new Integer(1));
-				
-			// Repaint the layered pane to reflect the changes
-			this.theLayeredPane.repaint();
+			this.theLayeredPane.add(this.thePlayerComponent, new Integer(1));	
 		}
 		else {
 			removePlayerComponent();
 
 		}
 		
-		
-	    theLayeredPane.repaint();
 	}
-	
+
+	private void updateMessage(String message) {
+		
+		this.theLayeredPane.remove(this.textJLabel);
+		this.textJLabel.setText("");
+		this.textJLabel.setText(message);
+        this.textJLabel.setBounds(500, 600, 200, 30);
+        this.textJLabel.setForeground(Color.WHITE);
+        this.theLayeredPane.add(this.textJLabel, new Integer(1));
+		
+	}
+
 	// Remove the player from the GUI
 	public void removePlayerComponent() {
 		this.theLayeredPane.remove(this.thePlayerComponent.getPlayerPanel());
 	}
 
+	public void startGame() {
+		
+		this.updateTableDisplay("Start Game");
+		this.theTable.startRound();
+	}
 }
