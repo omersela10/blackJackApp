@@ -10,10 +10,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.*;
 
-public  class DBManager {
+public class DBManager {
 
-	private static  String usersDBPath="resources\\usersDB\\usersDB.xml";
+	private static final String usersDBPath="resources\\usersDB\\usersDB.xml";
 	
 	public static String getUsersDBPath() {
 		return usersDBPath;
@@ -511,6 +513,7 @@ public  class DBManager {
         	return false;
         }
 	}
+	
 	synchronized public static Boolean updateUserValues (User anyUser) {
 		
 		try {
@@ -530,5 +533,61 @@ public  class DBManager {
         	return false;
         }
 	}
+	
+	
+	synchronized public static ArrayList<Map<String, String>> getAllUsers () {
+	
+		try {
+			
+			ArrayList<Map<String, String>> allUsers = new ArrayList<Map<String, String>>();
+            Document document = getdocumentOfXmlFile(usersDBPath);
 
+            // Get the root element
+            Element rootElement = document.getDocumentElement();
+
+            // Get the user elements
+            NodeList userNodes = rootElement.getElementsByTagName("user");
+	        
+	        for (int i = 0; i < userNodes.getLength(); i++) {
+	        	
+	        	// add user to list
+	        	Element userElement = (Element) userNodes.item(i);
+	        	
+                String name = userElement.getAttribute("name");
+                String numberOfWins = userElement.getAttribute("number_of_wins");
+                String totalProfit = userElement.getAttribute("total_profit");
+                Map<String, String> userAttributes = new HashMap<>();
+                
+                userAttributes.put("Name", name);
+                userAttributes.put("Number of wins", numberOfWins);
+                userAttributes.put("Total profit", totalProfit);
+                
+                allUsers.add(userAttributes);
+	        }
+	        
+	        return allUsers;
+	            	
+	    } catch (Exception e) {
+	    	return  new ArrayList<Map<String, String>>();
+	    }
+		
+	}
+	
+	
+	
+    public static ArrayList<Map<String, String>> sortUsersByWins() {
+    	
+        ArrayList<Map<String, String>> users = getAllUsers();
+        users.sort(new WinsComparator());
+        return users;
+    }
+
+    public static ArrayList<Map<String, String>> sortUsersByProfit() {
+    	
+        ArrayList<Map<String, String>> users = getAllUsers();
+        users.sort(new ProfitComparator());
+        return users;
+    }
+	
+	
 }

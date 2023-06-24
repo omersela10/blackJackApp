@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><users>
-  <user name="omersela10" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
-<user name="ahigadgenish1" number_of_wins="0" password="654321" total_amount="0" total_profit="0"/>
-<user name="yakov4" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
-<user name="shir3" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
-<user name="avi5" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/></users>
+<user name="omersela10" number_of_wins="1" password="123456" total_amount="0" total_profit="10000"/>
+<user name="ahigadgenish1" number_of_wins="2" password="654321" total_amount="0" total_profit="1000"/>
+<user name="yakov4" number_of_wins="3" password="123456" total_amount="0" total_profit="100"/>
+<user name="shir3" number_of_wins="4" password="123456" total_amount="0" total_profit="10"/>
+<user name="avi5" number_of_wins="5" password="123456" total_amount="0" total_profit="0"/></users>
