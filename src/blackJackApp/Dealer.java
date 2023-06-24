@@ -10,6 +10,7 @@ public class Dealer {
 	private String dealerName;
 	private Hand dealerHand;
 	private boolean dealerTurn = false;
+	public HandStateChangeListener dealerStateChangeListener;
 			
 	// Constructor
 	public Dealer(int minimumBet) {
@@ -53,6 +54,17 @@ public class Dealer {
 	public void setDealerTurn(boolean turn) {
 		this.dealerTurn = turn;
 	}
+	
+	
+   public void registerDealerStateChangeListener(HandStateChangeListener listener) {
+        this.dealerStateChangeListener = listener;
+    }
+
+   public void notifyDealerStateChangeListener() {
+        if (this.dealerStateChangeListener != null) {
+        	this.dealerStateChangeListener.onDealerPlay();
+        }
+    }
 	
 	
 			

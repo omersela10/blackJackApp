@@ -163,6 +163,8 @@ public class Hand {
 		}
 		return this.getSumOfCardsWithAce();
 	}
+
+
 	
 	
 }

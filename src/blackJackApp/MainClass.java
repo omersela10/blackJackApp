@@ -10,12 +10,10 @@ public class MainClass {
 		   //LobbyWindow lw = new LobbyWindow(newPlayer);
 		   
 		   
-		 //  Table newTable = OneHundredDollarTable.getInstance();
-		//   newTable.addPlayer(newPlayer);
-		//   newTable.addPlayer(new UserPlayer(new User("ahigad", 2000, 0, 0)));
-		//   TableWindow wt = new TableWindow(newTable, newPlayer);
-		   MainWindow mainMenu = new MainWindow(); 
-		   mainMenu.setVisible(true);
+		Table newTable = OneHundredDollarTable.getInstance();
+	
+		TableWindow wt = new TableWindow(newTable, newPlayer);
+		
 
 
 	   }

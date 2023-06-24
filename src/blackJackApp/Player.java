@@ -18,6 +18,7 @@ public abstract class Player implements HandState {
 	protected HandState theState;
 	
 	protected int seatIndex;
+	private HandStateChangeListener handStateChangeListener;
 	
 	// Abstract methods
 	protected abstract int getTotalMoney();
@@ -130,6 +131,7 @@ public abstract class Player implements HandState {
 	// Setters
 	protected void setTheState(HandState anyState) {
 		this.theState = anyState;
+		 notifyHandStateChangeListener(); // Notify the listener when the hand state changes
 	}
 	
 	protected void setFirstChoice(HandState firstChoice) {
@@ -156,7 +158,18 @@ public abstract class Player implements HandState {
 		this.hands = anyHands;
 		
 	}
-		
+
+
+    public void registerHandStateChangeListener(HandStateChangeListener listener) {
+        this.handStateChangeListener = listener;
+    }
+
+    private void notifyHandStateChangeListener() {
+        if (handStateChangeListener != null) {
+            handStateChangeListener.onHandStateChanged();
+        }
+    }
+    
 	// Playing functions
 	@Override
 	public String split() {

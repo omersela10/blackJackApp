@@ -14,12 +14,13 @@ public class PlayerComponent extends JLabel {
     public static final String playerIconPath = "resources/table/Player.png";
     private JPanel playerPanel;
 
+
     public PlayerComponent(Player player, JLayeredPane anyPane, int anySeat) {
     	
         this.thePlayer = player;
         this.thePane = anyPane;
         this.seatIndex = anySeat;
-
+  
         this.updateXYPlace();
         this.createPlayerPanel();
         this.updateComponents();
@@ -27,7 +28,7 @@ public class PlayerComponent extends JLabel {
 
     private void updateXYPlace() {
     	
-    	this.xPlace = this.seatIndex * 300 + 40;
+    	this.xPlace = this.seatIndex * 300 + 100;
         this.yPlace = 400;
         
     }
@@ -46,7 +47,7 @@ public class PlayerComponent extends JLabel {
         updateNameComponent();
         updatePlayerIconComponent();
         
-        if (this.thePlayer.isPlay() == true) {
+        if (this.thePlayer.getHands() != null) {
             updateHandsComponent();
         }
     }
@@ -76,7 +77,7 @@ public class PlayerComponent extends JLabel {
         
         for (Hand hand : this.thePlayer.getHands()) {
         	
-            JLabel handMoneyLabel = new JLabel(Integer.toString(hand.getBetMoney()));
+            JLabel handMoneyLabel = new JLabel(Integer.toString(hand.getBetMoney()) + "$");
             handMoneyLabel.setBounds(this.xPlace + i * 50, this.yPlace - 140, 80, 10);
             handMoneyLabel.setForeground(Color.WHITE);
             playerPanel.add(handMoneyLabel);
@@ -105,10 +106,6 @@ public class PlayerComponent extends JLabel {
             i += 1;
         }
         
-        JLabel sumOfCardsLabel = new JLabel(sumOfCards);
-        sumOfCardsLabel.setBounds(this.xPlace, this.yPlace - 200, 100, 20);
-        sumOfCardsLabel.setForeground(Color.WHITE);
-        playerPanel.add(sumOfCardsLabel);
     }
 
     // Getter

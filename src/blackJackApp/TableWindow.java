@@ -8,7 +8,7 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class TableWindow extends JFrame {
+public class TableWindow extends JFrame implements HandStateChangeListener {
 	
 	// Data Members
 	private Table theTable;
@@ -19,7 +19,7 @@ public class TableWindow extends JFrame {
 	private int dealerX = 500;
 	private int dealerY = 60;
 	// Pane
-	private JLayeredPane theLayeredPane;
+	protected JLayeredPane theLayeredPane;
 	//PlayerComponent
 	private PlayerComponent thePlayerComponent;
 	// Buttons
@@ -49,14 +49,103 @@ public class TableWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         
-        // Create a layered pane to hold the components
+        this.setPane();
+        
+        // Set the preferred size of the window
+        setPreferredSize(new Dimension(1200, 800));
+        pack(); // Adjust the window size based on the components' preferred sizes
+        setVisible(true); // Make the window visible
+
+	}
+	
+	private void initializeTimerLabel() {
+	    timerLabel = new JLabel();
+	    timerLabel.setBounds(800, 10, 200, 30); // Set the desired position and size of the label
+	    timerLabel.setForeground(Color.WHITE); // Set the text color
+	    theLayeredPane.add(timerLabel, new Integer(1)); // Add the label to the layered pane
+	}
+
+	private String seatOrUp() {
+		
+		if(isSeat == true) {
+			isSeat = false;
+			return theTable.removePlayer(this.thePlayingPlayer);
+		}
+		else {
+			isSeat = true;
+			return theTable.addPlayer(this.thePlayingPlayer);
+		}
+		
+	}
+
+	public void updateTableDisplay(String message) {
+		
+		this.updateMessage(message);
+		this.updatePlayerComponent();
+		if(theTable.anyPlayerBet() == true) {
+			this.updateDealerComponent();
+		}
+		
+	    theLayeredPane.repaint();
+	}
+	
+	public void updatePlayerLabel() {
+		
+		this.theLayeredPane.remove(this.playerInfoLabel);
+		this.playerInfoLabel = new JLabel("Name: " + thePlayingPlayer.getPlayerName() + " | Money: " + thePlayingPlayer.getTotalMoney() + "$");
+		this.playerInfoLabel.setBounds(20, 20, 200, 20);
+		this.playerInfoLabel.setForeground(Color.WHITE);
+	    this.theLayeredPane.add(playerInfoLabel, new Integer(1));
+     
+		
+	}
+
+	public void updateDealerComponent() {
+
+        int i = 0;
+
+        for (Card card : theTable.dealer.getDealerHand().getCards()) {
+        	
+        	String iconPath = "resources/cards/" + card.getIconPath();
+            ImageIcon cardIcon = new ImageIcon(iconPath);
+            JLabel cardIconLabel = new JLabel(cardIcon);
+            cardIconLabel.setBounds(this.dealerX - 15*i + 25, this.dealerY + 60, cardIcon.getIconWidth(), cardIcon.getIconHeight());
+            cardIconLabel.setForeground(Color.WHITE);
+            this.theLayeredPane.add(cardIconLabel, new Integer(1));
+            i += 1;
+         
+            if(theTable.dealer.isDealerTurn() == false) {
+            	break;
+            }
+        }
+        this.theLayeredPane.repaint();
+       
+	}
+
+	public void updatePlayerComponent() {
+		
+		if(isSeat == true) {
+			
+		    this.thePlayerComponent = new PlayerComponent(this.thePlayingPlayer, this.theLayeredPane, this.thePlayingPlayer.seatIndex);
+			this.theLayeredPane.add(this.thePlayerComponent, new Integer(1));	
+		}
+		else {
+			removePlayerComponent();
+
+		}
+		this.theLayeredPane.repaint();
+	}
+
+	private void setPane() throws IOException  {
+		
+		
+		// Create a layered pane to hold the components
         this.theLayeredPane = new JLayeredPane();
         this.theLayeredPane.setPreferredSize(new Dimension(1200, 800));
         add(this.theLayeredPane, BorderLayout.CENTER);
         
         // Load the background image
         Image img = ImageIO.read(new File(tableIcon));
-        
         // Create a custom panel to draw the background image
         JPanel backgroundPanel = new JPanel() {
         	@Override
@@ -208,91 +297,8 @@ public class TableWindow extends JFrame {
        
         });
         
-        // Set the preferred size of the window
-        setPreferredSize(new Dimension(1200, 800));
-        pack(); // Adjust the window size based on the components' preferred sizes
-        setVisible(true); // Make the window visible
-
 	}
-	
-	private void initializeTimerLabel() {
-	    timerLabel = new JLabel();
-	    timerLabel.setBounds(800, 10, 200, 30); // Set the desired position and size of the label
-	    timerLabel.setForeground(Color.WHITE); // Set the text color
-	    theLayeredPane.add(timerLabel, new Integer(1)); // Add the label to the layered pane
-	}
-
-	private String seatOrUp() {
-		
-		if(isSeat == true) {
-			isSeat = false;
-			return theTable.removePlayer(this.thePlayingPlayer);
-		}
-		else {
-			isSeat = true;
-			return theTable.addPlayer(this.thePlayingPlayer);
-		}
-		
-	}
-
-	public void updateTableDisplay(String message) {
-		
-		// Create and position components for each seated player
-		this.updateMessage(message);
-		this.updatePlayerComponent();
-		this.updateDelaerComponent();
-		
-	    theLayeredPane.repaint();
-	}
-	
-	private void updatePlayerLabel() {
-		
-		this.theLayeredPane.remove(this.playerInfoLabel);
-		this.playerInfoLabel = new JLabel("Name: " + thePlayingPlayer.getPlayerName() + " | Money: " + thePlayingPlayer.getTotalMoney() + "$");
-		this.playerInfoLabel.setBounds(20, 20, 200, 20);
-		this.playerInfoLabel.setForeground(Color.WHITE);
-	    this.theLayeredPane.add(playerInfoLabel, new Integer(1));
-     
-		
-	}
-
-	private void updateDelaerComponent() {
-
-        String sumOfCards = Integer.toString(theTable.dealer.getDealerHand().getSumOfCards()) + "\\" + Integer.toString(theTable.dealer.getDealerHand().getSumOfCardsWithAce());
-        int i = 0;
-
-        for (Card card : theTable.dealer.getDealerHand().getCards()) {
-        	
-        	String iconPath = "resources/cards/" + card.getIconPath();
-            ImageIcon cardIcon = new ImageIcon(iconPath);
-            JLabel cardIconLabel = new JLabel(cardIcon);
-            cardIconLabel.setBounds(this.dealerX - 15*i + 25, this.dealerY + 60, cardIcon.getIconWidth(), cardIcon.getIconHeight());
-            cardIconLabel.setForeground(Color.WHITE);
-            this.theLayeredPane.add(cardIconLabel, new Integer(1));
-            i += 1;
-         
-            if(theTable.dealer.isDealerTurn() == false) {
-            	break;
-            }
-        }
-       
-	}
-
-	private void updatePlayerComponent() {
-		
-		if(isSeat == true) {
-			
-		    this.thePlayerComponent = new PlayerComponent(this.thePlayingPlayer, this.theLayeredPane, this.thePlayingPlayer.seatIndex);
-			this.theLayeredPane.add(this.thePlayerComponent, new Integer(1));	
-		}
-		else {
-			removePlayerComponent();
-
-		}
-		
-	}
-
-	private void updateMessage(String message) {
+	public void updateMessage(String message) {
 		
 		this.theLayeredPane.remove(this.textJLabel);
 		this.textJLabel.setText("");
@@ -300,17 +306,55 @@ public class TableWindow extends JFrame {
         this.textJLabel.setBounds(500, 600, 200, 30);
         this.textJLabel.setForeground(Color.WHITE);
         this.theLayeredPane.add(this.textJLabel, new Integer(1));
-		
+        this.theLayeredPane.repaint();
 	}
 
 	// Remove the player from the GUI
 	public void removePlayerComponent() {
 		this.theLayeredPane.remove(this.thePlayerComponent.getPlayerPanel());
+		this.theLayeredPane.repaint();
 	}
 
-	public void startGame() {
+	public void clearTable() {
+		try {
+			this.theLayeredPane.repaint();
+			this.setPane();
+			this.theLayeredPane.repaint();
+		}
+		catch(Exception e) {
+			
+		}
+	}
+	public void startGame()   {
 		
 		this.updateTableDisplay("Start Game");
-		this.theTable.startRound();
+		this.updateDealerComponent();
+		this.updatePlayerLabel();
+		this.theTable.afterBetting();
+		boolean anyAlivePlayer = this.theTable.playersTurn(this);
+		if(anyAlivePlayer == true) {
+			this.theTable.turnOfDealer(this);
+		}
+		
+		this.theTable.updateMoneyOfPlayers(this);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.theTable.finishRound(this);
+	}
+
+	@Override
+	public void onHandStateChanged() {
+		this.updatePlayerComponent();
+		
+	}
+
+	@Override
+	public void onDealerPlay() {
+		this.updateDealerComponent();
+		
 	}
 }
