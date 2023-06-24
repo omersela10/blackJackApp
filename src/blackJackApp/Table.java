@@ -53,17 +53,16 @@ public abstract class Table{
 	// Methods:
 	
 	// Seat Player to Table
-	public void addPlayer(Player toAddPlayer) {
+	public String addPlayer(Player toAddPlayer) {
 		
-		toAddPlayer.seat(this.players);
-		
-
+		return toAddPlayer.seat(this.players);
 	}
 		
 	// Leave player from the Table
-	public void removePlayer(Player toRemovePlayer) {
+	public String removePlayer(Player toRemovePlayer) {
 	
-		toRemovePlayer.up(players);
+		return toRemovePlayer.up(players);
+		
 	}
 		
 

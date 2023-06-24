@@ -60,6 +60,7 @@ public class GuestPlayer extends Player {
 			if(places.get(i) == null) {
 				// Vacant so seat
 				places.set(i, this);
+				this.seatIndex = i;
 				return "Seated at " + i + "Place";
 			}
 		}

@@ -17,14 +17,14 @@ public class AfterSplitHandOneState implements HandState {
 	@Override
 	public String split() {
 		
-		return "Cannot split twice";
+		return "Can't split twice";
 
 	}
 
 	@Override
 	public String surrender() {
 		
-		return "Cannot surrender";
+		return "Can't surrender";
 	}
 
 	@Override

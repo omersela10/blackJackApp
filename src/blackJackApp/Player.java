@@ -17,12 +17,15 @@ public abstract class Player implements HandState {
 
 	protected HandState theState;
 	
+	protected int seatIndex;
+	
 	// Abstract methods
 	protected abstract int getTotalMoney();
 	protected abstract String getPlayerName();
 	protected abstract void setTotalMoney(int newAmount);
 	public abstract String seat(List<Player> places);
-
+	
+	
 	
 	// Constructor
 	public Player() {
@@ -74,15 +77,17 @@ public abstract class Player implements HandState {
 	}
 	
 	// Up Option for player
-	public void up(List<Player> places) {
+	public String up(List<Player> places) {
 		
 		isPlay = false;
 		// Update leaving
 		for(int i = 0; i < places.size(); i++) {
 			if(this.equals(places.get(i)) == true) {
 				places.set(i, null);
+				return "Up";
 			}
 		}
+		return "";
 		
 	}
 	
