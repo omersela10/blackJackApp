@@ -63,7 +63,7 @@ public class FirstChoiceState implements HandState{
 	public String surrender() {
 		
 		// Update money
-		this.thePlayer.setTotalMoney(this.thePlayer.getTotalMoney() - this.currentHand.getBetMoney()/2);
+		this.thePlayer.setTotalMoney(this.thePlayer.getTotalMoney() + (this.currentHand.getBetMoney()/2));
 		this.currentHand.setBetMoney(0);
 		
 		// Update State

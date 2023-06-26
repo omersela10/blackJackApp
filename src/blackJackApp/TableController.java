@@ -230,10 +230,26 @@ public class TableController {
 		System.out.println("AFTer betting");
 		this.updateDealerComponent();
 		System.out.println("AFTer update desler");
-		table.playersTurn();
-		System.out.println("AFTer players turn");
-	
-		table.turnOfDealer();
+	 
+        Thread playerThread = new Thread(() -> {
+        	table.playersTurn();
+            System.out.println("After player's turn");
+        });
+
+        playerThread.start();
+
+        // Wait for the player's turn to complete before proceeding with the dealer's turn
+        try {
+        	// Join
+			playerThread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        if(table.anyPlayerAlive() == true) {
+        	table.turnOfDealer();
+        }
+		
 		System.out.println("AFTer deakers turn");
 		
 		table.updateMoneyOfPlayers();

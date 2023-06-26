@@ -31,15 +31,15 @@ public class Card {
 	
 	// Setters
 	public void setValue(int anyValue) {
-		this.value = value;
+		this.value = anyValue;
 	}
 
 	public void setIconPath(String anyIconPath) {
-		this.iconPath = iconPath;
+		this.iconPath = anyIconPath;
 	}
 
 	public void setAce(boolean isAceCard) {
-		this.isAce = isAce;
+		this.isAce = isAceCard;
 	}
 	
 	@Override

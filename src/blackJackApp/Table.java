@@ -15,6 +15,7 @@ public abstract class Table{
 	private static final int TIMEOUT = 3000;
 	private volatile boolean anyPlayerBet = false;
 	private volatile boolean anyPlayerSeat = false;
+	private volatile boolean anyPlayerAlive = false;
 	private static volatile boolean inRound = false;
 	private static volatile boolean timeToBet = false; 
 	
@@ -61,6 +62,10 @@ public abstract class Table{
 		
 	public boolean anyPlayerBet() {
 		return this.anyPlayerBet;
+	}
+	public boolean anyPlayerAlive() {
+		
+		return this.anyPlayerAlive;
 	}
 	public TableController getTableController() {
 		return tableController;
@@ -132,7 +137,7 @@ public abstract class Table{
 			// If player in endRound State
 			isWaitingForDealer = anyPlayer.getHandState() instanceof EndHandRoundState;
 			try {
-				Thread.sleep(500);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -144,32 +149,33 @@ public abstract class Table{
 	
 	// Game Logic
 
-	public boolean playersTurn() {
+	public void playersTurn() {
 		
 		// If there are no players who bets
-		boolean anyAlive = false;
-		
-		if(anyPlayerBet == false) {	
-			return anyAlive;
+	
+		if(this.anyPlayerBet == false) {	
+			this.anyPlayerAlive = false;
 		}
 	
 		for(Player anyPlayer: this.getPlayers()) {
+			
 			if(playingPlayer(anyPlayer) == true) {
+				
 				 this.setCurrentTurn(anyPlayer);
 				 
-				 tableController.notifyMessageViaController("Turn of:" + anyPlayer.getPlayerName());
+				 tableController.notifyMessageViaController("Turn of: " + anyPlayer.getPlayerName());
 				 
 				 playRound(anyPlayer);
 				 
 				 for(Hand hand: anyPlayer.getHands()) {
-					 anyAlive = hand.getSumOfPlayingCards() <= 21;
+					 this.anyPlayerAlive = hand.getSumOfPlayingCards() <= 21 && hand.getBetMoney() > 0;
 				 }
 				 
 			}
 		}
 		
 		this.setCurrentTurn(null);
-		return anyAlive;
+	
 	}
 	
 	public synchronized Player getCurrentTurn() {
@@ -181,11 +187,11 @@ public abstract class Table{
 	}
 	
 	public synchronized boolean inRound() {
-		return this.inRound;
+		return inRound;
 	}
 	
 	public synchronized boolean getTimeToBet() {
-		return this.timeToBet;
+		return timeToBet;
 	}
 	
 	// Start Betting Phase.
@@ -248,7 +254,7 @@ public abstract class Table{
 			}
 		}
 		this.setInRound(false);
-		
+		this.anyPlayerAlive = false;
 	}
 
    public void stopBettingPhase() {
@@ -264,6 +270,7 @@ public abstract class Table{
 			   return;
 		   }
 	   }
+	   
     }
   
     
@@ -274,6 +281,7 @@ public abstract class Table{
     	while(this.dealer.getSumOfDealerCards() < 17) {
     		
     		dealer.getDealerHand().getMoreCard();
+    		// TODO : Add Sound of drawing card
     		notifyController();
 
     	}
@@ -291,8 +299,15 @@ public abstract class Table{
 		
 		for(Player player : this.players) {
 			if(playingPlayer(player) == true) {
-				String message =this.checkAndUpdateResultForPlayer(player, dealerSum, dealerFail);
-				tableController.notifyToSpecificWindow("You earn : " + message + "$", player);
+				int profit = this.checkAndUpdateResultForPlayer(player, dealerSum, dealerFail);
+				if(profit > 0) {
+					tableController.notifyToSpecificWindow("You win ", player);
+				}
+				
+				else {
+					tableController.notifyToSpecificWindow("You loose " , player);
+				}
+				
 				tableController.updatePlayerLabel(player);
 			}
 			
@@ -306,7 +321,7 @@ public abstract class Table{
 	
 
 	// Help method for update money
-	private String checkAndUpdateResultForPlayer(Player player, int dealerSum, boolean dealerFail) {
+	private int checkAndUpdateResultForPlayer(Player player, int dealerSum, boolean dealerFail) {
 
 		int totalWinMoney = 0;
 		for(Hand hand: player.getHands()) {
@@ -318,7 +333,7 @@ public abstract class Table{
 			
 		}
 		
-		return Integer.toString(totalWinMoney);
+		return totalWinMoney;
 	
 	}
 	
@@ -365,28 +380,32 @@ public abstract class Table{
 	}
 	
 	public synchronized void setInRound(boolean value) {
-		this.inRound = value;
+		inRound = value;
 	}
 	public synchronized void setTimeToBet(boolean value) {
-		this.timeToBet = value;
+		timeToBet = value;
 	}
 
 	public String hit(Player currentPlayer) {
+		// TODO : Add Sound of drawing card
 		return currentPlayer.hit();
 		
 	}
 
 	public String stand(Player currentPlayer) {
+		
 		return currentPlayer.stand();
 		
 	}
 
 	public String split(Player currentPlayer) {
+		// TODO : Add Sound of drawing card
 		return currentPlayer.split();
 		
 	}
 
 	public String doubleDown(Player currentPlayer) {
+		// TODO : Add Sound of drawing card
 		return currentPlayer.doubleDown();
 		
 	}
@@ -401,12 +420,16 @@ public abstract class Table{
 
 	public void placeBet(Player currentPlayer) {
 		
+		
 		this.startBettingPhase(currentPlayer);
+		// TODO: add sound of betting
 	}
 	 // Method to notify the controller of a game state change
     private void notifyController() {
        tableController.updateDealerComponent();
     }
+
+
     
     
 
