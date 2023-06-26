@@ -8,7 +8,7 @@ public class PlayerComponent extends JLabel {
 
     private Player thePlayer;
     private JLayeredPane thePane;
-    private int seatIndex;
+    protected int seatIndex = -1;
     private int xPlace;
     private int yPlace;
     public static final String playerIconPath = "resources/table/Player.png";

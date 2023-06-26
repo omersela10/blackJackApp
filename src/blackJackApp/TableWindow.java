@@ -8,28 +8,50 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class TableWindow extends JFrame implements HandStateChangeListener {
+import blackJackApp.TableController.BetButtonListener;
+import blackJackApp.TableController.DoubleButtonListener;
+import blackJackApp.TableController.HitButtonListener;
+import blackJackApp.TableController.SeatButtonListener;
+import blackJackApp.TableController.SplitButtonListener;
+import blackJackApp.TableController.StandButtonListener;
+import blackJackApp.TableController.SurrenderButtonListener;
+
+public class TableWindow extends JFrame {
 	
 	// Data Members
-	private Table theTable;
+	
 	private Player thePlayingPlayer;
-	private boolean isSeat = false;
 	private static final String tableIcon = "resources/table/background.png";
 	private static final String dealerIcon =  "resources/table/Dealer.png";
-	private int dealerX = 500;
-	private int dealerY = 60;
+	
+	private static int dealerX = 500;
+	private static int dealerY = 60;
+	
 	// Pane
 	protected JLayeredPane theLayeredPane;
-	//PlayerComponent
+	
+	// PlayerComponent
 	private PlayerComponent thePlayerComponent;
-	// Buttons
+	
 	private JLabel playerInfoLabel;
+	private JLabel dealerInfoLabel;
 	private JLabel textJLabel;
-	private JLabel timerLabel;
+	protected JLabel timerLabel;
+	
+	// Buttons
+	private JButton betButton;
+	private JButton seatOrUpButton;
+    private JButton hitButton;
+    private JButton standButton;
+    private JButton splitButton;
+    private JButton surrenderButton;
+    private JButton doubleButton;
+    
+
 	// Constructor
-	public TableWindow(Table newTable, Player newPlayer)   {
+	public TableWindow(Player newPlayer)   {
 		
-		this.theTable = newTable;
+
 		this.thePlayingPlayer = newPlayer;
 		this.textJLabel = new JLabel();
 		
@@ -42,6 +64,9 @@ public class TableWindow extends JFrame implements HandStateChangeListener {
 		}
 
     }
+	public Player getPlayer() {
+		return this.thePlayingPlayer;
+	}
 	
 	public void initializeComponents() throws IOException {
 		
@@ -59,36 +84,15 @@ public class TableWindow extends JFrame implements HandStateChangeListener {
 	}
 	
 	private void initializeTimerLabel() {
+		
 	    timerLabel = new JLabel();
 	    timerLabel.setBounds(800, 10, 200, 30); // Set the desired position and size of the label
 	    timerLabel.setForeground(Color.WHITE); // Set the text color
 	    theLayeredPane.add(timerLabel, new Integer(1)); // Add the label to the layered pane
 	}
 
-	private String seatOrUp() {
-		
-		if(isSeat == true) {
-			isSeat = false;
-			return theTable.removePlayer(this.thePlayingPlayer);
-		}
-		else {
-			isSeat = true;
-			return theTable.addPlayer(this.thePlayingPlayer);
-		}
-		
-	}
 
-	public void updateTableDisplay(String message) {
-		
-		this.updateMessage(message);
-		this.updatePlayerComponent();
-		if(theTable.anyPlayerBet() == true) {
-			this.updateDealerComponent();
-		}
-		
-	    theLayeredPane.repaint();
-	}
-	
+
 	public void updatePlayerLabel() {
 		
 		this.theLayeredPane.remove(this.playerInfoLabel);
@@ -100,21 +104,21 @@ public class TableWindow extends JFrame implements HandStateChangeListener {
 		
 	}
 
-	public void updateDealerComponent() {
+	public void updateDealerComponent(Dealer theDealer) {
 
         int i = 0;
 
-        for (Card card : theTable.dealer.getDealerHand().getCards()) {
+        for (Card card : theDealer.getDealerHand().getCards()) {
         	
         	String iconPath = "resources/cards/" + card.getIconPath();
             ImageIcon cardIcon = new ImageIcon(iconPath);
             JLabel cardIconLabel = new JLabel(cardIcon);
-            cardIconLabel.setBounds(this.dealerX - 15*i + 25, this.dealerY + 60, cardIcon.getIconWidth(), cardIcon.getIconHeight());
+            cardIconLabel.setBounds(dealerX - 15*i + 25, dealerY + 60, cardIcon.getIconWidth(), cardIcon.getIconHeight());
             cardIconLabel.setForeground(Color.WHITE);
             this.theLayeredPane.add(cardIconLabel, new Integer(1));
             i += 1;
          
-            if(theTable.dealer.isDealerTurn() == false) {
+            if(theDealer.isDealerTurn() == false) {
             	break;
             }
         }
@@ -122,19 +126,7 @@ public class TableWindow extends JFrame implements HandStateChangeListener {
        
 	}
 
-	public void updatePlayerComponent() {
-		
-		if(isSeat == true) {
-			
-		    this.thePlayerComponent = new PlayerComponent(this.thePlayingPlayer, this.theLayeredPane, this.thePlayingPlayer.seatIndex);
-			this.theLayeredPane.add(this.thePlayerComponent, new Integer(1));	
-		}
-		else {
-			removePlayerComponent();
-
-		}
-		this.theLayeredPane.repaint();
-	}
+	
 
 	private void setPane() throws IOException  {
 		
@@ -164,7 +156,7 @@ public class TableWindow extends JFrame implements HandStateChangeListener {
         this.theLayeredPane.add(playerInfoLabel, new Integer(1));
 
         // Create a label for the dealer's name and cards
-        JLabel dealerInfoLabel = new JLabel(theTable.dealer.getDealerName());
+        this.dealerInfoLabel = new JLabel();
         dealerInfoLabel.setBounds(dealerX, dealerY, 200, 100);
         
         dealerInfoLabel.setForeground(Color.WHITE);
@@ -178,126 +170,47 @@ public class TableWindow extends JFrame implements HandStateChangeListener {
         this.theLayeredPane.add(dealerIconLabel, new Integer(1));
 
         // Create buttons for surrender, stand, hit, split, double
-        JButton surrenderButton = new JButton("Surrender");
-        surrenderButton.setBounds(300, 650, 100, 20);
-        this.theLayeredPane.add(surrenderButton, new Integer(1));
+        this.surrenderButton = new JButton("Surrender");
+        this.surrenderButton.setBounds(300, 650, 100, 20);
+        this.theLayeredPane.add(this.surrenderButton, new Integer(1));
         
-        surrenderButton.addActionListener(e -> {
-            // Code to handle the seat button click event
-            
-        	String message = "";
-      	    if(thePlayingPlayer.getHandState() == null) {
-             	  message = "Please bet first";
-            }
-            else {
-             	 message = thePlayingPlayer.surrender();
-             } 
-        	// Update the table display to reflect the changes
-            updateTableDisplay(message); 
-        });
+   
         
-        JButton standButton = new JButton("Stand");
-        standButton.setBounds(410, 650, 100, 20);
+        this.standButton = new JButton("Stand");
+        this.standButton.setBounds(410, 650, 100, 20);
         this.theLayeredPane.add(standButton, new Integer(1));
         
-        standButton.addActionListener(e -> {
-            // Code to handle the seat button click event
-            
-        	String message = "";
-  	        if(thePlayingPlayer.getHandState() == null) {
-         	  message = "Please bet first";
-            }
-            else {
-         	  message = thePlayingPlayer.stand();
-            }
-        	// Update the table display to reflect the changes
-            updateTableDisplay(message); 
-        });
+   
         
-        JButton hitButton = new JButton("Hit");
-        hitButton.setBounds(520, 650, 100, 20);
-        this.theLayeredPane.add(hitButton, new Integer(1));
-        hitButton.addActionListener(e -> {
-            // Code to handle the seat button click event
-            
-        	String message = "";
-        	
-            if(thePlayingPlayer.getHandState() == null) {
-            	message = "Please bet first";
-            }
-            else {
-            	message = thePlayingPlayer.hit();
-            } 
-        	// Update the table display to reflect the changes
-            updateTableDisplay(message); 
-        });
+        this.hitButton = new JButton("Hit");
+        this.hitButton.setBounds(520, 650, 100, 20);
+        this.theLayeredPane.add(this.hitButton, new Integer(1));
+        
+ 
 
-        JButton splitButton = new JButton("Split");
-        splitButton.setBounds(630, 650, 100, 20);
-        this.theLayeredPane.add(splitButton, new Integer(1));
+        this.splitButton = new JButton("Split");
+        this.splitButton.setBounds(630, 650, 100, 20);
+        this.theLayeredPane.add(this.splitButton, new Integer(1));
         
-        splitButton.addActionListener(e -> {
-            // Code to handle the seat button click event
-    	    String message = "";
-    	    if(thePlayingPlayer.getHandState() == null) {
-           	  message = "Please bet first";
-            }
-            else {
-           	  message = thePlayingPlayer.split();
-            }
-        	// Update the table display to reflect the changes
-            updateTableDisplay(message); 
-        });
-        
-        JButton doubleButton = new JButton("Double");
-        doubleButton.setBounds(740, 650, 100, 20);
-        this.theLayeredPane.add(doubleButton, new Integer(1));
+        this.doubleButton = new JButton("Double");
+        this.doubleButton.setBounds(740, 650, 100, 20);
+        this.theLayeredPane.add(this.doubleButton, new Integer(1));
     
-        doubleButton.addActionListener(e -> {
-            // Code to handle the seat button click event
-        	String message = "";
-        	
-            if(thePlayingPlayer.getHandState() == null) {
-            	message = "Please bet first";
-            }
-            else {
-            	message = thePlayingPlayer.doubleDown();
-            }
-        	
-        	// Update the table display to reflect the changes
-            updateTableDisplay(message); 
-        });
+   
 
-        JButton seatUpButton = new JButton("Seat or Up");
-        seatUpButton.setBounds(1000, 60, 100, 20);
-        this.theLayeredPane.add(seatUpButton, new Integer(1));
+        this.seatOrUpButton = new JButton("Seat or Up");
+        this.seatOrUpButton.setBounds(1000, 60, 100, 20);
+        this.theLayeredPane.add(this.seatOrUpButton, new Integer(1));
         
-        seatUpButton.addActionListener(e -> {
-            // Code to handle the seat button click event
-            
-        	String message = seatOrUp(); 
-        	// Update the table display to reflect the changes
-            updateTableDisplay(message); 
-        });
+  
         
-        JButton betButton = new JButton("Bet");
-        betButton.setBounds(940, 650, 100, 20);
-        this.theLayeredPane.add(betButton, new Integer(1));
+        this.betButton = new JButton("Bet");
+        this.betButton.setBounds(940, 650, 100, 20);
+        this.theLayeredPane.add(this.betButton, new Integer(1));
         
-        betButton.addActionListener(e -> {
-            // Code to handle the seat button click event
-        	if(isSeat == false) {
-        		updateMessage("Please seat before bet");
-        		return;
-        	}
-            theTable.startBettingPhase(this, this.timerLabel, this.thePlayingPlayer);
-           
-            
-           
-       
-        });
-        
+
 	}
+	// Update message in the table
 	public void updateMessage(String message) {
 		
 		this.theLayeredPane.remove(this.textJLabel);
@@ -310,51 +223,61 @@ public class TableWindow extends JFrame implements HandStateChangeListener {
 	}
 
 	// Remove the player from the GUI
-	public void removePlayerComponent() {
+	public  void removePlayerComponent() {
 		this.theLayeredPane.remove(this.thePlayerComponent.getPlayerPanel());
 		this.theLayeredPane.repaint();
 	}
 
-	public void clearTable() {
-		try {
-			this.theLayeredPane.repaint();
-			this.setPane();
-			this.theLayeredPane.repaint();
-		}
-		catch(Exception e) {
+
+	public void addSeatButtonListener(SeatButtonListener seatButtonListener) {
+		seatOrUpButton.addActionListener(seatButtonListener);
+		
+	}
+	public void addBetButtonListener(BetButtonListener betButtonListener) {
+		betButton.addActionListener(betButtonListener);
+		
+	}
+	public void addHitButtonListener(HitButtonListener hitButtonListener) {
+		hitButton.addActionListener(hitButtonListener);
+		
+	}
+	public void addStandButtonListener(StandButtonListener standButtonListener) {
+		standButton.addActionListener(standButtonListener);
+		
+	}
+	public void addSplitButtonListener(SplitButtonListener splitButtonListener) {
+		splitButton.addActionListener(splitButtonListener);
+		
+	}
+	public void addDoubleButtonListener(DoubleButtonListener doubleButtonListener) {
+		doubleButton.addActionListener(doubleButtonListener);
+		
+	}
+	public void addSurrenderButtonListener(SurrenderButtonListener surrenderButtonListener) {
+		surrenderButton.addActionListener(surrenderButtonListener);
+		
+	}
+	public void updateTableComponent(Table table) {
+		this.dealerInfoLabel.setText(table.dealer.getDealerName());
+		this.updatePlayerComponenet(this.thePlayingPlayer);
+		
+		
+	}
+	
+	public void updatePlayerComponenet(Player anyPlayer) {
+		
+		if(anyPlayer.seatIndex != -1) {
 			
+		    this.thePlayerComponent = new PlayerComponent(this.thePlayingPlayer, this.theLayeredPane, this.thePlayingPlayer.seatIndex);
+			this.theLayeredPane.add(this.thePlayerComponent, new Integer(1));	
 		}
-	}
-	public void startGame()   {
-		
-		this.updateTableDisplay("Start Game");
-		this.updateDealerComponent();
-		this.updatePlayerLabel();
-		this.theTable.afterBetting();
-		boolean anyAlivePlayer = this.theTable.playersTurn(this);
-		if(anyAlivePlayer == true) {
-			this.theTable.turnOfDealer(this);
-		}
-		
-		this.theTable.updateMoneyOfPlayers(this);
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		this.theTable.finishRound(this);
-	}
+		else {
+			removePlayerComponent();
 
-	@Override
-	public void onHandStateChanged() {
-		this.updatePlayerComponent();
-		
+		}
+		this.theLayeredPane.repaint();
 	}
+	
 
-	@Override
-	public void onDealerPlay() {
-		this.updateDealerComponent();
-		
-	}
+
 }

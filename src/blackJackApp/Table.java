@@ -11,16 +11,22 @@ import javax.swing.JOptionPane;
 public abstract class Table{
 	
 	// Data Members:
-	private Timer betTimer;
+	private volatile Timer betTimer;
 	private static final int TIMEOUT = 3000;
 	private volatile boolean anyPlayerBet = false;
+	private volatile boolean anyPlayerSeat = false;
 	private static volatile boolean inRound = false;
 	private static volatile boolean timeToBet = false; 
 	
 	protected final int MAXIMUMPLAYERS = 4;
 	protected List<Player> players;
 	protected Dealer dealer;
+	protected volatile Player currentTurn = null;
 	
+	public TableController tableController = null;
+	
+	
+
 	public abstract int getMinimumBet();
 		
 	// Constructor:
@@ -56,19 +62,43 @@ public abstract class Table{
 	public boolean anyPlayerBet() {
 		return this.anyPlayerBet;
 	}
+	public TableController getTableController() {
+		return tableController;
+	}
+
+	public void setTableController(TableController tableController) {
+		this.tableController = tableController;
+	}
 	
 	// Methods:
 	
 	// Seat Player to Table
 	public String addPlayer(Player toAddPlayer) {
 		
-		return toAddPlayer.seat(this.players);
+		String returnMessage =  toAddPlayer.seat(this.players);
+		if(returnMessage.contains("Seated") == true) {
+			this.anyPlayerSeat = true;
+		}
+		return returnMessage;
 	}
 		
 	// Leave player from the Table
 	public String removePlayer(Player toRemovePlayer) {
 	
-		return toRemovePlayer.up(players);
+		String returnMessage = toRemovePlayer.up(players);
+		int count = 0;
+		
+		for(Player anyPlayer : this.players) {
+			if(anyPlayer == null) {
+				count += 1;
+			}
+		}
+		
+		if(count == 0 ) {
+			this.anyPlayerSeat = false;
+		}
+		
+		return returnMessage;
 		
 	}
 		
@@ -94,14 +124,19 @@ public abstract class Table{
 		
 	}
 	
-	public void playRound(Player anyPlayer , TableWindow tableWindow) {
-		anyPlayer.registerHandStateChangeListener(tableWindow);
+	public void playRound(Player anyPlayer) {
+		
 		boolean isWaitingForDealer = true;
 		
 		do {
 			// If player in endRound State
 			isWaitingForDealer = anyPlayer.getHandState() instanceof EndHandRoundState;
-		
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		while(isWaitingForDealer == false);
 
@@ -109,7 +144,7 @@ public abstract class Table{
 	
 	// Game Logic
 
-	public boolean playersTurn(TableWindow tableWindow) {
+	public boolean playersTurn() {
 		
 		// If there are no players who bets
 		boolean anyAlive = false;
@@ -120,25 +155,41 @@ public abstract class Table{
 	
 		for(Player anyPlayer: this.getPlayers()) {
 			if(playingPlayer(anyPlayer) == true) {
-				 tableWindow.updateMessage("Turn of:" + anyPlayer.getPlayerName());
-				 playRound(anyPlayer, tableWindow);
+				 this.setCurrentTurn(anyPlayer);
+				 
+				 tableController.notifyMessageViaController("Turn of:" + anyPlayer.getPlayerName());
+				 
+				 playRound(anyPlayer);
+				 
 				 for(Hand hand: anyPlayer.getHands()) {
 					 anyAlive = hand.getSumOfPlayingCards() <= 21;
 				 }
 				 
 			}
 		}
+		
+		this.setCurrentTurn(null);
 		return anyAlive;
+	}
+	
+	public synchronized Player getCurrentTurn() {
+		return this.currentTurn;
+	}
+	
+	public synchronized void setCurrentTurn(Player currentTurnPlayer) {
+		this.currentTurn = currentTurnPlayer;
 	}
 	
 	public synchronized boolean inRound() {
 		return this.inRound;
 	}
+	
 	public synchronized boolean getTimeToBet() {
 		return this.timeToBet;
 	}
+	
 	// Start Betting Phase.
-	 public void startBettingPhase(TableWindow tableWindow, JLabel timerLabel, Player anyPlayer) {
+	 public void startBettingPhase(Player anyPlayer) {
 		 
 		 if(this.inRound() == true) {
 			 return;
@@ -154,6 +205,7 @@ public abstract class Table{
 		 
 		 
 		 betTimer = new Timer();
+		 
 		 betTimer.schedule(new TimerTask() {
 		        private int remainingTime = TIMEOUT / 1000; // Convert the timeout value to seconds
 
@@ -161,14 +213,17 @@ public abstract class Table{
 		        public void run() {
 		        	
 		            // Update the timer label with the remaining time
-		            timerLabel.setText("Time remaining: " + remainingTime + " seconds");
+		        	tableController.notifyToTimerLabel("Time remaining: " + remainingTime + " seconds");
+		        
 		            
 		            if (remainingTime == -1) {
 		            	stopBettingPhase();
-		            	timerLabel.setText("No more bet");
+		            	tableController.notifyToTimerLabel("No more bet");
+		            
+		            	
 		            	setInRound(true);
 		            	setTimeToBet(false);
-		            	tableWindow.startGame();
+		            	tableController.startGame();
 		
 		            }
 		            remainingTime--;
@@ -176,12 +231,16 @@ public abstract class Table{
 
 		           
 		        }
+
+			
 		    }, TIMEOUT / 1000, 1000);
 		 	betPlayer(anyPlayer);// Set the delay and period of the timer task to 1 second
 	}
 	 
-	// After round is over, no one is playing until next timeout.
-   public void finishRound(TableWindow tableWindow) {
+	
+
+// After round is over, no one is playing until next timeout.
+   public void finishRound() {
 	   
 		for(Player player: this.getPlayers()) {
 			if(player != null) {
@@ -189,7 +248,6 @@ public abstract class Table{
 			}
 		}
 		this.setInRound(false);
-		tableWindow.clearTable();
 		
 	}
 
@@ -201,7 +259,7 @@ public abstract class Table{
     	
 	   for(Player anyPlayer: this.getPlayers()) {
 		   
-		   if(anyPlayer.isPlay() == true) {
+		   if(playingPlayer(anyPlayer) == true) {
 			   anyPlayerBet = true;
 			   return;
 		   }
@@ -209,47 +267,33 @@ public abstract class Table{
     }
   
     
-    public void turnOfDealer(TableWindow tableWindow) {
-    	tableWindow.updateMessage("Turn of Dealer");
+    public void turnOfDealer() {
+
     	this.dealer.setDealerTurn(true);
-    	this.dealer.registerDealerStateChangeListener(tableWindow);
-    	this.dealer.notifyDealerStateChangeListener();
-    	
-    	try {
-			 
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			
-			e.printStackTrace();
-		}
+    	notifyController();
     	while(this.dealer.getSumOfDealerCards() < 17) {
-    		dealer.getDealerHand().getMoreCard();
-    		this.dealer.notifyDealerStateChangeListener();
-    		try {
-    			 
-    			Thread.sleep(1000);
-    		} catch (InterruptedException e) {
-    			
-    			e.printStackTrace();
-    		}
     		
+    		dealer.getDealerHand().getMoreCard();
+    		notifyController();
+
     	}
-    	this.dealer.notifyDealerStateChangeListener();
+
     	this.dealer.setDealerTurn(false);
-    	
-    	
-    	
+    	notifyController();
+
     }
 
     // Update money when dealer finish
-	public void updateMoneyOfPlayers(TableWindow tableWindow) {
+	public void updateMoneyOfPlayers() {
 		
 		int dealerSum = this.dealer.getSumOfDealerCards();
 		boolean dealerFail = dealerSum > 21;
 		
 		for(Player player : this.players) {
 			if(playingPlayer(player) == true) {
-				this.checkAndUpdateResultForPlayer(tableWindow, player, dealerSum, dealerFail);
+				String message =this.checkAndUpdateResultForPlayer(player, dealerSum, dealerFail);
+				tableController.notifyToSpecificWindow("You earn : " + message + "$", player);
+				tableController.updatePlayerLabel(player);
 			}
 			
 		}
@@ -259,8 +303,10 @@ public abstract class Table{
 
 
 	
+	
+
 	// Help method for update money
-	private void checkAndUpdateResultForPlayer(TableWindow tableWindow, Player player, int dealerSum, boolean dealerFail) {
+	private String checkAndUpdateResultForPlayer(Player player, int dealerSum, boolean dealerFail) {
 
 		int totalWinMoney = 0;
 		for(Hand hand: player.getHands()) {
@@ -271,10 +317,8 @@ public abstract class Table{
 			totalWinMoney += winPrize;
 			
 		}
-		// Update money for the given player
-	    tableWindow.updatePlayerLabel();
-	    tableWindow.updateMessage("You earn: " + totalWinMoney +"$");
 		
+		return Integer.toString(totalWinMoney);
 	
 	}
 	
@@ -320,27 +364,50 @@ public abstract class Table{
 		}
 	}
 	
-	// Round Routine
-	public void startRound(TableWindow tableWindow) {
-		
-		// Players are playing
-		this.playersTurn(tableWindow);
-		// Dealer Turn
-		this.turnOfDealer(tableWindow);
-		
-		// Update money when dealer show cards
-		this.updateMoneyOfPlayers(tableWindow);
-		// TODO: Update DB with the new Money
-		// TODO: Update win
-		// finish round, update no one playing
-		this.finishRound(tableWindow);
-	}
-	
 	public synchronized void setInRound(boolean value) {
 		this.inRound = value;
 	}
 	public synchronized void setTimeToBet(boolean value) {
 		this.timeToBet = value;
 	}
+
+	public String hit(Player currentPlayer) {
+		return currentPlayer.hit();
+		
+	}
+
+	public String stand(Player currentPlayer) {
+		return currentPlayer.stand();
+		
+	}
+
+	public String split(Player currentPlayer) {
+		return currentPlayer.split();
+		
+	}
+
+	public String doubleDown(Player currentPlayer) {
+		return currentPlayer.doubleDown();
+		
+	}
+	public String surrender(Player currentPlayer) {
+		return currentPlayer.surrender();
+		
+	}
+
+	public Player getCurrentPlayer() {
+		return this.getCurrentTurn();
+	}
+
+	public void placeBet(Player currentPlayer) {
+		
+		this.startBettingPhase(currentPlayer);
+	}
+	 // Method to notify the controller of a game state change
+    private void notifyController() {
+       tableController.updateDealerComponent();
+    }
+    
+    
 
 }

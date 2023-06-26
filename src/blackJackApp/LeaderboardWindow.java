@@ -55,7 +55,7 @@ public class LeaderboardWindow extends JFrame {
 
     		printStr += ("Name: " + allUsers.get(i).get("Name"));
     		printStr += (", Number of wins: " + allUsers.get(i).get("Number of wins"));
-    		printStr += (", Total profit: "+allUsers.get(i).get("Total profit"));
+    		printStr += (", Total profit: "+ allUsers.get(i).get("Total profit"));
     		printStr += "\n";
     	}
     	
