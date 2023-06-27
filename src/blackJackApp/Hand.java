@@ -144,8 +144,9 @@ public class Hand {
 		cardsHand2.add(firstCardHand2);
 		cardsHand2.add(secondCardHand2);
 		
-		// Set the new cards of first hand
+		// Set the new cards of first hand and second hand
 		this.setCards(cardsHand1);
+		secondHand.setCards(cardsHand2);
 		
 		List<Hand> newHands = new ArrayList<Hand>();
 		newHands.add(this);

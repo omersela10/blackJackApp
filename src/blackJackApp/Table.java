@@ -120,7 +120,7 @@ public abstract class Table{
 		int betMoney = Integer.parseInt(inputBet);
 		
 		if(betMoney > anyPlayer.getTotalMoney() || betMoney < this.getMinimumBet()) {
-			 JOptionPane.showMessageDialog(null, "Enter amount between " + this.getMinimumBet() + anyPlayer.getTotalMoney());
+			 JOptionPane.showMessageDialog(null, "Enter amount between " + this.getMinimumBet() + " - " + anyPlayer.getTotalMoney());
 			 return false;
 		}
 		
@@ -265,10 +265,13 @@ public abstract class Table{
 
     public void afterBetting() {
     	
+       dealer.setDealerHand(new Hand(0));
+       
 	   for(Player anyPlayer: this.getPlayers()) {
 		   
 		   if(playingPlayer(anyPlayer) == true) {
 			   anyPlayerBet = true;
+			   this.tableController.updatePlayerLabel(anyPlayer);
 			   return;
 		   }
 	   }

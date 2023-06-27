@@ -48,7 +48,7 @@ public class Dealer {
 	}
 	
 	// Setters:
-	public void SetDealerHand(Hand newHand) {
+	public void setDealerHand(Hand newHand) {
 		this.dealerHand = newHand;
 	}
 	public synchronized void setDealerTurn(boolean turn) {

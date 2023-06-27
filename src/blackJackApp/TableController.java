@@ -209,8 +209,7 @@ public class TableController {
             	message = table.removePlayer(currentPlayer);
             }
             
-            // update seat index
-        	this.theWindow.getPlayerComponent().setSeat(theWindow.getPlayer().seatIndex);
+            
             theWindow.updateMessage(message);
             
             // Notify all players of the updated game state
@@ -230,9 +229,15 @@ public class TableController {
 	
 		
 		this.table.afterBetting();
-		System.out.println("AFTer betting");
-		this.updateDealerComponent();
-		System.out.println("AFTer update desler");
+		
+		if(this.table.anyPlayerBet() == true){
+			this.createDealerComponent();
+			System.out.println("AFTer betting");
+			this.updateDealerComponent();
+			System.out.println("AFTer update desler");
+		}
+		
+		
 	 
         Thread playerThread = new Thread(() -> {
         	table.playersTurn();
@@ -249,6 +254,7 @@ public class TableController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        
         if(table.anyPlayerAlive() == true) {
         	table.turnOfDealer();
         }
@@ -258,9 +264,10 @@ public class TableController {
 		table.updateMoneyOfPlayers();
 	
 		table.finishRound();
+		
 		try {
-	        	// Sleep for 2 seconds
-				Thread.sleep(2000);
+	        	// Sleep for 4 seconds
+				Thread.sleep(4000);
 			} 
 		  catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -269,6 +276,14 @@ public class TableController {
 		this.cleanAllTables();
 	}
 	
+	private void createDealerComponent() {
+		
+		for(TableWindow tableWindow : this.allWindows) {
+			tableWindow.createNewDealerComponent();
+		}
+		
+	}
+
 	private void cleanAllTables() {
 		
 	
@@ -277,7 +292,7 @@ public class TableController {
 			windowTable.clearPlayerComponent();
 		}
 		  try {
-	        	// Sleep for 2 seconds
+	        	// Sleep for 1 second
 				Thread.sleep(1000);
 			} 
 		  catch (InterruptedException e) {
@@ -288,7 +303,16 @@ public class TableController {
 		for(TableWindow windowTable : this.allWindows) {
 			windowTable.removeDealerComponent();
 		}
+		try {
+	        	// Sleep for 1 second
+				Thread.sleep(1000);
+			} 
+		  catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
 		
+		this.notifyToTimerLabel("Waiting for bet");
 	}
 
 	public void updateDealerComponent() {

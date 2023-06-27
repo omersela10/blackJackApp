@@ -25,6 +25,7 @@ public class FirstChoiceState implements HandState{
 	private void updateTotalMoneyAfterSplitOrDouble() {
 		// Update total money
 		this.thePlayer.setTotalMoney(this.thePlayer.getTotalMoney() - this.currentHand.getBetMoney());
+		
 	}
 	
 	@Override
@@ -32,7 +33,7 @@ public class FirstChoiceState implements HandState{
 		
 		if(this.currentHand.canSplit() == false || enoughMoneyForSplitOrDouble() == false) {
 			
-			return "Can't split because either or no pair or enough money";
+			return "Can't split";
 		}
 		
 		// Update total money
@@ -93,7 +94,7 @@ public class FirstChoiceState implements HandState{
 		this.currentHand.getMoreCard();
 		
 		// If done
-		if(this.currentHand.getSumOfPlayingCards() > 21) {
+		if(this.currentHand.getSumOfPlayingCards() >= 21) {
 			
 				// Update State
 				this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
@@ -119,7 +120,7 @@ public class FirstChoiceState implements HandState{
 		
 		// Update total money
 		this.updateTotalMoneyAfterSplitOrDouble();
-		
+		this.currentHand.setBetMoney(2 * this.currentHand.getBetMoney());
 		// Get More Card
 		this.currentHand.getMoreCard();
 		

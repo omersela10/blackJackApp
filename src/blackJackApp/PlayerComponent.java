@@ -15,6 +15,7 @@ public class PlayerComponent extends JLabel {
     private int yPlace;
     public static final String playerIconPath = "resources/table/Player.png";
     private JPanel playerPanel;
+    private JPanel handsPanel;
 
     public PlayerComponent(Player player, JLayeredPane anyPane, int anySeat) {
         this.thePlayer = player;
@@ -35,11 +36,19 @@ public class PlayerComponent extends JLabel {
     }
 
     private void createPlayerPanel() {
+    	
         playerPanel = new JPanel();
         playerPanel.setLayout(null);
         playerPanel.setOpaque(false);
         playerPanel.setBounds(0, 0, 1200, 800);
         thePane.add(playerPanel, new Integer(1));
+        
+        handsPanel = new JPanel();
+        handsPanel.setLayout(null);
+        handsPanel.setOpaque(false);
+        handsPanel.setBounds(0, 0, 1200, 800);
+        thePane.add(handsPanel, new Integer(1));
+        
     }
 
     // Update components
@@ -49,15 +58,22 @@ public class PlayerComponent extends JLabel {
         updateNameComponent();
         updatePlayerIconComponent();
 
-        if (this.thePlayer.getHands() != null && !this.thePlayer.getHands().isEmpty()) {
+        if (this.thePlayer.getHands() != null) {
             updateHandsComponent();
         }
+        else {
+        	
+        	clearHandsComponent();
+        }
 
-        playerPanel.revalidate(); // Revalidate the panel to reflect the changes
-        playerPanel.repaint(); // Repaint the panel
+        thePane.repaint(); // Repaint the panel
     }
 
-    // This method paints the icon of the player on the screen
+    private void clearHandsComponent() {
+    	this.thePane.remove(handsPanel);
+	}
+
+	// This method paints the icon of the player on the screen
     private void updatePlayerIconComponent() {
         ImageIcon playerIcon = new ImageIcon(playerIconPath);
         JLabel playerIconLabel = new JLabel(playerIcon);
@@ -67,6 +83,7 @@ public class PlayerComponent extends JLabel {
 
     // This method paints the name of the player on the screen
     private void updateNameComponent() {
+    	
         JLabel playerName = new JLabel(this.thePlayer.getPlayerName());
         playerName.setBounds(xPlace, yPlace + 50, 100, 20);
         playerName.setForeground(Color.WHITE);
@@ -75,29 +92,43 @@ public class PlayerComponent extends JLabel {
 
     // This method paints the hands of the player on the screen
     private void updateHandsComponent() {
+    	
+    	thePane.remove(handsPanel);
+        handsPanel = new JPanel();
+        handsPanel.setLayout(null);
+        handsPanel.setOpaque(false);
+        handsPanel.setBounds(0, 0, 1200, 800);
+        
+        thePane.add(handsPanel, new Integer(1));
+ 
+        
         int i = 0;
         for (Hand hand : this.thePlayer.getHands()) {
+        	
+        	
             JLabel handMoneyLabel = new JLabel(Integer.toString(hand.getBetMoney()) + "$");
             handMoneyLabel.setBounds(this.xPlace + i * 50, this.yPlace - 140, 80, 10);
             handMoneyLabel.setForeground(Color.WHITE);
-            playerPanel.add(handMoneyLabel);
+            handsPanel.add(handMoneyLabel);
             updateHandComponent(i, hand);
             i += 1;
         }
+        thePane.repaint();
     }
 
     // This method gets a Hand and paints it on the screen
     private void updateHandComponent(int numOfHand, Hand hand) {
         int placeOfHand = 150 * numOfHand;
-        String sumOfCards = Integer.toString(hand.getSumOfCards()) + "\\" + Integer.toString(hand.getSumOfCardsWithAce());
+        
         int i = 0;
         for (Card card : hand.getCards()) {
+        	System.out.println("card: " + card.getValue() );
             String iconPath = "resources/cards/" + card.getIconPath();
             ImageIcon cardIcon = new ImageIcon(iconPath);
             JLabel cardIconLabel = new JLabel(cardIcon);
             cardIconLabel.setBounds(placeOfHand + this.xPlace - 15 * i, this.yPlace - 100, cardIcon.getIconWidth(), cardIcon.getIconHeight());
             cardIconLabel.setForeground(Color.WHITE);
-            this.playerPanel.add(cardIconLabel, new Integer(1));
+            this.handsPanel.add(cardIconLabel, new Integer(1));
             i += 1;
         }
     }

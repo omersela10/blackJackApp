@@ -12,7 +12,6 @@ public class DealerComponent extends JLabel {
 	private JLayeredPane thePane;    
 	private JPanel dealerPanel;
 	
-	
 	private static int dealerX = 500;
 	private static int dealerY = 60;
 	
@@ -34,7 +33,6 @@ public class DealerComponent extends JLabel {
     
     public void updateComponent(Dealer dealer) {
 
-		
         int i = 0;
 
         for (Card card : dealer.getDealerHand().getCards()) {

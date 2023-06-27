@@ -53,7 +53,7 @@ public class TableWindow extends JFrame {
 		
 		this.thePlayingPlayer = newPlayer;
 		this.textJLabel = new JLabel();
-		
+	
 		
 		try {
 		     initializeComponents();
@@ -63,7 +63,7 @@ public class TableWindow extends JFrame {
 			
 		}
 		this.theDealerComponent = new DealerComponent(this.theLayeredPane);
-		this.thePlayerComponent = new PlayerComponent(this.thePlayingPlayer, this.theLayeredPane, this.thePlayingPlayer.seatIndex);
+
 
     }
 	public Player getPlayer() {
@@ -87,7 +87,7 @@ public class TableWindow extends JFrame {
 	
 	private void initializeTimerLabel() {
 		
-	    timerLabel = new JLabel();
+	    timerLabel = new JLabel("Waiting for bet");
 	    timerLabel.setBounds(800, 10, 200, 30); // Set the desired position and size of the label
 	    timerLabel.setForeground(Color.WHITE); // Set the text color
 	    theLayeredPane.add(timerLabel, new Integer(1)); // Add the label to the layered pane
@@ -106,6 +106,9 @@ public class TableWindow extends JFrame {
 		
 	}
 
+	public void createNewDealerComponent() {
+		this.theDealerComponent = new DealerComponent(this.theLayeredPane);
+	}
 	public void updateDealerComponent(Dealer anyDealer) {
 		
        this.theDealerComponent.updateComponent(anyDealer);
@@ -211,6 +214,7 @@ public class TableWindow extends JFrame {
 	public  void removePlayerComponent() {
 		this.theLayeredPane.remove(this.thePlayerComponent.getPlayerPanel());
 		this.theLayeredPane.repaint();
+		this.thePlayerComponent = null;
 	}
 
 
@@ -252,12 +256,18 @@ public class TableWindow extends JFrame {
 		
 		if(anyPlayer.seatIndex != -1) {
 			
-		    this.thePlayerComponent = new PlayerComponent(this.thePlayingPlayer, this.theLayeredPane, this.thePlayingPlayer.seatIndex);
-			this.theLayeredPane.add(this.thePlayerComponent, new Integer(1));	
+			if( this.thePlayerComponent == null) {
+			    this.thePlayerComponent = new PlayerComponent(this.thePlayingPlayer, this.theLayeredPane, this.thePlayingPlayer.seatIndex);
+				this.theLayeredPane.add(this.thePlayerComponent, new Integer(1));
+			}
+			else {
+				this.thePlayerComponent.updateComponents();
+			}
 		}
 		else {
 			removePlayerComponent();
 		}
+		this.theLayeredPane.repaint();
 
 	}
 	
@@ -265,6 +275,7 @@ public class TableWindow extends JFrame {
 		this.theDealerComponent.clearDealerComponent();
 		this.theLayeredPane.repaint();
 	}
+	
 	public PlayerComponent getPlayerComponent() {
 		return this.thePlayerComponent;
 	}
