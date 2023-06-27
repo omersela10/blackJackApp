@@ -19,20 +19,20 @@ import blackJackApp.TableController.SurrenderButtonListener;
 public class TableWindow extends JFrame {
 	
 	// Data Members
-	
 	private Player thePlayingPlayer;
 	private static final String tableIcon = "resources/table/background.png";
 	private static final String dealerIcon =  "resources/table/Dealer.png";
-	
-	private static int dealerX = 500;
-	private static int dealerY = 60;
-	
+
 	// Pane
 	protected JLayeredPane theLayeredPane;
 	
-	// PlayerComponent
+	// Player Component
 	private PlayerComponent thePlayerComponent;
-	
+	// Dealer Component
+	private DealerComponent theDealerComponent;
+	private static int dealerX = 500;
+	private static int dealerY = 60;
+	// Labels
 	private JLabel playerInfoLabel;
 	private JLabel dealerInfoLabel;
 	private JLabel textJLabel;
@@ -51,9 +51,9 @@ public class TableWindow extends JFrame {
 	// Constructor
 	public TableWindow(Player newPlayer)   {
 		
-
 		this.thePlayingPlayer = newPlayer;
 		this.textJLabel = new JLabel();
+		
 		
 		try {
 		     initializeComponents();
@@ -62,6 +62,8 @@ public class TableWindow extends JFrame {
 		catch(Exception e) {
 			
 		}
+		this.theDealerComponent = new DealerComponent(this.theLayeredPane);
+		this.thePlayerComponent = new PlayerComponent(this.thePlayingPlayer, this.theLayeredPane, this.thePlayingPlayer.seatIndex);
 
     }
 	public Player getPlayer() {
@@ -104,26 +106,9 @@ public class TableWindow extends JFrame {
 		
 	}
 
-	public void updateDealerComponent(Dealer theDealer) {
-
-        int i = 0;
-
-        for (Card card : theDealer.getDealerHand().getCards()) {
-        	
-        	String iconPath = "resources/cards/" + card.getIconPath();
-            ImageIcon cardIcon = new ImageIcon(iconPath);
-            JLabel cardIconLabel = new JLabel(cardIcon);
-            cardIconLabel.setBounds(dealerX - 15*i + 25, dealerY + 60, cardIcon.getIconWidth(), cardIcon.getIconHeight());
-            cardIconLabel.setForeground(Color.WHITE);
-            this.theLayeredPane.add(cardIconLabel, new Integer(1));
-            i += 1;
-         
-            if(theDealer.isDealerTurn() == false) {
-            	break;
-            }
-        }
-        this.theLayeredPane.repaint();
-       
+	public void updateDealerComponent(Dealer anyDealer) {
+		
+       this.theDealerComponent.updateComponent(anyDealer);
 	}
 
 	
@@ -258,10 +243,9 @@ public class TableWindow extends JFrame {
 		
 	}
 	public void updateTableComponent(Table table) {
+		
 		this.dealerInfoLabel.setText(table.dealer.getDealerName());
 		this.updatePlayerComponenet(this.thePlayingPlayer);
-		
-		
 	}
 	
 	public void updatePlayerComponenet(Player anyPlayer) {
@@ -273,11 +257,22 @@ public class TableWindow extends JFrame {
 		}
 		else {
 			removePlayerComponent();
-
 		}
+
+	}
+	
+	public void removeDealerComponent() {
+		this.theDealerComponent.clearDealerComponent();
+		this.theLayeredPane.repaint();
+	}
+	public PlayerComponent getPlayerComponent() {
+		return this.thePlayerComponent;
+	}
+	
+	public void clearPlayerComponent() {
+		this.thePlayerComponent.updateComponents();
 		this.theLayeredPane.repaint();
 	}
 	
-
 
 }

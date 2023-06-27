@@ -1,8 +1,10 @@
 package blackJackApp;
+import java.awt.Color;
 
-import java.awt.*;
-
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JLayeredPane;
 
 public class PlayerComponent extends JLabel {
 
@@ -14,90 +16,83 @@ public class PlayerComponent extends JLabel {
     public static final String playerIconPath = "resources/table/Player.png";
     private JPanel playerPanel;
 
-
     public PlayerComponent(Player player, JLayeredPane anyPane, int anySeat) {
-    	
         this.thePlayer = player;
         this.thePane = anyPane;
         this.seatIndex = anySeat;
-  
         this.updateXYPlace();
         this.createPlayerPanel();
         this.updateComponents();
     }
 
+    public void setSeat(int seat) {
+        this.seatIndex = seat;
+    }
+
     private void updateXYPlace() {
-    	
-    	this.xPlace = this.seatIndex * 300 + 100;
+        this.xPlace = this.seatIndex * 300 + 100;
         this.yPlace = 400;
-        
     }
 
     private void createPlayerPanel() {
-    	
         playerPanel = new JPanel();
         playerPanel.setLayout(null);
         playerPanel.setOpaque(false);
         playerPanel.setBounds(0, 0, 1200, 800);
         thePane.add(playerPanel, new Integer(1));
     }
+
     // Update components
-    private void updateComponents() {
-    	
+    public void updateComponents() {
+        playerPanel.removeAll(); // Clear the player panel before updating
+
         updateNameComponent();
         updatePlayerIconComponent();
-        
-        if (this.thePlayer.getHands() != null) {
+
+        if (this.thePlayer.getHands() != null && !this.thePlayer.getHands().isEmpty()) {
             updateHandsComponent();
         }
+
+        playerPanel.revalidate(); // Revalidate the panel to reflect the changes
+        playerPanel.repaint(); // Repaint the panel
     }
-    
-    // This method paint the icon of the player on the screen
+
+    // This method paints the icon of the player on the screen
     private void updatePlayerIconComponent() {
-    	
         ImageIcon playerIcon = new ImageIcon(playerIconPath);
         JLabel playerIconLabel = new JLabel(playerIcon);
         playerIconLabel.setBounds(this.xPlace, this.yPlace, playerIcon.getIconWidth(), playerIcon.getIconHeight());
         playerPanel.add(playerIconLabel);
     }
-    
-    // This method paint the name of the player on the screen
+
+    // This method paints the name of the player on the screen
     private void updateNameComponent() {
-    	
         JLabel playerName = new JLabel(this.thePlayer.getPlayerName());
         playerName.setBounds(xPlace, yPlace + 50, 100, 20);
         playerName.setForeground(Color.WHITE);
         playerPanel.add(playerName);
     }
 
-    // This method paint the hands of the player on the screen
+    // This method paints the hands of the player on the screen
     private void updateHandsComponent() {
-    	
         int i = 0;
-        
         for (Hand hand : this.thePlayer.getHands()) {
-        	
             JLabel handMoneyLabel = new JLabel(Integer.toString(hand.getBetMoney()) + "$");
             handMoneyLabel.setBounds(this.xPlace + i * 50, this.yPlace - 140, 80, 10);
             handMoneyLabel.setForeground(Color.WHITE);
             playerPanel.add(handMoneyLabel);
-            
             updateHandComponent(i, hand);
             i += 1;
         }
     }
 
-    // This method get Hand and painting it on the screen
+    // This method gets a Hand and paints it on the screen
     private void updateHandComponent(int numOfHand, Hand hand) {
-    	
         int placeOfHand = 150 * numOfHand;
-        
         String sumOfCards = Integer.toString(hand.getSumOfCards()) + "\\" + Integer.toString(hand.getSumOfCardsWithAce());
         int i = 0;
-
         for (Card card : hand.getCards()) {
-        	
-        	String iconPath = "resources/cards/" + card.getIconPath();
+            String iconPath = "resources/cards/" + card.getIconPath();
             ImageIcon cardIcon = new ImageIcon(iconPath);
             JLabel cardIconLabel = new JLabel(cardIcon);
             cardIconLabel.setBounds(placeOfHand + this.xPlace - 15 * i, this.yPlace - 100, cardIcon.getIconWidth(), cardIcon.getIconHeight());
@@ -105,12 +100,10 @@ public class PlayerComponent extends JLabel {
             this.playerPanel.add(cardIconLabel, new Integer(1));
             i += 1;
         }
-        
     }
 
     // Getter
     public JPanel getPlayerPanel() {
         return playerPanel;
     }
-    
 }

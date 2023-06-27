@@ -38,14 +38,22 @@ public class SecondChoiceState implements HandState {
 	@Override
 	public String hit() {
 		
-		if(this.currentHand.getSumOfCards() >= 21 || this.currentHand.getSumOfCardsWithAce() >= 21) {
+		if(this.currentHand.getSumOfCards() >= 21 && this.currentHand.getSumOfCardsWithAce() >= 21) {
 	
 			return "Can't Hit";
 		}
 		
 		// Get More Card
 		this.currentHand.getMoreCard();
-		
+		// If done
+		if(this.currentHand.getSumOfPlayingCards() > 21) {
+			
+				// Update State
+				this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
+				this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
+				
+				
+		}
 		return "Hitted";
 	}
 

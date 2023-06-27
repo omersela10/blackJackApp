@@ -3,7 +3,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.SwingUtilities;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import java.util.*;
 // Controller ->
 public class TableController {
 	
@@ -13,22 +13,20 @@ public class TableController {
 	public TableController(Table anyTable, List<TableWindow> tableGUIS) {
 		
         this.table = anyTable;
-        this.allWindows = tableGUIS;
-        if(this.allWindows == null) {
+        this.allWindows = new ArrayList<TableWindow>();
+        
+        if(tableGUIS == null) {
         	return;
+        
         }
-        for(TableWindow anyWindow :  this.allWindows) {
-	        // Add action listeners to the buttons in the TableGUI
-        	anyWindow.addSeatButtonListener(new SeatButtonListener(anyWindow));
-        	anyWindow.addBetButtonListener(new BetButtonListener(anyWindow));
-        	anyWindow.addHitButtonListener(new HitButtonListener(anyWindow));
-        	anyWindow.addStandButtonListener(new StandButtonListener(anyWindow));
-        	anyWindow.addSplitButtonListener(new SplitButtonListener(anyWindow));
-        	anyWindow.addDoubleButtonListener(new DoubleButtonListener(anyWindow));
-        	anyWindow.addSurrenderButtonListener(new SurrenderButtonListener(anyWindow));
+        
+        for(TableWindow anyWindow :  tableGUIS) {
+	       
+        	addWindow(anyWindow);
         }
     }
 	
+	// Add action listeners to the buttons in the TableGUI
 	public void addWindow(TableWindow anyWindow) {
 		
 		this.allWindows.add(anyWindow);
@@ -203,13 +201,18 @@ public class TableController {
             
             if(this.isSeat == false) {
             	this.isSeat = true;
-            	message = table.addPlayer(currentPlayer); 
+            	message = table.addPlayer(currentPlayer);
+            	
             }
             else {
             	this.isSeat = false;
             	message = table.removePlayer(currentPlayer);
             }
+            
+            // update seat index
+        	this.theWindow.getPlayerComponent().setSeat(theWindow.getPlayer().seatIndex);
             theWindow.updateMessage(message);
+            
             // Notify all players of the updated game state
             notifyPlayersOfGameStateChange();
         }
@@ -255,30 +258,56 @@ public class TableController {
 		table.updateMoneyOfPlayers();
 	
 		table.finishRound();
-	}
-	
-	public void updateDealerComponent() {
-		
-		    try {
-				SwingUtilities.invokeAndWait(() -> {
-					for(TableWindow anyWindow : allWindows) {
-						 anyWindow.updateDealerComponent(table.dealer);
-					 }
-				});
-			} catch (InvocationTargetException | InterruptedException e) {
+		try {
+	        	// Sleep for 2 seconds
+				Thread.sleep(2000);
+			} 
+		  catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+		}
+		this.cleanAllTables();
+	}
+	
+	private void cleanAllTables() {
+		
+	
+		// Clean player components
+		for(TableWindow windowTable : this.allWindows) {
+			windowTable.clearPlayerComponent();
+		}
+		  try {
+	        	// Sleep for 2 seconds
+				Thread.sleep(1000);
+			} 
+		  catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
+		// Clean Dealer component
+		for(TableWindow windowTable : this.allWindows) {
+			windowTable.removeDealerComponent();
+		}
+		
+	}
+
+	public void updateDealerComponent() {
+	
+		for(TableWindow anyWindow : allWindows) {
+			 anyWindow.updateDealerComponent(this.table.dealer);
+		 }
+
 		
 		 
 	}
+	// Notify message to all windows
 	protected void notifyMessageViaController(String message) {
     	
     	for(TableWindow tableWindow : this.allWindows) {
 			 tableWindow.updateMessage(message);
 		 }
     }
-    
+	// Notify message to specific window
 	protected void notifyToSpecificWindow(String message, Player anyPlayer) {
     	
     	for(TableWindow tableWindow : this.allWindows) {
@@ -287,7 +316,7 @@ public class TableController {
     		}
 		 }
     }
-    
+	// Notify message to Timer label
     protected void notifyToTimerLabel(String message) {
 		
 		for(TableWindow tableWindow : this.allWindows) {
@@ -295,6 +324,8 @@ public class TableController {
     	}
 		
 	}
+    
+    // Update player label
     protected void updatePlayerLabel(Player anyPlayer) {
 		
 		for(TableWindow tableWindow : this.allWindows) {

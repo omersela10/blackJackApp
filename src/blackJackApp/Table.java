@@ -251,6 +251,8 @@ public abstract class Table{
 		for(Player player: this.getPlayers()) {
 			if(player != null) {
 				player.isPlay = false;
+				player.setHands(null);
+				
 			}
 		}
 		this.setInRound(false);
@@ -277,17 +279,23 @@ public abstract class Table{
     public void turnOfDealer() {
 
     	this.dealer.setDealerTurn(true);
-    	notifyController();
+    	notifyControllerOnDealerChanged();
     	while(this.dealer.getSumOfDealerCards() < 17) {
     		
     		dealer.getDealerHand().getMoreCard();
     		// TODO : Add Sound of drawing card
-    		notifyController();
+    		try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		notifyControllerOnDealerChanged();
 
     	}
 
     	this.dealer.setDealerTurn(false);
-    	notifyController();
+    	notifyControllerOnDealerChanged();
 
     }
 
@@ -425,7 +433,7 @@ public abstract class Table{
 		// TODO: add sound of betting
 	}
 	 // Method to notify the controller of a game state change
-    private void notifyController() {
+    private void notifyControllerOnDealerChanged() {
        tableController.updateDealerComponent();
     }
 
