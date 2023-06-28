@@ -75,6 +75,8 @@ public class Hand {
 	// Setters
 	public void setCards(List<Card> cards) {
 		this.cards = cards;
+		this.setSumOfCard();
+		this.setSumOfCardsWithAce();
 	}
 
 	public void setBetMoney(int anyBetMoney) {
@@ -147,6 +149,7 @@ public class Hand {
 		// Set the new cards of first hand and second hand
 		this.setCards(cardsHand1);
 		secondHand.setCards(cardsHand2);
+	
 		
 		List<Hand> newHands = new ArrayList<Hand>();
 		newHands.add(this);

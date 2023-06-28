@@ -12,13 +12,13 @@ public abstract class Table{
 	
 	// Data Members:
 	private volatile Timer betTimer;
-	private static final int TIMEOUT = 3000;
+	private static final int TIMEOUT = 8000;
 	private volatile boolean anyPlayerBet = false;
 	private volatile boolean anyPlayerSeat = false;
 	private volatile boolean anyPlayerAlive = false;
 	private static volatile boolean inRound = false;
 	private static volatile boolean timeToBet = false; 
-	
+	private Object betLock = new Object();
 	protected final int MAXIMUMPLAYERS = 4;
 	protected List<Player> players;
 	protected Dealer dealer;
@@ -195,52 +195,52 @@ public abstract class Table{
 	}
 	
 	// Start Betting Phase.
-	 public void startBettingPhase(Player anyPlayer) {
-		 
-		 if(this.inRound() == true) {
-			 return;
-		 }
-		 
-		 if(getTimeToBet() == false) {
-			 this.setTimeToBet(true);
-		 }
-		 else {
-			 return;
-		 }
-		 
-		 
-		 
-		 betTimer = new Timer();
-		 
-		 betTimer.schedule(new TimerTask() {
-		        private int remainingTime = TIMEOUT / 1000; // Convert the timeout value to seconds
-
-		        @Override
-		        public void run() {
-		        	
-		            // Update the timer label with the remaining time
-		        	tableController.notifyToTimerLabel("Time remaining: " + remainingTime + " seconds");
-		        
-		            
-		            if (remainingTime == -1) {
-		            	stopBettingPhase();
-		            	tableController.notifyToTimerLabel("No more bet");
-		            
-		            	
-		            	setInRound(true);
-		            	setTimeToBet(false);
-		            	tableController.startGame();
+	public void startBettingPhase(Player anyPlayer) {
 		
-		            }
-		            remainingTime--;
-		       	
+	
+	    synchronized (betLock) {
+	    	
+	        if (inRound() == true) {
+	            return;
+	        }
 
-		           
-		        }
+	        if (getTimeToBet() == false) {
+	            setTimeToBet(true);
+	        } 
 
-			
-		    }, TIMEOUT / 1000, 1000);
-		 	betPlayer(anyPlayer);// Set the delay and period of the timer task to 1 second
+	        betTimer = new Timer();
+
+	        betTimer.schedule(new TimerTask() {
+	        	
+	            private int remainingTime = TIMEOUT / 1000; // Convert the timeout value to seconds
+
+	            @Override
+	            public void run() {
+	     
+	                synchronized (betLock) {
+	                    // Update the timer label with the remaining time
+	                    tableController.notifyToTimerLabel("Time remaining: " + remainingTime + " seconds");
+
+	                    if (remainingTime == -1) {
+	                        stopBettingPhase();
+	                        tableController.notifyToTimerLabel("No more bet");
+
+	                        setInRound(true);
+	                        setTimeToBet(false);
+	                        tableController.startGame();
+	                  
+	                    }
+	                    remainingTime--;
+	                    
+	                }
+	            }
+	        }, TIMEOUT / 1000, 1000);
+
+	        betPlayer(anyPlayer);
+	        
+
+	       
+	    }
 	}
 	 
 	
@@ -316,7 +316,7 @@ public abstract class Table{
 				}
 				
 				else {
-					tableController.notifyToSpecificWindow("You loose " , player);
+					tableController.notifyToSpecificWindow("You lose " , player);
 				}
 				
 				tableController.updatePlayerLabel(player);

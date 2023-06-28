@@ -16,7 +16,7 @@ import blackJackApp.TableController.SplitButtonListener;
 import blackJackApp.TableController.StandButtonListener;
 import blackJackApp.TableController.SurrenderButtonListener;
 
-public class TableWindow extends JFrame {
+public class TableWindow extends JFrame implements IObservable {
 	
 	// Data Members
 	private Player thePlayingPlayer;
@@ -26,12 +26,14 @@ public class TableWindow extends JFrame {
 	// Pane
 	protected JLayeredPane theLayeredPane;
 	
-	// Player Component
-	private PlayerComponent thePlayerComponent;
+	// Players Component
+	protected ArrayList<PlayerComponent> playersComponent;
+	
 	// Dealer Component
 	private DealerComponent theDealerComponent;
 	private static int dealerX = 500;
 	private static int dealerY = 60;
+	
 	// Labels
 	private JLabel playerInfoLabel;
 	private JLabel dealerInfoLabel;
@@ -53,7 +55,8 @@ public class TableWindow extends JFrame {
 		
 		this.thePlayingPlayer = newPlayer;
 		this.textJLabel = new JLabel();
-	
+		this.playersComponent = new ArrayList<PlayerComponent>();
+		
 		
 		try {
 		     initializeComponents();
@@ -211,10 +214,10 @@ public class TableWindow extends JFrame {
 	}
 
 	// Remove the player from the GUI
-	public  void removePlayerComponent() {
-		this.theLayeredPane.remove(this.thePlayerComponent.getPlayerPanel());
+	public  void removePlayerComponent(PlayerComponent playerComponent) {
+		this.theLayeredPane.remove(playerComponent.getPlayerPanel());
 		this.theLayeredPane.repaint();
-		this.thePlayerComponent = null;
+		playerComponent = null;
 	}
 
 
@@ -246,44 +249,56 @@ public class TableWindow extends JFrame {
 		surrenderButton.addActionListener(surrenderButtonListener);
 		
 	}
-	public void updateTableComponent(Table table) {
+	public void updateTableComponents(Table anyTable) {
 		
-		this.dealerInfoLabel.setText(table.dealer.getDealerName());
-		this.updatePlayerComponenet(this.thePlayingPlayer);
+		for(Player player : anyTable.getPlayers()) {
+			if(player != null) {
+				updatePlayersComponents(player);
+			}
+		}
+		
 	}
 	
-	public void updatePlayerComponenet(Player anyPlayer) {
-		
-		if(anyPlayer.seatIndex != -1) {
-			
-			if( this.thePlayerComponent == null) {
-			    this.thePlayerComponent = new PlayerComponent(this.thePlayingPlayer, this.theLayeredPane, this.thePlayingPlayer.seatIndex);
-				this.theLayeredPane.add(this.thePlayerComponent, new Integer(1));
-			}
-			else {
-				this.thePlayerComponent.updateComponents();
-			}
-		}
-		else {
-			removePlayerComponent();
-		}
-		this.theLayeredPane.repaint();
 
-	}
 	
 	public void removeDealerComponent() {
 		this.theDealerComponent.clearDealerComponent();
 		this.theLayeredPane.repaint();
 	}
 	
-	public PlayerComponent getPlayerComponent() {
-		return this.thePlayerComponent;
-	}
+
 	
-	public void clearPlayerComponent() {
-		this.thePlayerComponent.updateComponents();
+	public void clearPlayerComponent(PlayerComponent anyComponent) {
+		anyComponent.updateComponents(this.thePlayingPlayer);
 		this.theLayeredPane.repaint();
 	}
 	
+    // Update the player components with new player information
+    public void updatePlayersComponents(Player player) {
+    	
+        for (PlayerComponent playerComponent : this.playersComponent) {
+        	if(player.seatIndex == playerComponent.seatIndex) {
+        		System.out.println("after update");
+                playerComponent.updateComponents(player);
+        	}
+        	
+            
+        }
+        
+        //this.theLayeredPane.repaint();
+    }
+    
+	public void updateDealerLabel(Table table) {
+		 dealerInfoLabel.setText(table.dealer.getDealerName());
+		
+	}
+	
+	@Override
+	public void onPropertyChanged(Table anyTable) {
+		
+		this.updateTableComponents(anyTable);
+		
+	}
+
 
 }

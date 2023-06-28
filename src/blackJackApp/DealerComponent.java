@@ -38,6 +38,7 @@ public class DealerComponent extends JLabel {
         for (Card card : dealer.getDealerHand().getCards()) {
         	
         	String iconPath = "resources/cards/" + card.getIconPath();
+        	System.out.println("deler card :" + card.getValue());
             ImageIcon cardIcon = new ImageIcon(iconPath);
             JLabel cardIconLabel = new JLabel(cardIcon);
             cardIconLabel.setBounds(dealerX - 15*i + 25, dealerY + 60, cardIcon.getIconWidth(), cardIcon.getIconHeight());

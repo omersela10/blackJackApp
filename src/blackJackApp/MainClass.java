@@ -8,9 +8,8 @@ public class MainClass {
 
 		   // Player newPlayer = new GuestPlayer();
 		   // Player newPlayer2 = new GuestPlayer();
-		   // //LobbyWindow lw = new LobbyWindow(newPlayer);
-			   
-			   
+		   // //LobbyWindow lw = new LobbyWindow(newPlayer)
+		   
 			//Table newTable = OneHundredDollarTable.getInstance();
 			//TableWindow wt = new TableWindow(newPlayer);
 

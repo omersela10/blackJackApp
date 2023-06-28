@@ -17,14 +17,14 @@ public class AfterSplitHandTwoState implements HandState {
 	@Override
 	public String split() {
 		
-		return "Cannot split twice";
+		return "Hand2 : Cannot split twice";
 
 	}
 
 	@Override
 	public String surrender() {
 		
-		return "Cannot surrender";
+		return "Hand2 : Cannot surrender";
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class AfterSplitHandTwoState implements HandState {
  
 		// Update State
 		this.thePlayer.setTheState(new EndHandRoundState(this.thePlayer, this.currentHand));
-		return "Stand";
+		return "Hand2 : Stand";
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class AfterSplitHandTwoState implements HandState {
 		if(this.currentHand.getSumOfCards() >= 21 || this.currentHand.getSumOfCardsWithAce() >= 21) {
 			
 			// JOption : Cant Hit
-			return "Can't hit";
+			return "Hand2 : Can't hit";
 		}
 		
 		// Get More Card
@@ -56,7 +56,7 @@ public class AfterSplitHandTwoState implements HandState {
 		}
 		
 		// Else, stay in current state
-		return "Hitted";
+		return "Hand2 : Hitted";
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class AfterSplitHandTwoState implements HandState {
 		
 		if(this.afterHit == true || this.enoughMoneyForSplitOrDouble() == false) {
 		
-			return "Can't Double";
+			return "Hand2 : Can't Double";
 		}
 
 		// Update total money
@@ -76,7 +76,7 @@ public class AfterSplitHandTwoState implements HandState {
 		// Update State
 		this.thePlayer.setTheState(new EndHandRoundState(this.thePlayer, this.currentHand));
 		
-		return "Double down";
+		return "Hand2 : Double down";
 	}
 	
 	// Helper method for check enough money for split or double
