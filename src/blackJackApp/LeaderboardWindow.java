@@ -100,12 +100,12 @@ public class LeaderboardWindow extends JFrame {
 
         // Add ActionListener to totalWinsButton
         instance.totalWinsButton.addActionListener(e -> {
-        	instance.printTotalWinsLeaderBoard(); // Call your desired function for sign up
+        	instance.printTotalWinsLeaderBoard(); // Call  desired function for sign up
         });
 
         // Add ActionListener to totalProfitButton
         instance.totalProfitButton.addActionListener(e -> {
-        	instance.printTotalProfitLeaderBoard(); // Call your desired function for log in
+        	instance.printTotalProfitLeaderBoard(); // Call  desired function for log in
         });
         
         instance.pack();

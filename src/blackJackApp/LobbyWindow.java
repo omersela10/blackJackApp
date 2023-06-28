@@ -21,7 +21,7 @@ public class LobbyWindow {
     private JPanel panel;
     private JLabel playerNameField;
 
-    public LobbyWindow(Player newPlayer) {
+    public LobbyWindow(Player newPlayer, TableController nTcOneHundred,TableController nTcFifty,TableController nTcFive) {
     	
     	 this.thePlayer = newPlayer;
     	 this.createAndShowGUI();
