@@ -5,15 +5,15 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 // Controller ->
-public class TableController {
+public class TableController{
 	
 	private Table table;
-	protected List<TableWindow> allWindows;
+	protected List<TableWindow> obsrevers;
 	
 	public TableController(Table anyTable, List<TableWindow> tableGUIS) {
 		
         this.table = anyTable;
-        this.allWindows = new ArrayList<TableWindow>();
+        this.obsrevers = new ArrayList<TableWindow>();
         
         if(tableGUIS == null) {
         	return;
@@ -29,7 +29,7 @@ public class TableController {
 	// Add action listeners to the buttons in the TableGUI
 	public void addWindow(TableWindow anyWindow) {
 		
-		this.allWindows.add(anyWindow);
+		this.obsrevers.add(anyWindow);
 	   	anyWindow.addSeatButtonListener(new SeatButtonListener(anyWindow));
     	anyWindow.addBetButtonListener(new BetButtonListener(anyWindow));
     	anyWindow.addHitButtonListener(new HitButtonListener(anyWindow));
@@ -190,6 +190,7 @@ public class TableController {
     	
     	TableWindow theWindow;
     	private boolean isSeat = false;
+    	PlayerComponent playerComponent;
     	public SeatButtonListener(TableWindow theWindow) {
     		this.theWindow = theWindow;
     	}
@@ -199,17 +200,22 @@ public class TableController {
             Player currentPlayer = theWindow.getPlayer(); // Get the current player from the Table model
             String message = "";
             
+            
             if(this.isSeat == false) {
             	this.isSeat = true;
+            	playerComponent   = new PlayerComponent(theWindow.theLayeredPane, theWindow.getPlayer().seatIndex);
+
+            	subscribePlayerComponent(playerComponent);
             	message = table.addPlayer(currentPlayer);
             	
             }
             else {
             	this.isSeat = false;
+            	unSubscribePlayerComponent(playerComponent);
             	message = table.removePlayer(currentPlayer);
             }
             
-            
+            playerComponent.setSeat(theWindow.getPlayer().seatIndex);
             theWindow.updateMessage(message);
             
             // Notify all players of the updated game state
@@ -220,14 +226,16 @@ public class TableController {
     // Notify all players of the game state change
     private void notifyPlayersOfGameStateChange() {
     	
-    	 for(TableWindow anyWindow : allWindows) {
-			 anyWindow.updateTableComponent(table);
+    	 for(TableWindow anyWindow : obsrevers) {
+    		
+			 anyWindow.onPropertyChanged(this.table);
+			 
 		 }
     }
 	
 	public void startGame()  {
 	
-		
+		updateDealerLabel();
 		this.table.afterBetting();
 		
 		if(this.table.anyPlayerBet() == true){
@@ -276,9 +284,16 @@ public class TableController {
 		this.cleanAllTables();
 	}
 	
+	private void updateDealerLabel() {
+		for(TableWindow tableWindow : this.obsrevers) {
+			tableWindow.updateDealerLabel(this.table);
+		}
+		
+	}
+
 	private void createDealerComponent() {
 		
-		for(TableWindow tableWindow : this.allWindows) {
+		for(TableWindow tableWindow : this.obsrevers) {
 			tableWindow.createNewDealerComponent();
 		}
 		
@@ -288,8 +303,10 @@ public class TableController {
 		
 	
 		// Clean player components
-		for(TableWindow windowTable : this.allWindows) {
-			windowTable.clearPlayerComponent();
+		for(TableWindow windowTable : this.obsrevers) {
+			for(PlayerComponent anyComponent : windowTable.playersComponent) {
+				windowTable.clearPlayerComponent(anyComponent);
+			}
 		}
 		  try {
 	        	// Sleep for 1 second
@@ -300,7 +317,7 @@ public class TableController {
 				e.printStackTrace();
 		}
 		// Clean Dealer component
-		for(TableWindow windowTable : this.allWindows) {
+		for(TableWindow windowTable : this.obsrevers) {
 			windowTable.removeDealerComponent();
 		}
 		try {
@@ -317,7 +334,7 @@ public class TableController {
 
 	public void updateDealerComponent() {
 	
-		for(TableWindow anyWindow : allWindows) {
+		for(TableWindow anyWindow : obsrevers) {
 			 anyWindow.updateDealerComponent(this.table.dealer);
 		 }
 
@@ -327,14 +344,14 @@ public class TableController {
 	// Notify message to all windows
 	protected void notifyMessageViaController(String message) {
     	
-    	for(TableWindow tableWindow : this.allWindows) {
+    	for(TableWindow tableWindow : this.obsrevers) {
 			 tableWindow.updateMessage(message);
 		 }
     }
 	// Notify message to specific window
 	protected void notifyToSpecificWindow(String message, Player anyPlayer) {
     	
-    	for(TableWindow tableWindow : this.allWindows) {
+    	for(TableWindow tableWindow : this.obsrevers) {
     		if(tableWindow.getPlayer() == anyPlayer) {
 			  tableWindow.updateMessage(message);
     		}
@@ -343,7 +360,7 @@ public class TableController {
 	// Notify message to Timer label
     protected void notifyToTimerLabel(String message) {
 		
-		for(TableWindow tableWindow : this.allWindows) {
+		for(TableWindow tableWindow : this.obsrevers) {
     		tableWindow.timerLabel.setText(message);
     	}
 		
@@ -352,10 +369,37 @@ public class TableController {
     // Update player label
     protected void updatePlayerLabel(Player anyPlayer) {
 		
-		for(TableWindow tableWindow : this.allWindows) {
+		for(TableWindow tableWindow : this.obsrevers) {
     		if(tableWindow.getPlayer() == anyPlayer) {
 			  tableWindow.updatePlayerLabel();
     		}
 		 }
 	}
+
+    public void subscribePlayerComponent(PlayerComponent newPlayerComponent) {
+    	
+    	for(TableWindow tableWindow : this.obsrevers) {
+    		
+    	
+	    	tableWindow.playersComponent.add(newPlayerComponent);
+	
+    		tableWindow.theLayeredPane.add(newPlayerComponent, new Integer(1));
+    		tableWindow.theLayeredPane.repaint();
+    		System.out.println("added:" + newPlayerComponent.seatIndex);
+    	}
+    	
+    }
+    public void unSubscribePlayerComponent(PlayerComponent anyPlayerComponent) {
+    	
+    	for(TableWindow tableWindow : this.obsrevers) {
+ 
+    			tableWindow.playersComponent.remove(anyPlayerComponent);
+    			tableWindow.theLayeredPane.remove(anyPlayerComponent);
+  
+    		System.out.println("removed:" + anyPlayerComponent.seatIndex);
+    	}
+    	  
+    }
+
+
 }
