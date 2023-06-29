@@ -23,5 +23,10 @@ public class MainClass {
 		   MainWindow blackJack = new MainWindow();
 
 
+//		   //sound test
+//		   SoundPlayer sp = new SoundPlayer("resources/sounds/cardDraw.wav");
+//		   sp.play();
+
+
 	   }
 }

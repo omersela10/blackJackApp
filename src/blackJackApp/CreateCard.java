@@ -21,7 +21,8 @@ public class CreateCard {
     private static void fillIconsList() {
 
 //        // Get icons path, and fill the list.
-    	  String cardsFolderPath = "resources\\cards";
+//    	  String cardsFolderPath = "resources\\cards"; //WINDWOS
+          String cardsFolderPath = "resources/cards"; //MAC
           File cardsFolder = new File(cardsFolderPath);
           File[] pngIcons = cardsFolder.listFiles();
 

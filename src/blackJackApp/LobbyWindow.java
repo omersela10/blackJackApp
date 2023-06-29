@@ -13,6 +13,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import blackJackApp.LobbyController.*;
+
 public class LobbyWindow {
 
 	// Data Members
@@ -49,11 +51,11 @@ public class LobbyWindow {
         playerNameField = new JLabel(this.thePlayer.getPlayerName());
         playerNameField.setPreferredSize(new Dimension(200, 30));
 
-        // Create the buttons
-        JButton table100Button = createTableButton("100$ Table");
-        JButton table50Button = createTableButton("50$ Table");
-        JButton table5Button = createTableButton("5$ Table");
-        JButton addMoneyButton = createActionButton("Add Money");
+//        // Create the buttons
+//        JButton table100Button = createTableButton("100$ Table");
+//        JButton table50Button = createTableButton("50$ Table");
+//        JButton table5Button = createTableButton("5$ Table");
+//        JButton addMoneyButton = createActionButton("Add Money");
 
         // Add components to the panel
         panel.add(createPlayerNamePanel(), BorderLayout.NORTH);
@@ -90,7 +92,7 @@ public class LobbyWindow {
         return tableButtonsPanel;
     }
 
-    private JButton createTableButton(String buttonText) {
+    private JButton createTableButton(String buttonText ) {
         JButton button = new JButton(buttonText);
         button.setFont(new Font("Arial", Font.BOLD, 18));
         button.setForeground(Color.WHITE);
@@ -102,6 +104,7 @@ public class LobbyWindow {
             public void actionPerformed(ActionEvent e) {
                 // Handle button click event
                 // TODO: Add your logic here
+//                moveToTable(toTable);
             }
         });
         return button;

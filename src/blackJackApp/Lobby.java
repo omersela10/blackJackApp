@@ -8,6 +8,7 @@ public abstract class Lobby {
     protected List<Table> tables;
     protected Player thePlayer;
     protected int balance;
+    public LobbyController theLobbyController;
 
     //Constructor
     public Lobby(Player newPlayer) {
