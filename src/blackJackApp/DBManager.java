@@ -60,8 +60,7 @@ public class DBManager {
 
 	}
 	
-	synchronized public static String getUserPassword(String userName) {
-
+	synchronized public static Boolean getUserInGame(String userName) {	
 		try {
 			// Get the root element (users)
 			Element root = getRootOfXmlFile(getUsersDBPath());
@@ -76,7 +75,13 @@ public class DBManager {
                 String name = userElement.getAttribute("name");
                 if (userName.equals(name)) {
                     // User exists in the XML file
-                    return userElement.getAttribute("password");
+                    String inGame =  userElement.getAttribute("in_game");
+                    if ( inGame == "false") {
+                    	return false;
+                    }
+                    else {
+                    	return true;
+                    }
                 }
 	        }
 	        
@@ -85,9 +90,39 @@ public class DBManager {
 		} catch (Exception e) {
 	        e.printStackTrace();
 	        // User not found or xml file not opened
-	        return null;
+	        return false;
 	    }
-    }
+		
+	}
+
+	synchronized public static String getUserPassword(String userName) {
+	
+			try {
+				// Get the root element (users)
+				Element root = getRootOfXmlFile(getUsersDBPath());
+				NodeList userNodes = root.getElementsByTagName("user");
+	
+		        // Process each user element
+		        for (int i = 0; i < userNodes.getLength(); i++) {
+		        	
+		        	Element userElement = (Element) userNodes.item(i);
+	
+	                // Check if the name attribute matches the User object's name
+	                String name = userElement.getAttribute("name");
+	                if (userName.equals(name)) {
+	                    // User exists in the XML file
+	                    return userElement.getAttribute("password");
+	                }
+		        }
+		        
+		        return null;
+		        
+			} catch (Exception e) {
+		        e.printStackTrace();
+		        // User not found or xml file not opened
+		        return null;
+		    }
+	    }
 	
 	
 	synchronized public static String getUserTotalAmount(String userName) {
@@ -331,8 +366,58 @@ public class DBManager {
         }   	
 
 	}
+
+	synchronized public static Boolean setInGameToUser(String userName, Boolean inGame) {
+		try {
+			
+            // Parse the XML file and obtain the Document object
+            Document document = getdocumentOfXmlFile(usersDBPath);
+
+            // Get the root element
+            Element rootElement = document.getDocumentElement();
+
+            // Get the user elements
+            NodeList userNodes = rootElement.getElementsByTagName("user");
+	        
+	        for (int i = 0; i < userNodes.getLength(); i++) {
+	        	
+	        	Element userElement = (Element) userNodes.item(i);
+	        	// Check if the name attribute matches the given user name
+                String name = userElement.getAttribute("name");
+                if (userName.equals(name)) {
+                    // Set the new total_profit attribute
+                	String inGameStr;
+                	if (inGame == true) {
+                		
+                		inGameStr = "true";
+                	}
+                	else {
+                		
+                		inGameStr = "false";
+                	}
+                    userElement.setAttribute("in_game", inGameStr);
+
+                    // Save the modified DOM structure back to the XML file
+                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                    Transformer transformer = transformerFactory.newTransformer();
+                    DOMSource source = new DOMSource(document);
+                    StreamResult result = new StreamResult(new File(usersDBPath));
+                    transformer.transform(source, result);
+
+                    return true; // total_profit updated successfully
+                }
+	        }
+	        return false;
+        } catch (Exception e) {
+        	return false;
+        }   	
+
+	}
 	
-	
+	synchronized public static Boolean setInGameToUser(User user, Boolean inGame) {
+		
+		return setInGameToUser(user.getName(),inGame);
+	}
 	
 	synchronized public static User addNewUserToDB (String newuserName, String newuserPassword,String newTotalAmount, String newNumberOfWins, String newTotalProfit) {
 		try {
@@ -378,6 +463,7 @@ public class DBManager {
             userElement.setAttribute("total_amount", "0");
             userElement.setAttribute("number_of_wins", "0");
             userElement.setAttribute("total_profit", "0");
+            userElement.setAttribute("in_game", "false");
 
             // Get the root element
             Element rootElement = document.getDocumentElement();
