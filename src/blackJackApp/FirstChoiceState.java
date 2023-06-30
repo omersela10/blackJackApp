@@ -48,7 +48,7 @@ public class FirstChoiceState implements HandState{
 		
 		// Check if BlackJack in any new hand
 		if(this.thePlayer.getHands().get(0).hasBlackJack() == true) {
-			this.thePlayer.setAfterSplitHand1(new EndHandRoundState(this.thePlayer, this.thePlayer.getHands().get(0)));
+			this.thePlayer.setAfterSplitHand1(this.thePlayer.getAfterSplitHand2());
 		}
 	
 		if(this.thePlayer.getHands().get(1).hasBlackJack() == true) {

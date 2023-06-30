@@ -43,7 +43,7 @@ public class TableController{
 	// Listener for the Bet button
     public class BetButtonListener implements ActionListener {
     	
-    	TableWindow theWindow;
+    	private TableWindow theWindow;
     	
     	public BetButtonListener(TableWindow theWidnow) {
     		
@@ -60,14 +60,14 @@ public class TableController{
             }
             table.placeBet(currentPlayer); // Place the bet in the Table model
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange();
+            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
         }
     }
 
     // Listener for the Hit button
     public class HitButtonListener implements ActionListener {
     	
-    	TableWindow theWindow;
+    	private TableWindow theWindow;
     	
     	public HitButtonListener(TableWindow theWindow) {
     		
@@ -81,17 +81,18 @@ public class TableController{
             	theWindow.updateMessage("Its not your turn");
             	return;
             }
+            
             String message = table.hit(currentPlayer); // Player hits in the Table model
             theWindow.updateMessage(message);
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange();
+            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
         }
     }
 
     // Listener for the Stand button
     public class StandButtonListener implements ActionListener {
     	
-    	TableWindow theWindow;
+    	private TableWindow theWindow;
     	
     	public StandButtonListener(TableWindow theWindow) {
     		
@@ -100,21 +101,23 @@ public class TableController{
     	
         @Override
         public void actionPerformed(ActionEvent e) {
+        	
             Player currentPlayer = table.getCurrentPlayer(); // Get the current player from the Table model
             if(this.theWindow.getPlayer() != currentPlayer) {
             	theWindow.updateMessage("Its not your turn");
             	return;
             }
+            
             String message = table.stand(currentPlayer); // Player stands in the Table model
             theWindow.updateMessage(message);
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange();
+            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
         }
     }
     // Listener for the Split button
     public class SplitButtonListener implements ActionListener {
     	
-    	TableWindow theWindow;
+    	private TableWindow theWindow;
     	
     	public SplitButtonListener(TableWindow theWindow) {
     		
@@ -133,13 +136,13 @@ public class TableController{
             String message = table.split(currentPlayer); // Player stands in the Table model
             theWindow.updateMessage(message);
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange();
+            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
         }
     }
     // Listener for the Double button
     public class DoubleButtonListener implements ActionListener {
     	
-    	TableWindow theWindow;
+    	private TableWindow theWindow;
     	
     	public DoubleButtonListener(TableWindow theWindow) {
     		
@@ -154,16 +157,17 @@ public class TableController{
             	theWindow.updateMessage("Its not your turn");
             	return;
             }
+            
             String message = table.doubleDown(currentPlayer); // Player stands in the Table model
             theWindow.updateMessage(message);
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange();
+            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
         }
     }
     // Listener for the Surrender button
     public class SurrenderButtonListener implements ActionListener {
     	
-    	TableWindow theWindow;
+    	private TableWindow theWindow;
     	
     	public SurrenderButtonListener(TableWindow theWindow) {
     		
@@ -182,54 +186,69 @@ public class TableController{
             String message = table.surrender(currentPlayer); // Player stands in the Table model
             theWindow.updateMessage(message);
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange();
+            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
         }
     }
     // Listener for the Seat button
     public class SeatButtonListener implements ActionListener {
     	
-    	TableWindow theWindow;
+    	private TableWindow theWindow;
     	private boolean isSeat = false;
-    	PlayerComponent playerComponent;
+    	private PlayerComponent playerComponent;
+    	
     	public SeatButtonListener(TableWindow theWindow) {
     		this.theWindow = theWindow;
     	}
     	
         @Override
         public void actionPerformed(ActionEvent e) {
+        	
             Player currentPlayer = theWindow.getPlayer(); // Get the current player from the Table model
             String message = "";
             
             
             if(this.isSeat == false) {
             	this.isSeat = true;
-            	playerComponent   = new PlayerComponent(theWindow.theLayeredPane, theWindow.getPlayer().seatIndex);
+            	
+            	playerComponent = new PlayerComponent(theWindow.theLayeredPane, theWindow.getPlayer().seatIndex);
 
-            	subscribePlayerComponent(playerComponent);
             	message = table.addPlayer(currentPlayer);
+            	subscribePlayerComponent(playerComponent);
             	
             }
             else {
             	this.isSeat = false;
-            	unSubscribePlayerComponent(playerComponent);
             	message = table.removePlayer(currentPlayer);
+            	unSubscribePlayerComponent(playerComponent);
+            	
             }
             
+            
             playerComponent.setSeat(theWindow.getPlayer().seatIndex);
+        
             theWindow.updateMessage(message);
             
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange();
+            notifyPlayersOfGameStateChange(playerComponent);
         }
+
+			
+		
+		
     }
  
     // Notify all players of the game state change
-    private void notifyPlayersOfGameStateChange() {
+    private void notifyPlayersOfGameStateChange(PlayerComponent playerComponent) {
     	
     	 for(TableWindow anyWindow : obsrevers) {
     		
-			 anyWindow.onPropertyChanged(this.table);
+			 anyWindow.onPropertyChanged(playerComponent, this.table);
+			 System.out.println(anyWindow.getPlayer().getPlayerName() +" : windiw");
 			 
+			 for(PlayerComponent playerComponent1 :anyWindow.playersComponent)
+				 System.out.println(playerComponent1.xPlace + " y:"+ playerComponent1.yPlace);
+			 anyWindow.revalidate();
+			 anyWindow.repaint();
 		 }
     }
 	
@@ -395,8 +414,10 @@ public class TableController{
  
     			tableWindow.playersComponent.remove(anyPlayerComponent);
     			tableWindow.theLayeredPane.remove(anyPlayerComponent);
+    			tableWindow.theLayeredPane.repaint();
   
     		System.out.println("removed:" + anyPlayerComponent.seatIndex);
+    		tableWindow.clearPlayerComponent(anyPlayerComponent);
     	}
     	  
     }

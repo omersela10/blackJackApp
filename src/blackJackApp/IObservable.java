@@ -3,6 +3,6 @@ package blackJackApp;
 
 public interface IObservable {
 
-	void onPropertyChanged(Table table);
+	void onPropertyChanged(PlayerComponent playerComponent, Table anyTable);
 
 }

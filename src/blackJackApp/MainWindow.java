@@ -11,6 +11,7 @@ public class MainWindow extends JFrame {
     private static String backgroundIcon = "resources/mainWindow/blackJackMain.png";
 
     public MainWindow() {
+    	
         setTitle("Blackjack main menu");
         
         // Backend:

@@ -55,7 +55,7 @@ public class TableWindow extends JFrame implements IObservable {
 		
 		this.thePlayingPlayer = newPlayer;
 		this.textJLabel = new JLabel();
-		this.playersComponent = new ArrayList<PlayerComponent>();
+		this.playersComponent = new ArrayList<PlayerComponent>(4);
 		
 		
 		try {
@@ -249,18 +249,7 @@ public class TableWindow extends JFrame implements IObservable {
 		surrenderButton.addActionListener(surrenderButtonListener);
 		
 	}
-	public void updateTableComponents(Table anyTable) {
-		
-		for(Player player : anyTable.getPlayers()) {
-			if(player != null) {
-				updatePlayersComponents(player);
-			}
-		}
-		
-	}
-	
 
-	
 	public void removeDealerComponent() {
 		this.theDealerComponent.clearDealerComponent();
 		this.theLayeredPane.repaint();
@@ -274,29 +263,43 @@ public class TableWindow extends JFrame implements IObservable {
 	}
 	
     // Update the player components with new player information
-    public void updatePlayersComponents(Player player) {
+    public void updatePlayersComponents(PlayerComponent playerComponent, Table anyTable) {
     	
-        for (PlayerComponent playerComponent : this.playersComponent) {
-        	if(player.seatIndex == playerComponent.seatIndex) {
-        		System.out.println("after update");
-                playerComponent.updateComponents(player);
+        for (Player player : anyTable.getPlayers()) {
+        	
+        	if(player != null && player.seatIndex == playerComponent.seatIndex) {
+        		
+        		System.out.println("after update on " + this.thePlayingPlayer.getPlayerName());
+        		playerComponent.updateComponents(player);
         	}
         	
             
         }
         
-        //this.theLayeredPane.repaint();
+        // Repaint Window
+        System.out.println("after repaint Window" + this.thePlayingPlayer.getPlayerName());
+      
     }
     
+    // Update dealer label
 	public void updateDealerLabel(Table table) {
 		 dealerInfoLabel.setText(table.dealer.getDealerName());
 		
 	}
 	
-	@Override
-	public void onPropertyChanged(Table anyTable) {
+	public PlayerComponent getMyPlayerComponent() {
 		
-		this.updateTableComponents(anyTable);
+		for(PlayerComponent playerComponent : this.playersComponent) {
+			if(playerComponent.seatIndex != -1 && playerComponent.seatIndex == this.getPlayer().seatIndex) {
+				return playerComponent;
+			}
+		}
+		return null;
+	}
+	@Override
+	public void onPropertyChanged(PlayerComponent playerComponent, Table anyTable) {
+		
+		this.updatePlayersComponents(playerComponent, anyTable);
 		
 	}
 

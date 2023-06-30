@@ -11,16 +11,21 @@ public class PlayerComponent extends JLabel {
 
     private JLayeredPane thePane;
     protected int seatIndex = -1;
-    private int xPlace;
-    private int yPlace;
+    protected int xPlace;
+    protected int yPlace;
     public static final String playerIconPath = "resources/table/Player.png";
     private JPanel playerPanel;
     private JPanel handsPanel;
 
+    // Player component dimensions
+    private static final int PLAYER_WIDTH = 300;
+    private static final int PLAYER_HEIGHT = 300;
+    
     public PlayerComponent(JLayeredPane anyPane, int anySeat) {
     	
         this.thePane = anyPane;
         this.seatIndex = anySeat;
+        
         if(seatIndex != -1) {
 	        this.updateXYPlace();
 	        this.createPlayerPanel();
@@ -31,22 +36,22 @@ public class PlayerComponent extends JLabel {
     public void setSeat(int seat) {
     	
     	this.seatIndex = seat;
-    	this.yPlace = 400;
-    	
-    	if(seat == 1 || seat == 2) {
-    		this.yPlace += 100; 
-    	}
-    	
-      
-        this.xPlace = this.seatIndex * 300 + 100;
-        
+  
         this.updateXYPlace();
         this.createPlayerPanel();
     }
 
     private void updateXYPlace() {
-        this.xPlace = this.seatIndex * 300 + 100;
-        this.yPlace = 400;
+    	
+    	this.yPlace = 400;
+    	
+    	if(seatIndex == 1 || seatIndex == 2) {
+    		this.yPlace += 100; 
+    	}
+    	
+      
+        this.xPlace = this.seatIndex * 300 + 150;
+       
     }
 
     private void createPlayerPanel() {
@@ -60,16 +65,20 @@ public class PlayerComponent extends JLabel {
         handsPanel = new JPanel();
         handsPanel.setLayout(null);
         handsPanel.setOpaque(false);
-        handsPanel.setBounds(0, 0, 1200, 800);
-        thePane.add(handsPanel, new Integer(1));
-        
+        handsPanel.setBounds(this.xPlace, this.yPlace, 300, 300);
+        playerPanel.add(handsPanel, new Integer(1));
+
     }
 
     // Update components
     public void updateComponents(Player player) {
     	
+    	
         playerPanel.removeAll(); // Clear the player panel before updating
 
+        if(player.seatIndex < 0) {
+        	return;
+        }
         updateNameComponent(player);
         updatePlayerIconComponent();
 
@@ -85,7 +94,7 @@ public class PlayerComponent extends JLabel {
     }
 
     private void clearHandsComponent() {
-    	this.thePane.remove(handsPanel);
+    	this.playerPanel.remove(handsPanel);
 	}
 
 	// This method paints the icon of the player on the screen
@@ -95,6 +104,7 @@ public class PlayerComponent extends JLabel {
         JLabel playerIconLabel = new JLabel(playerIcon);
         playerIconLabel.setBounds(this.xPlace, this.yPlace, playerIcon.getIconWidth(), playerIcon.getIconHeight());
         playerPanel.add(playerIconLabel);
+        playerPanel.repaint();
     }
 
     // This method paints the name of the player on the screen
@@ -104,18 +114,20 @@ public class PlayerComponent extends JLabel {
         playerName.setBounds(xPlace, yPlace + 50, 100, 20);
         playerName.setForeground(Color.WHITE);
         playerPanel.add(playerName);
+        System.out.println(player.getPlayerName() + "added at " + "xPlace:" + xPlace + "yPlace:" + yPlace);
+        playerPanel.repaint();
     }
 
     // This method paints the hands of the player on the screen
     private void updateHandsComponent(Player player) {
     	
-    	thePane.remove(handsPanel);
+    	playerPanel.remove(handsPanel);
         handsPanel = new JPanel();
         handsPanel.setLayout(null);
         handsPanel.setOpaque(false);
         handsPanel.setBounds(0, 0, 1200, 800);
         
-        thePane.add(handsPanel, new Integer(1));
+        playerPanel.add(handsPanel, new Integer(1));
  
         
         int i = 0;
@@ -135,8 +147,10 @@ public class PlayerComponent extends JLabel {
 
     // This method gets a Hand and paints it on the screen
     private void updateHandComponent(int numOfHand, Hand hand) {
+    	
         int placeOfHand = 150 * numOfHand;
         System.out.println("SumOfPlayingCards: " + hand.getSumOfPlayingCards());
+        
         int i = 0;
         for (Card card : hand.getCards()) {
         	

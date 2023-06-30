@@ -13,8 +13,8 @@ public abstract class Table{
 	// Data Members:
 
 	//soundPlayers:
-	private SoundPlayer cardDrawSound = new SoundPlayer("resources/sounds/cardDraw.wav");
-	private SoundPlayer chipsSettleSound = new SoundPlayer("resources/sounds/chipsSettle.wav");
+	//private SoundPlayer cardDrawSound = new SoundPlayer("resources/sounds/cardDraw.wav");
+	//private SoundPlayer chipsSettleSound = new SoundPlayer("resources/sounds/chipsSettle.wav");
 
 	private volatile Timer betTimer;
 	private static final int TIMEOUT = 8000;
@@ -173,7 +173,13 @@ public abstract class Table{
 				 playRound(anyPlayer);
 				 
 				 for(Hand hand: anyPlayer.getHands()) {
-					 this.anyPlayerAlive = hand.getSumOfPlayingCards() <= 21 && hand.getBetMoney() > 0;
+					 
+					 boolean anyAlive = hand.getSumOfPlayingCards() <= 21 && hand.getBetMoney() > 0;
+					 if(anyAlive == true) {
+						 this.anyPlayerAlive = true;
+						
+					 }
+					 
 				 }
 				 
 			}
@@ -202,45 +208,49 @@ public abstract class Table{
 	// Start Betting Phase.
 	public void startBettingPhase(Player anyPlayer) {
 		
+	    if (inRound() == true || anyPlayer.isPlay() == true) {
+		   
+		   tableController.notifyToSpecificWindow("Can't bet now", anyPlayer);
+            return;
+        }
 	
 	    synchronized (betLock) {
 	    	
-	        if (inRound() == true) {
-	            return;
-	        }
+	     
 
 	        if (getTimeToBet() == false) {
 	            setTimeToBet(true);
+	            betTimer = new Timer();
+
+		        betTimer.schedule(new TimerTask() {
+		        	
+		            private int remainingTime = TIMEOUT / 1000; // Convert the timeout value to seconds
+
+		            @Override
+		            public void run() {
+		     
+		                synchronized (betLock) {
+		                    // Update the timer label with the remaining time
+		                    tableController.notifyToTimerLabel("Time remaining: " + remainingTime + " seconds");
+
+		                    if (remainingTime == -1) {
+		                        stopBettingPhase();
+		                        tableController.notifyToTimerLabel("No more bet");
+
+		                        setInRound(true);
+		                        setTimeToBet(false);
+		                        tableController.startGame();
+		                  
+		                    }
+		                    remainingTime--;
+		                    
+		                }
+		            }
+		        }, TIMEOUT / 1000, 1000);
+
 	        } 
 
-	        betTimer = new Timer();
-
-	        betTimer.schedule(new TimerTask() {
-	        	
-	            private int remainingTime = TIMEOUT / 1000; // Convert the timeout value to seconds
-
-	            @Override
-	            public void run() {
-	     
-	                synchronized (betLock) {
-	                    // Update the timer label with the remaining time
-	                    tableController.notifyToTimerLabel("Time remaining: " + remainingTime + " seconds");
-
-	                    if (remainingTime == -1) {
-	                        stopBettingPhase();
-	                        tableController.notifyToTimerLabel("No more bet");
-
-	                        setInRound(true);
-	                        setTimeToBet(false);
-	                        tableController.startGame();
-	                  
-	                    }
-	                    remainingTime--;
-	                    
-	                }
-	            }
-	        }, TIMEOUT / 1000, 1000);
-
+	        
 	        betPlayer(anyPlayer);
 	        
 
@@ -292,9 +302,9 @@ public abstract class Table{
     		
     		dealer.getDealerHand().getMoreCard();
     		// TODO : Add Sound of drawing card
-			cardDrawSound.play();
+			//cardDrawSound.play();
     		try {
-				Thread.sleep(500);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -316,15 +326,25 @@ public abstract class Table{
 		
 		for(Player player : this.players) {
 			if(playingPlayer(player) == true) {
+				
 				int profit = this.checkAndUpdateResultForPlayer(player, dealerSum, dealerFail);
-				if(profit > 0) {
-					tableController.notifyToSpecificWindow("You win ", player);
+				int sumOfTotalBetOnHand = 0;
+				
+				for(Hand hand : player.getHands()) {
+					sumOfTotalBetOnHand += hand.getBetMoney();
+				}
+				
+				int difference = profit - sumOfTotalBetOnHand;
+				
+				if( difference > 0) {
+					//TODO: Update he win in DB if it is user
+					tableController.notifyToSpecificWindow("You win " + difference + "$", player);
 				}
 				
 				else {
-					tableController.notifyToSpecificWindow("You lose " , player);
+					tableController.notifyToSpecificWindow("You lose " + (-1 * difference) + "$", player);
 				}
-				
+				//TODO: Update += difference in DB if it is user
 				tableController.updatePlayerLabel(player);
 			}
 			
@@ -367,7 +387,7 @@ public abstract class Table{
 		}
 		else if(blackJackHand == true && dealer.getDealerHand().hasBlackJack() == false) {
 			// If Black Jack and Dealer has'nt
-			 return (int) 2.5 * hand.getBetMoney();
+			 return (int) (2.5 * hand.getBetMoney());
 		}
 		else if(dealerFail == true) {
 			// Dealer Fail or hand has more than dealer
@@ -405,7 +425,7 @@ public abstract class Table{
 
 	public String hit(Player currentPlayer) {
 		// TODO : Add Sound of drawing card
-		cardDrawSound.play();
+		//cardDrawSound.play();
 		return currentPlayer.hit();
 		
 	}
@@ -418,14 +438,14 @@ public abstract class Table{
 
 	public String split(Player currentPlayer) {
 		// TODO : Add Sound of drawing card
-		cardDrawSound.play();
+		//cardDrawSound.play();
 		return currentPlayer.split();
 		
 	}
 
 	public String doubleDown(Player currentPlayer) {
 		// TODO : Add Sound of drawing card
-		cardDrawSound.play();
+		//cardDrawSound.play();
 		return currentPlayer.doubleDown();
 		
 	}
@@ -443,7 +463,7 @@ public abstract class Table{
 		
 		this.startBettingPhase(currentPlayer);
 		// TODO: add sound of betting
-		chipsSettleSound.play();
+		//chipsSettleSound.play();
 	}
 	 // Method to notify the controller of a game state change
     private void notifyControllerOnDealerChanged() {
