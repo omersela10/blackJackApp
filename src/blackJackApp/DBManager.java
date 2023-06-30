@@ -60,7 +60,7 @@ public class DBManager {
 
 	}
 	
-	synchronized public static Boolean getUserInGame(String userName) {	
+	synchronized public static Boolean getUserconnected(String userName) {	
 		try {
 			// Get the root element (users)
 			Element root = getRootOfXmlFile(getUsersDBPath());
@@ -75,7 +75,7 @@ public class DBManager {
                 String name = userElement.getAttribute("name");
                 if (userName.equals(name)) {
                     // User exists in the XML file
-                    String inGame =  userElement.getAttribute("in_game");
+                    String inGame =  userElement.getAttribute("connected");
                     if ( inGame == "false") {
                     	return false;
                     }
@@ -367,7 +367,7 @@ public class DBManager {
 
 	}
 
-	synchronized public static Boolean setInGameToUser(String userName, Boolean inGame) {
+	synchronized public static Boolean setconnectedToUser(String userName, Boolean inGame) {
 		try {
 			
             // Parse the XML file and obtain the Document object
@@ -395,7 +395,7 @@ public class DBManager {
                 		
                 		inGameStr = "false";
                 	}
-                    userElement.setAttribute("in_game", inGameStr);
+                    userElement.setAttribute("connected", inGameStr);
 
                     // Save the modified DOM structure back to the XML file
                     TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -414,9 +414,9 @@ public class DBManager {
 
 	}
 	
-	synchronized public static Boolean setInGameToUser(User user, Boolean inGame) {
+	synchronized public static Boolean setconnectedToUser(User user, Boolean inGame) {
 		
-		return setInGameToUser(user.getName(),inGame);
+		return setconnectedToUser(user.getName(),inGame);
 	}
 	
 	synchronized public static User addNewUserToDB (String newuserName, String newuserPassword,String newTotalAmount, String newNumberOfWins, String newTotalProfit) {
@@ -463,7 +463,7 @@ public class DBManager {
             userElement.setAttribute("total_amount", "0");
             userElement.setAttribute("number_of_wins", "0");
             userElement.setAttribute("total_profit", "0");
-            userElement.setAttribute("in_game", "false");
+            userElement.setAttribute("connected", "false");
 
             // Get the root element
             Element rootElement = document.getDocumentElement();

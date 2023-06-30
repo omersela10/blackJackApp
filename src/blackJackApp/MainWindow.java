@@ -194,7 +194,11 @@ public class MainWindow extends JFrame {
 	    
 	        if (userDB.validUserPassword(name, password) == false) {
 	            JOptionPane.showMessageDialog(this, "Invalid user name or password", "Error", JOptionPane.ERROR_MESSAGE);
-	        } 
+	        }
+	        else if( userDB.getUserconnected(name) == true){
+	        	
+	        	JOptionPane.showMessageDialog(this, "user is already connected", "Error", JOptionPane.ERROR_MESSAGE);
+	        }
 	        else {
 	            // User exists, proceed with the login
 	        	User logInUser = userDB.getUserFromDB(name, password);
