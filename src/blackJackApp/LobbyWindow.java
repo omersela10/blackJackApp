@@ -13,31 +13,37 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import blackJackApp.LobbyController.*;
-
 public class LobbyWindow extends JFrame{
 
-	// Data Members
-	private Player thePlayer;
-    private JPanel panel;
+    // Data Members
+    private final Player thePlayer;
     private JLabel playerNameField;
+    private final TableController tcOneHundred;
+    private final TableController tcFifty;
+    private final TableController tcFive;
 
+    private final String TABLESTRING100 = "100$ Table";
+    private final String TABLESTRING50 = "50$ Table";
+    private final String TABLESTRING5 = "5$ Table";
     public LobbyWindow(Player newPlayer, TableController nTcOneHundred,TableController nTcFifty,TableController nTcFive) {
-    	
-    	 this.thePlayer = newPlayer;
-    	 this.createAndShowGUI();
+        this.thePlayer = newPlayer;
+        this.tcOneHundred = nTcOneHundred;
+        this.tcFifty = nTcFifty;
+        this.tcFive = nTcFive;
+        this.createAndShowGUI();
     }
-      
-       
+
+
     public void createAndShowGUI() {
-    	
+
 
         setTitle("Lobby Window");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 
         // Create the panel with a BorderLayout
-        panel = new JPanel() {
+        // Load and draw the background image
+        JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -89,14 +95,14 @@ public class LobbyWindow extends JFrame{
         JPanel tableButtonsPanel = new JPanel();
         tableButtonsPanel.setOpaque(false);
         tableButtonsPanel.setLayout(new GridLayout(1, 3, 10, 0));
-        tableButtonsPanel.add(createTableButton("100$ Table"));
-        tableButtonsPanel.add(createTableButton("50$ Table"));
-        tableButtonsPanel.add(createTableButton("5$ Table"));
+        tableButtonsPanel.add(createTableButton(TABLESTRING100));
+        tableButtonsPanel.add(createTableButton(TABLESTRING50));
+        tableButtonsPanel.add(createTableButton(TABLESTRING5));
         return tableButtonsPanel;
     }
 
     private JButton createTableButton(String buttonText) {
-    	
+
         JButton button = new JButton(buttonText);
         button.setFont(new Font("Arial", Font.BOLD, 18));
         button.setForeground(Color.WHITE);
@@ -107,8 +113,12 @@ public class LobbyWindow extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Handle button click event
-                // TODO: Add your logic here
-//                moveToTable(toTable);
+                TableWindow nTw = new TableWindow(thePlayer);
+                switch (buttonText) {
+                    case TABLESTRING100 -> tcOneHundred.addWindow(nTw);
+                    case TABLESTRING50 -> tcFifty.addWindow(nTw);
+                    case TABLESTRING5 -> tcFive.addWindow(nTw);
+                }
             }
         });
         return button;
@@ -139,5 +149,5 @@ public class LobbyWindow extends JFrame{
         });
         return button;
     }
-	
+
 }

@@ -214,7 +214,7 @@ public class MainWindow extends JFrame {
 	            
 	        	Thread thread = new Thread(() -> {
 	        		LobbyWindow loggedInLobby = new LobbyWindow(loggedInPlayer, nTcOneHundred, nTFifty, nTcFive);
-	        	    // Any other code you want to execute in the thread
+	        	    
 	        	});
 
 	        	thread.start();  // Start the thread
