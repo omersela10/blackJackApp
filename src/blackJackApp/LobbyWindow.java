@@ -15,11 +15,10 @@ import javax.swing.*;
 
 import blackJackApp.LobbyController.*;
 
-public class LobbyWindow {
+public class LobbyWindow extends JFrame{
 
 	// Data Members
 	private Player thePlayer;
-	private JFrame frame;
     private JPanel panel;
     private JLabel playerNameField;
 
@@ -31,8 +30,9 @@ public class LobbyWindow {
       
        
     public void createAndShowGUI() {
-        frame = new JFrame("Lobby Window");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	
+        setTitle("Lobby Window");
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Create the panel with a BorderLayout
         panel = new JPanel() {
@@ -63,14 +63,14 @@ public class LobbyWindow {
         panel.add(createActionButtonPanel(), BorderLayout.SOUTH);
 
         // Set the panel as the content pane of the frame
-        frame.setContentPane(panel);
+        this.setContentPane(panel);
         // Set the size of the window
-        frame.setSize(800, 600); // Set the width to 800 pixels and height to 600 pixels
+        this.setSize(800, 600); // Set the width to 800 pixels and height to 600 pixels
 
         // Center the window on the screen
-        frame.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);
 
-        frame.setVisible(true);
+        this.setVisible(true);
     }
 
     private JPanel createPlayerNamePanel() {

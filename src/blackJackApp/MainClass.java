@@ -2,6 +2,10 @@ package blackJackApp;
 
 
 import java.util.*;
+
+import javax.swing.SwingUtilities;
+
+
 public class MainClass {
 	
 	   public static void main(String[] args) {
@@ -18,18 +22,6 @@ public class MainClass {
 			l.add(wt1);
 			l.add(wt);
 			TableController nTc = new TableController(newTable, l);
-			newTable.setTableController(nTc);
-		
-			//LobbyWindow lobby = new LobbyWindow(newPlayer);
-			
-			
-		   //MainWindow blackJack = new MainWindow();
-
-
-//		   //sound test
-//		   SoundPlayer sp = new SoundPlayer("resources/sounds/cardDraw.wav");
-//		   sp.play();
-
-
-	   }
+			newTable.setTableController(nTc);	  
+		}
 }
