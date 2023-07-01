@@ -35,10 +35,7 @@ public class LobbyWindow extends JFrame{
 
 
     public void createAndShowGUI() {
-<<<<<<< Updated upstream
-    	
-=======
->>>>>>> Stashed changes
+
 
         setTitle("Lobby Window");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -105,10 +102,7 @@ public class LobbyWindow extends JFrame{
     }
 
     private JButton createTableButton(String buttonText) {
-<<<<<<< Updated upstream
-    	
-=======
->>>>>>> Stashed changes
+
         JButton button = new JButton(buttonText);
         button.setFont(new Font("Arial", Font.BOLD, 18));
         button.setForeground(Color.WHITE);
