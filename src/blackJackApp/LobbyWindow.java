@@ -21,6 +21,7 @@ public class LobbyWindow extends JFrame{
     private final TableController tcOneHundred;
     private final TableController tcFifty;
     private final TableController tcFive;
+	private JPanel panel;
 
     private static final String TABLESTRING100 = "100$ Table";
     private static final String TABLESTRING50 = "50$ Table";
@@ -35,16 +36,22 @@ public class LobbyWindow extends JFrame{
         this.createAndShowGUI();
         
         // Update User is connected in DB
-        DBManager userDB = new DBManager ();
-        if (newPlayer instanceof UserPlayer) {
-			
-			User user = ((UserPlayer)newPlayer).getUser();
-			DBManager.setconnectedToUser(user, true);
-		}
+        updateUserConnectInDB();
     }
 
 
-    public void createAndShowGUI() {
+    // Update user connect in DB
+    private void updateUserConnectInDB() {
+    	
+         if (thePlayer instanceof UserPlayer) {
+ 			
+ 			User user = ((UserPlayer)thePlayer).getUser();
+ 			DBManager.setconnectedToUser(user, true);
+ 		}
+	}
+
+
+	public void createAndShowGUI() {
 
 
         setTitle("Lobby Window");
@@ -53,7 +60,7 @@ public class LobbyWindow extends JFrame{
 
         // Create the panel with a BorderLayout
         // Load and draw the background image
-        JPanel panel = new JPanel() {
+        this.panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -63,22 +70,20 @@ public class LobbyWindow extends JFrame{
                 g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        panel.setLayout(new BorderLayout());
+        
+    
+        this.panel.setLayout(new BorderLayout());
 
-        // Create the player name text field
-        playerNameField = new JLabel(this.thePlayer.getPlayerName());
-        playerNameField.setPreferredSize(new Dimension(200, 30));
-
-//        // Create the buttons
-//        JButton table100Button = createTableButton("100$ Table");
-//        JButton table50Button = createTableButton("50$ Table");
-//        JButton table5Button = createTableButton("5$ Table");
-//        JButton addMoneyButton = createActionButton("Add Money");
+        // Create a label for the player's name and total money
+        this.playerNameField = new JLabel("Name: " + thePlayer.getPlayerName() + " | Money: " + thePlayer.getTotalMoney() + "$");
+        playerNameField.setBounds(20, 20, 500, 20);
+        playerNameField.setForeground(Color.GRAY);
+        this.panel.add(playerNameField, BorderLayout.NORTH);
 
         // Add components to the panel
-        panel.add(createPlayerNamePanel(), BorderLayout.NORTH);
-        panel.add(createTableButtonsPanel(), BorderLayout.CENTER);
-        panel.add(createActionButtonPanel(), BorderLayout.SOUTH);
+  
+        this.panel.add(createTableButtonsPanel(), BorderLayout.CENTER);
+        this.panel.add(createActionButtonPanel(), BorderLayout.SOUTH);
 
         // Set the panel as the content pane of the frame
         this.setContentPane(panel);
@@ -91,14 +96,16 @@ public class LobbyWindow extends JFrame{
         this.setVisible(true);
     }
 
-    private JLabel  createPlayerNamePanel() {
+    private void createPlayerNamePanel() {
     	
+    	this.panel.remove(this.playerNameField);
+    
     	// Create a label for the player's name and total money
-    	JLabel playerInfoLabel = new JLabel("Name: " + thePlayer.getPlayerName() + " | Money: " + thePlayer.getTotalMoney() + "$");
-        playerInfoLabel.setBounds(20, 20, 500, 20);
-        playerInfoLabel.setForeground(Color.GRAY);
-        playerNameField.add(playerInfoLabel, new Integer(1));
-        return playerInfoLabel;
+    	 this.playerNameField = new JLabel("Name: " + thePlayer.getPlayerName() + " | Money: " + thePlayer.getTotalMoney() + "$");
+    	 this.playerNameField.setBounds(20, 20, 500, 20);
+    	 this.playerNameField.setForeground(Color.GRAY);
+    	 this.panel.add(this.playerNameField, BorderLayout.NORTH);
+ 
     }
 
     private JPanel createTableButtonsPanel() {
@@ -166,14 +173,22 @@ public class LobbyWindow extends JFrame{
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	
                 // Handle button click event
-                if(thePlayer instanceof UserPlayer) addMoneyDialog();
-                else JOptionPane.showMessageDialog(null, "Guest players can not add money :(");
+                if(thePlayer instanceof UserPlayer) {
+                	addMoneyDialog();
+                
+                }
+                else {
+                	JOptionPane.showMessageDialog(null, "Guest players can not add money :(");
+                
+                }
             }
         });
         return button;
     }
     public void addMoneyDialog() {
+    	
         // Create a panel to hold the sign-up form components
         JPanel addMoneyPanel = new JPanel();
         addMoneyPanel.setLayout(new BoxLayout(addMoneyPanel, BoxLayout.Y_AXIS));
@@ -199,6 +214,8 @@ public class LobbyWindow extends JFrame{
         		
                 thePlayer.setTotalMoney(thePlayer.getTotalMoney() + Integer.parseInt(amount));//Integer.parseInt(amountTextField.getText()));
                 DBManager.updateUserValues(((UserPlayer)thePlayer).getUser());
+                createPlayerNamePanel();
+                panel.revalidate();
         	}
         	else {
         		JOptionPane.showMessageDialog(null, "Insert valid number, please");

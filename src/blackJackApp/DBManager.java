@@ -22,6 +22,7 @@ public class DBManager {
 	}
 	
 	
+	
 	synchronized public static Element getRootOfXmlFile (String filePath) {
 		try {
 			// Create a DocumentBuilderFactory
@@ -674,6 +675,42 @@ public class DBManager {
         ArrayList<Map<String, String>> users = getAllUsers();
         users.sort(new ProfitComparator());
         return users;
+    }
+    
+    public static void resetConnectedToFalse() {
+    	
+    	try {
+			
+            // Parse the XML file and obtain the Document object
+            Document document = getdocumentOfXmlFile(usersDBPath);
+
+            // Get the root element
+            Element rootElement = document.getDocumentElement();
+
+            // Get the user elements
+            NodeList userNodes = rootElement.getElementsByTagName("user");
+	        
+	        for (int i = 0; i < userNodes.getLength(); i++) {
+	        	
+	        	Element userElement = (Element) userNodes.item(i);
+	  
+                    userElement.setAttribute("connected", "false");
+
+                    // Save the modified DOM structure back to the XML file
+                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                    Transformer transformer = transformerFactory.newTransformer();
+                    DOMSource source = new DOMSource(document);
+                    StreamResult result = new StreamResult(new File(usersDBPath));
+                    transformer.transform(source, result);
+
+            }
+	        
+	  
+        } 
+    	catch (Exception e) {
+        	
+        }   	
+    	
     }
 	
 	

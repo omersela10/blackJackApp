@@ -14,6 +14,8 @@ public class MainWindow extends JFrame {
     
     public MainWindow() {
     	
+    	DBManager.resetConnectedToFalse();
+    	
         setTitle("Blackjack main menu");
         
         // Backend:
