@@ -192,9 +192,18 @@ public class LobbyWindow extends JFrame{
 
         // If the OK button is pressed
         if (result == JOptionPane.OK_OPTION) {
-            //TODO: update player money in DB
-            thePlayer.setTotalMoney(thePlayer.getTotalMoney() + Integer.parseInt(amountTextField.getText()));
-            DBManager.updateUserValues(((UserPlayer)thePlayer).getUser());
+            // Update player money in DB
+        	String amount = amountTextField.getText();
+        	boolean isValid = amount.matches("^[1-9]\\d*$");
+        	if (isValid == true) {
+        		
+                thePlayer.setTotalMoney(thePlayer.getTotalMoney() + Integer.parseInt(amount));//Integer.parseInt(amountTextField.getText()));
+                DBManager.updateUserValues(((UserPlayer)thePlayer).getUser());
+        	}
+        	else {
+        		JOptionPane.showMessageDialog(null, "Insert valid number, please");
+        	}
+
         }
 
     }
