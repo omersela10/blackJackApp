@@ -98,7 +98,6 @@ public class MainWindow extends JFrame {
         pack();
         setVisible(true);
         
-        
     }
     
     public static boolean validPassword(String password) {
