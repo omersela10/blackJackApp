@@ -148,18 +148,17 @@ public class TableWindow extends JFrame implements IObservable {
 
         // Create a panel to hold the players
         JPanel playersPanel = new JPanel();
-        GridLayout playersGridLayout = new GridLayout(2, 2);
-        playersGridLayout.setHgap(10); // Horizontal gap between players
-     
-        this.theLayeredPane.add(playersPanel, new Integer(1));
+        
 
         // Create player components and add them to the players panel
         for (int i = 0; i < 4; i++) {
         	
-            PlayerComponent playerComponent = new PlayerComponent(this.theLayeredPane, -1);
+            PlayerComponent playerComponent = new PlayerComponent(this.theLayeredPane, i);
             playersComponent.add(playerComponent);
             playersPanel.add(playerComponent);
         }
+        
+        this.theLayeredPane.add(playersPanel, new Integer(1));
         
         // Create a label for the dealer's name and cards
         this.dealerInfoLabel = new JLabel();
@@ -167,9 +166,10 @@ public class TableWindow extends JFrame implements IObservable {
         
         dealerInfoLabel.setForeground(Color.WHITE);
         this.theLayeredPane.add(dealerInfoLabel, new Integer(1));
+        
         // Create an icon for the dealer
         ImageIcon dealerIcon = new ImageIcon(this.dealerIcon);
-
+        
         // Create a label to display the dealer icon
         JLabel dealerIconLabel = new JLabel(dealerIcon);
         dealerIconLabel.setBounds(dealerX + 30, dealerY - 20, dealerIcon.getIconWidth(), dealerIcon.getIconHeight());
@@ -181,7 +181,6 @@ public class TableWindow extends JFrame implements IObservable {
         this.theLayeredPane.add(this.surrenderButton, new Integer(1));
         
    
-        
         this.standButton = new JButton("Stand");
         this.standButton.setBounds(410, 650, 100, 20);
         this.theLayeredPane.add(standButton, new Integer(1));
@@ -203,7 +202,7 @@ public class TableWindow extends JFrame implements IObservable {
         this.theLayeredPane.add(this.doubleButton, new Integer(1));
     
    
-
+     	// Create buttons for seat and bet
         this.seatOrUpButton = new JButton("Seat or Up");
         this.seatOrUpButton.setBounds(1000, 60, 100, 20);
         this.theLayeredPane.add(this.seatOrUpButton, new Integer(1));
@@ -272,25 +271,19 @@ public class TableWindow extends JFrame implements IObservable {
 	
 
 	
-	public void clearPlayerComponent(PlayerComponent anyComponent) {
-		anyComponent.updateComponents(this.thePlayingPlayer);
+	public void clearPlayerComponent(PlayerComponent anyPlayerComponent) {
+		
+		anyPlayerComponent.clearComponent();
 		this.theLayeredPane.repaint();
 	}
 	
     // Update the player components with new player information
-    public void updatePlayersComponents(PlayerComponent playerComponent, Table anyTable) {
+    public void updatePlayersComponents(Player anyPlayer) {
     	
-        for (Player player : anyTable.getPlayers()) {
-        	
-        	if(player != null && player.seatIndex == playerComponent.seatIndex) {
-        		
-        		System.out.println("after update on " + this.thePlayingPlayer.getPlayerName());
-        		playerComponent.updateComponents(player);
-        	}
-        	
-            
-        }
-        
+    	
+    	PlayerComponent thePlayerComponent = this.playersComponent.get(anyPlayer.seatIndex);
+    	thePlayerComponent.updateComponents(anyPlayer);
+
         // Repaint Window
         System.out.println("after repaint Window" + this.thePlayingPlayer.getPlayerName());
       
@@ -302,19 +295,21 @@ public class TableWindow extends JFrame implements IObservable {
 		
 	}
 	
-	public PlayerComponent getMyPlayerComponent() {
+	public PlayerComponent getMyPlayerComponent(int seat) {
 		
-		for(PlayerComponent playerComponent : this.playersComponent) {
-			if(playerComponent.seatIndex != -1 && playerComponent.seatIndex == this.getPlayer().seatIndex) {
-				return playerComponent;
-			}
-		}
-		return null;
+		return this.playersComponent.get(seat);
 	}
 	@Override
-	public void onPropertyChanged(PlayerComponent playerComponent, Table anyTable) {
+	public void onPropertyChanged(Player anyPlayer) {
 		
-		this.updatePlayersComponents(playerComponent, anyTable);
+		this.updatePlayersComponents(anyPlayer);
+		
+	}
+	public void clearHands() {
+		
+		for(PlayerComponent playerComponent : this.playersComponent) {
+			playerComponent.clearHandsComponent();
+		}
 		
 	}
 

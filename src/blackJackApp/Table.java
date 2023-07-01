@@ -298,19 +298,23 @@ public abstract class Table{
 
     	this.dealer.setDealerTurn(true);
     	notifyControllerOnDealerChanged();
+    	
     	while(this.dealer.getSumOfDealerCards() < 17) {
     		
     		dealer.getDealerHand().getMoreCard();
+    	
     		// TODO : Add Sound of drawing card
-			cardDrawSound.play();
+		
     		try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+    		
     		notifyControllerOnDealerChanged();
-
+    		cardDrawSound.play();
+    	
     	}
 
     	this.dealer.setDealerTurn(false);

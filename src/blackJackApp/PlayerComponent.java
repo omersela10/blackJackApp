@@ -10,7 +10,7 @@ public class PlayerComponent extends JLabel {
 
 
     private JLayeredPane thePane;
-    protected int seatIndex = -1;
+    private boolean isSeat = false;
     protected int xPlace;
     protected int yPlace;
     public static final String playerIconPath = "resources/table/Player.png";
@@ -24,33 +24,36 @@ public class PlayerComponent extends JLabel {
     public PlayerComponent(JLayeredPane anyPane, int anySeat) {
     	
         this.thePane = anyPane;
-        this.seatIndex = anySeat;
+        this.updateXYPlace(anySeat);
         
-        if(seatIndex != -1) {
-	        this.updateXYPlace();
+        if(isSeat == true) {
+	       
 	        this.createPlayerPanel();
         }
        
     }
 
-    public void setSeat(int seat) {
+    public void setSeat(boolean isSeat) {
     	
-    	this.seatIndex = seat;
-  
-        this.updateXYPlace();
-        this.createPlayerPanel();
+    	this.isSeat = isSeat;
+ 
+        if(isSeat == true) {
+ 	       
+	        this.createPlayerPanel();
+        }
+       
     }
 
-    private void updateXYPlace() {
+    private void updateXYPlace(int anySeatIndex) {
     	
     	this.yPlace = 400;
     	
-    	if(seatIndex == 1 || seatIndex == 2) {
+    	if(anySeatIndex == 1 || anySeatIndex == 2) {
     		this.yPlace += 100; 
     	}
     	
       
-        this.xPlace = this.seatIndex * 300 + 150;
+        this.xPlace = anySeatIndex * 300 + 150;
        
     }
 
@@ -70,15 +73,23 @@ public class PlayerComponent extends JLabel {
 
     }
 
+    public void clearComponent() {
+    	
+    	if(playerPanel != null) {
+    		playerPanel.removeAll(); // Clear the player panel before updating
+
+    	}
+    }
+    
     // Update components
     public void updateComponents(Player player) {
     	
-    	
-        playerPanel.removeAll(); // Clear the player panel before updating
+    	if(playerPanel != null) {
+    		playerPanel.removeAll(); // Clear the player panel before updating
 
-        if(player.seatIndex < 0) {
-        	return;
-        }
+    	}
+    	
+        
         updateNameComponent(player);
         updatePlayerIconComponent();
 
@@ -93,8 +104,11 @@ public class PlayerComponent extends JLabel {
         thePane.repaint(); // Repaint the panel
     }
 
-    private void clearHandsComponent() {
-    	this.playerPanel.remove(handsPanel);
+    public void clearHandsComponent() {
+    	
+    	if(this.playerPanel!=null) {
+    		this.playerPanel.remove(handsPanel);
+    	}
 	}
 
 	// This method paints the icon of the player on the screen
@@ -134,11 +148,19 @@ public class PlayerComponent extends JLabel {
         
         for (Hand hand : player.getHands()) {
         	
-        	
+        	// Display hand bet money
             JLabel handMoneyLabel = new JLabel(Integer.toString(hand.getBetMoney()) + "$");
-            handMoneyLabel.setBounds(this.xPlace + i * 150, this.yPlace - 140, 80, 10);
+            handMoneyLabel.setBounds(this.xPlace + i * 150, this.yPlace - 150, 80, 10);
             handMoneyLabel.setForeground(Color.WHITE);
+            
+            // Display sum of cards
+            JLabel sumOfCards = new JLabel(Integer.toString(hand.getSumOfCards()) + "/" + Integer.toString(hand.getSumOfCardsWithAce()));
+            sumOfCards.setBounds(this.xPlace + i * 150, this.yPlace - 120, 80, 10);
+            sumOfCards.setForeground(Color.WHITE);
+            
             handsPanel.add(handMoneyLabel);
+            handsPanel.add(sumOfCards);
+            
             updateHandComponent(i, hand);
             i += 1;
         }

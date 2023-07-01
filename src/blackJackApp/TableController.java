@@ -60,7 +60,7 @@ public class TableController{
             }
             table.placeBet(currentPlayer); // Place the bet in the Table model
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
+            notifyPlayersOfGameStateChange(currentPlayer);
         }
     }
 
@@ -77,7 +77,7 @@ public class TableController{
         public void actionPerformed(ActionEvent e) {
         	
             Player currentPlayer = table.getCurrentPlayer(); // Get the current player from the Table model
-            if(this.theWindow.getPlayer() != currentPlayer) {
+            if(this.theWindow.getPlayer() != currentPlayer || currentPlayer.seatIndex == -1) {
             	theWindow.updateMessage("Its not your turn");
             	return;
             }
@@ -85,7 +85,7 @@ public class TableController{
             String message = table.hit(currentPlayer); // Player hits in the Table model
             theWindow.updateMessage(message);
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
+            notifyPlayersOfGameStateChange(currentPlayer);
         }
     }
 
@@ -103,7 +103,7 @@ public class TableController{
         public void actionPerformed(ActionEvent e) {
         	
             Player currentPlayer = table.getCurrentPlayer(); // Get the current player from the Table model
-            if(this.theWindow.getPlayer() != currentPlayer) {
+            if(this.theWindow.getPlayer() != currentPlayer || currentPlayer.seatIndex == -1) {
             	theWindow.updateMessage("Its not your turn");
             	return;
             }
@@ -111,7 +111,7 @@ public class TableController{
             String message = table.stand(currentPlayer); // Player stands in the Table model
             theWindow.updateMessage(message);
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
+            notifyPlayersOfGameStateChange(currentPlayer);
         }
     }
     // Listener for the Split button
@@ -128,7 +128,7 @@ public class TableController{
         public void actionPerformed(ActionEvent e) {
         	
             Player currentPlayer = table.getCurrentPlayer(); // Get the current player from the Table model
-            if(this.theWindow.getPlayer() != currentPlayer) {
+            if(this.theWindow.getPlayer() != currentPlayer || currentPlayer.seatIndex == -1) {
             	theWindow.updateMessage("Its not your turn");
             	return;
             }
@@ -136,7 +136,7 @@ public class TableController{
             String message = table.split(currentPlayer); // Player stands in the Table model
             theWindow.updateMessage(message);
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
+            notifyPlayersOfGameStateChange(currentPlayer);
         }
     }
     // Listener for the Double button
@@ -153,7 +153,7 @@ public class TableController{
         public void actionPerformed(ActionEvent e) {
       
             Player currentPlayer = table.getCurrentPlayer(); // Get the current player from the Table model
-            if(this.theWindow.getPlayer() != currentPlayer) {
+            if(this.theWindow.getPlayer() != currentPlayer || currentPlayer.seatIndex == -1) {
             	theWindow.updateMessage("Its not your turn");
             	return;
             }
@@ -161,7 +161,7 @@ public class TableController{
             String message = table.doubleDown(currentPlayer); // Player stands in the Table model
             theWindow.updateMessage(message);
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
+            notifyPlayersOfGameStateChange(currentPlayer);
         }
     }
     // Listener for the Surrender button
@@ -179,7 +179,7 @@ public class TableController{
         	
             Player currentPlayer = table.getCurrentPlayer(); // Get the current player from the Table model
             
-            if(this.theWindow.getPlayer() != currentPlayer) {
+            if(this.theWindow.getPlayer() != currentPlayer || currentPlayer.seatIndex == -1) {
             	theWindow.updateMessage("Its not your turn");
             	return;
             }
@@ -188,7 +188,7 @@ public class TableController{
             theWindow.updateMessage(message);
             
             // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
+            notifyPlayersOfGameStateChange(currentPlayer);
         }
     }
     // Listener for the Seat button
@@ -206,9 +206,7 @@ public class TableController{
         	
             Player currentPlayer = theWindow.getPlayer(); // Get the current player from the Table model
             String message = "";
-            
 
-            
             if(this.isSeat == false) {
             	this.isSeat = true;
             	
@@ -218,10 +216,10 @@ public class TableController{
             }
             else {
             	this.isSeat = false;
-            	unSubscribePlayerComponent(currentPlayer);
+            	int seatBefore = currentPlayer.seatIndex;
             	message = table.removePlayer(currentPlayer);
-            	
-            	
+            	unSubscribePlayerComponent(currentPlayer, seatBefore);
+
             }
             
             theWindow.updateMessage(message);
@@ -231,15 +229,16 @@ public class TableController{
     }
  
     // Notify all players of the game state change
-    private void notifyPlayersOfGameStateChange(PlayerComponent playerComponent) {
+    private void notifyPlayersOfGameStateChange(Player anyPlayer) {
     	
     	 for(TableWindow anyWindow : obsrevers) {
     		
-			 anyWindow.onPropertyChanged(playerComponent, this.table);
+			 anyWindow.onPropertyChanged(anyPlayer);
 			 System.out.println(anyWindow.getPlayer().getPlayerName() +" : windiw");
 			 
 			 for(PlayerComponent playerComponent1 :anyWindow.playersComponent)
 				 System.out.println(playerComponent1.xPlace + " y:"+ playerComponent1.yPlace);
+			 
 			 anyWindow.revalidate();
 			 anyWindow.repaint();
 		 }
@@ -316,9 +315,9 @@ public class TableController{
 	
 		// Clean player components
 		for(TableWindow windowTable : this.obsrevers) {
-			for(PlayerComponent anyComponent : windowTable.playersComponent) {
-				windowTable.clearPlayerComponent(anyComponent);
-			}
+
+			windowTable.clearHands();
+
 		}
 		  try {
 	        	// Sleep for 1 second
@@ -395,25 +394,23 @@ public class TableController{
     	for(TableWindow tableWindow : this.obsrevers) {
     		
     		PlayerComponent anyPlayerComponent = tableWindow.playersComponent.get(seat);
-    		anyPlayerComponent.setSeat(seat);
+    		anyPlayerComponent.setSeat(true);
     		anyPlayerComponent.updateComponents(anyPlayer);
     		tableWindow.theLayeredPane.repaint();
 
     	}
     	
     }
-    public void unSubscribePlayerComponent(Player anyPlayer) {
+    public void unSubscribePlayerComponent(Player anyPlayer,  int seatBefore) {
     	
-    	int seatBefore = anyPlayer.seatIndex; 
-    	int seatAfter = anyPlayer.seatIndex = -1;
-    	
+    	 
+
     	for(TableWindow tableWindow : this.obsrevers) {
  
     		PlayerComponent anyPlayerComponent = tableWindow.playersComponent.get(seatBefore);
-    		anyPlayerComponent.setSeat(seatAfter);
-    		
-    		anyPlayerComponent.updateComponents(anyPlayer);
     		tableWindow.clearPlayerComponent(anyPlayerComponent);
+    		anyPlayerComponent.setSeat(false);
+  
     		tableWindow.theLayeredPane.repaint();
     	}
     	  
