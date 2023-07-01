@@ -22,9 +22,9 @@ public class LobbyWindow extends JFrame{
     private final TableController tcFifty;
     private final TableController tcFive;
 
-    private final String TABLESTRING100 = "100$ Table";
-    private final String TABLESTRING50 = "50$ Table";
-    private final String TABLESTRING5 = "5$ Table";
+    private static final String TABLESTRING100 = "100$ Table";
+    private static final String TABLESTRING50 = "50$ Table";
+    private static final String TABLESTRING5 = "5$ Table";
     
     public LobbyWindow(Player newPlayer, TableController nTcOneHundred,TableController nTcFifty,TableController nTcFive) {
     	
