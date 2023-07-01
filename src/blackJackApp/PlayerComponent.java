@@ -158,7 +158,7 @@ public class PlayerComponent extends JLabel {
             // Display sum of cards
             String sum = hand.hasBlackJack() ? "BlackJack" : Integer.toString(hand.getSumOfCards()) + "/" + Integer.toString(hand.getSumOfCardsWithAce());
             JLabel sumOfCards = new JLabel(sum);
-            sumOfCards.setBounds(this.xPlace + i * 150, this.yPlace - 120, 80, 10);
+            sumOfCards.setBounds(this.xPlace + (i * 150) - 15, this.yPlace - 120, 80, 10);
             sumOfCards.setForeground(Color.WHITE);
             
             handsPanel.add(chipIconLabel);

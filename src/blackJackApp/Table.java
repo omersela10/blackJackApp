@@ -371,17 +371,6 @@ public abstract class Table{
 					tableController.notifyToSpecificWindow("You lose " + (-1 * difference) + "$", player);
 				}
 			
-				// Update DB if it is user 
-				if (player instanceof UserPlayer) {
-					
-					User user = ((UserPlayer)player).getUser();
-					
-					// Update += difference in user object
-					user.addToTotalProfit(profit);
-					
-					DBManager.updateUserValues(user);
-				}
-				
 				updaeMoneyInDB(player, profit);
 				tableController.updatePlayerLabel(player);
 			}
