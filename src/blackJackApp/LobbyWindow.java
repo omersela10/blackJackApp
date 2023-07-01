@@ -145,7 +145,8 @@ public class LobbyWindow extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Handle button click event
-                addMoneyDialog();
+                if(thePlayer instanceof UserPlayer) addMoneyDialog();
+                else JOptionPane.showMessageDialog(null, "Guest players can not add money :(");
             }
         });
         return button;
@@ -170,6 +171,8 @@ public class LobbyWindow extends JFrame{
         // If the OK button is pressed
         if (result == JOptionPane.OK_OPTION) {
             //TODO: update player money in DB
+            thePlayer.setTotalMoney(thePlayer.getTotalMoney() + Integer.parseInt(amountTextField.getText()));
+            DBManager.updateUserValues(((UserPlayer)thePlayer).getUser());
         }
 
     }
