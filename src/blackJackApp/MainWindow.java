@@ -146,7 +146,7 @@ public class MainWindow extends JFrame {
 
 	        if (!isNameValid || !isPasswordValid) {
 	        	
-	            JOptionPane.showMessageDialog(this, "Invalid name or password", "Error", JOptionPane.ERROR_MESSAGE);
+	            JOptionPane.showMessageDialog(this, "Invalid name or password! \n -Name must be at least 5 characters long and contain only letters and numbers, \n -Password must be at least 5 characters long.", "Error", JOptionPane.ERROR_MESSAGE);
 	        } else {
 	            // Name and password are valid, save them to variables or process them further
 	            // For example, you can save them as instance variables in the MainWindow class
