@@ -66,7 +66,7 @@ public class MainWindow extends JFrame {
         signUpButton.setBounds(baffer, 500, 120, 30);
         logInButton.setBounds(baffer+150, 500, 120, 30);
         playAsGuestButton.setBounds(baffer+300, 500, 120, 30);
-        leaderboardButton.setBounds(50, 700, 120, 30);
+        leaderboardButton.setBounds(baffer - 200, 600, 120, 30);
 
         // Add buttons to the mainPanel
         mainPanel.add(signUpButton);
