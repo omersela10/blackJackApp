@@ -22,7 +22,7 @@ public abstract class Table{
 	private SoundPlayer chipsSettleSound = new SoundPlayer("resources/sounds/chipsSettle.wav");
 
 	private volatile Timer betTimer;
-	private static final int TIMEOUT = 8000;
+	private static final int TIMEOUT = 10000;
 	private volatile boolean anyPlayerBet = false;
 	private volatile boolean anyPlayerSeat = false;
 	private volatile boolean anyPlayerAlive = false;
