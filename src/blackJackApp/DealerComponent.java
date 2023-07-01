@@ -64,8 +64,11 @@ public class DealerComponent extends JLabel {
         if(dealer.getDealerHand().getSumOfPlayingCards() >= 17 && dealer.isDealerTurn() == true && this.showCard == false) {
         	
         	this.showCard = true;
+        	 // Display sum of cards
+            String sum = dealer.getDealerHand().hasBlackJack() ? "BlackJack!" : Integer.toString(dealer.getDealerHand().getSumOfCards()) + "/" + Integer.toString(dealer.getDealerHand().getSumOfCardsWithAce());
+            JLabel sumOfCards = new JLabel(sum);
 	       	// It's dealer turn so Display sum of cards
-	        JLabel sumOfCards = new JLabel(Integer.toString(dealer.getDealerHand().getSumOfCards()) + "/" + Integer.toString(dealer.getDealerHand().getSumOfCardsWithAce()));
+	        
 	        sumOfCards.setBounds(dealerX + 25, dealerY + 180 , 80, 10);
 	        sumOfCards.setForeground(Color.WHITE);
 	        this.dealerPanel.add(sumOfCards, new Integer(1));

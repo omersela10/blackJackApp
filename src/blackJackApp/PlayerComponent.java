@@ -41,11 +41,11 @@ public class PlayerComponent extends JLabel {
     	this.yPlace = 400;
     	
     	if(anySeatIndex == 1 || anySeatIndex == 2) {
-    		this.yPlace += 100; 
+    		this.yPlace += 160; 
     	}
     	
       
-        this.xPlace = anySeatIndex * 300 + 150;
+        this.xPlace = anySeatIndex * 250 + 140;
        
     }
 
@@ -152,11 +152,12 @@ public class PlayerComponent extends JLabel {
             // Display chips icon
             ImageIcon chipIcon = new ImageIcon(chipsIconPath);
             JLabel chipIconLabel = new JLabel(chipIcon);
-            chipIconLabel.setBounds(this.xPlace + (i * 150) + 25, this.yPlace - 150, chipIcon.getIconWidth(), chipIcon.getIconHeight());
+            chipIconLabel.setBounds(this.xPlace + (i * 150) + 30, this.yPlace - 150, chipIcon.getIconWidth(), chipIcon.getIconHeight());
 
             
             // Display sum of cards
-            JLabel sumOfCards = new JLabel(Integer.toString(hand.getSumOfCards()) + "/" + Integer.toString(hand.getSumOfCardsWithAce()));
+            String sum = hand.hasBlackJack() ? "BlackJack" : Integer.toString(hand.getSumOfCards()) + "/" + Integer.toString(hand.getSumOfCardsWithAce());
+            JLabel sumOfCards = new JLabel(sum);
             sumOfCards.setBounds(this.xPlace + i * 150, this.yPlace - 120, 80, 10);
             sumOfCards.setForeground(Color.WHITE);
             
