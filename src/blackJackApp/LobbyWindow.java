@@ -152,6 +152,7 @@ public class LobbyWindow extends JFrame{
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	
                 // Handle button click event
                 TableWindow nTw = new TableWindow(thePlayer);
                 switch (buttonText) {
@@ -160,13 +161,13 @@ public class LobbyWindow extends JFrame{
                     	 tcOneHundred.getTable().setTableController(tcOneHundred);
                     	 break;
                     case TABLESTRING50:
-                    	tcFifty.addWindow(nTw);
-                    	tcFifty.getTable().setTableController(tcFifty);
-                    	break;
+                    	 tcFifty.addWindow(nTw);
+                    	 tcFifty.getTable().setTableController(tcFifty);
+                    	 break;
                     case TABLESTRING5:
-                    	tcFive.addWindow(nTw);
-                    	tcFive.getTable().setTableController(tcFive);
-                    	break;
+                    	 tcFive.addWindow(nTw);
+                    	 tcFive.getTable().setTableController(tcFive);
+                    	 break;
                 }
                 setVisible(false);
             }

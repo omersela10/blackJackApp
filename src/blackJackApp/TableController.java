@@ -227,13 +227,19 @@ public class TableController{
             String message = "";
 
             if(this.isSeat == false) {
-            	this.isSeat = true;
+            	
             	
             	message = table.addPlayer(currentPlayer);
-            	subscribePlayerComponent(currentPlayer);
+            	
+            	// If seated
+            	if(message.indexOf("Seated") != -1) {
+            		subscribePlayerComponent(currentPlayer);
+            		this.isSeat = true;
+            	}
             	
             }
             else {
+            	
             	this.isSeat = false;
             	int seatBefore = currentPlayer.seatIndex;
             	message = table.removePlayer(currentPlayer);

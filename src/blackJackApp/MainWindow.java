@@ -18,19 +18,16 @@ public class MainWindow extends JFrame {
     	
         setTitle("Blackjack main menu");
         
-        // Backend:
+        // Initialize Tables:
         
         Table oneHundredNewTable = OneHundredDollarTable.getInstance();
         Table fiftynewTable = FiftyDollarTable.getInstance();
         Table fiveNewTable = FiveDollarTable.getInstance();
         
-        List<TableWindow> lOneHundred = new ArrayList<TableWindow>();
-        List<TableWindow> lFifty = new ArrayList<TableWindow>();
-        List<TableWindow> lFive = new ArrayList<TableWindow>();
         
-        TableController nTcOneHundred = new TableController(oneHundredNewTable, lOneHundred);
-        TableController nTFifty = new TableController(fiftynewTable, lFifty);
-        TableController nTcFive = new TableController(fiveNewTable, lFive);
+        TableController nTcOneHundred = new TableController(oneHundredNewTable, null);
+        TableController nTFifty = new TableController(fiftynewTable, null);
+        TableController nTcFive = new TableController(fiveNewTable, null);
         
         oneHundredNewTable.setTableController(nTcOneHundred);
         fiftynewTable.setTableController(nTFifty);

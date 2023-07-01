@@ -26,8 +26,8 @@ public abstract class Table{
 	private volatile boolean anyPlayerBet = false;
 	private volatile boolean anyPlayerSeat = false;
 	private volatile boolean anyPlayerAlive = false;
-	private static volatile boolean inRound = false;
-	private static volatile boolean timeToBet = false; 
+	private volatile boolean inRound = false;
+	private volatile boolean timeToBet = false; 
 	
 	private Object betLock = new Object();
 	protected static final int MAXIMUMPLAYERS = 4;
