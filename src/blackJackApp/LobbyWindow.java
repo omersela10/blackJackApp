@@ -31,6 +31,14 @@ public class LobbyWindow extends JFrame{
         this.tcFifty = nTcFifty;
         this.tcFive = nTcFive;
         this.createAndShowGUI();
+        
+        // Update User is connected in DB
+        DBManager userDB = new DBManager ();
+        if (newPlayer instanceof UserPlayer) {
+			
+			User user = ((UserPlayer)newPlayer).getUser();
+			DBManager.setconnectedToUser(user, true);
+		}
     }
 
 
@@ -98,6 +106,7 @@ public class LobbyWindow extends JFrame{
         tableButtonsPanel.add(createTableButton(TABLESTRING100));
         tableButtonsPanel.add(createTableButton(TABLESTRING50));
         tableButtonsPanel.add(createTableButton(TABLESTRING5));
+        
         return tableButtonsPanel;
     }
 
