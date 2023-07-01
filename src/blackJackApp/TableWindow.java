@@ -142,7 +142,7 @@ public class TableWindow extends JFrame implements IObservable {
         
         // Create a label for the player's name and total money
         this.playerInfoLabel = new JLabel("Name: " + thePlayingPlayer.getPlayerName() + " | Money: " + thePlayingPlayer.getTotalMoney() + "$");
-        playerInfoLabel.setBounds(20, 20, 200, 20);
+        playerInfoLabel.setBounds(20, 20, 500, 20);
         playerInfoLabel.setForeground(Color.WHITE);
         this.theLayeredPane.add(playerInfoLabel, new Integer(1));
 
@@ -151,7 +151,7 @@ public class TableWindow extends JFrame implements IObservable {
         
 
         // Create player components and add them to the players panel
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < Table.MAXIMUMPLAYERS; i++) {
         	
             PlayerComponent playerComponent = new PlayerComponent(this.theLayeredPane, i);
             playersComponent.add(playerComponent);

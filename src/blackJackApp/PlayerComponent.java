@@ -14,12 +14,11 @@ public class PlayerComponent extends JLabel {
     protected int xPlace;
     protected int yPlace;
     public static final String playerIconPath = "resources/table/Player.png";
+    public static final String chipsIconPath = "resources/table/chipsIcon.png";
     private JPanel playerPanel;
     private JPanel handsPanel;
 
-    // Player component dimensions
-    private static final int PLAYER_WIDTH = 300;
-    private static final int PLAYER_HEIGHT = 300;
+
     
     public PlayerComponent(JLayeredPane anyPane, int anySeat) {
     	
@@ -153,11 +152,18 @@ public class PlayerComponent extends JLabel {
             handMoneyLabel.setBounds(this.xPlace + i * 150, this.yPlace - 150, 80, 10);
             handMoneyLabel.setForeground(Color.WHITE);
             
+            // Display chips icon
+            ImageIcon chipIcon = new ImageIcon(chipsIconPath);
+            JLabel chipIconLabel = new JLabel(chipIcon);
+            chipIconLabel.setBounds(this.xPlace + (i * 150) + 25, this.yPlace - 150, chipIcon.getIconWidth(), chipIcon.getIconHeight());
+
+            
             // Display sum of cards
             JLabel sumOfCards = new JLabel(Integer.toString(hand.getSumOfCards()) + "/" + Integer.toString(hand.getSumOfCardsWithAce()));
             sumOfCards.setBounds(this.xPlace + i * 150, this.yPlace - 120, 80, 10);
             sumOfCards.setForeground(Color.WHITE);
             
+            handsPanel.add(chipIconLabel);
             handsPanel.add(handMoneyLabel);
             handsPanel.add(sumOfCards);
             
