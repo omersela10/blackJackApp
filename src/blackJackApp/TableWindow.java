@@ -99,7 +99,7 @@ public class TableWindow extends JFrame implements IObservable {
 
 
 	public void updatePlayerLabel() {
-		
+	
 		this.theLayeredPane.remove(this.playerInfoLabel);
 		this.playerInfoLabel = new JLabel("Name: " + thePlayingPlayer.getPlayerName() + " | Money: " + thePlayingPlayer.getTotalMoney() + "$");
 		this.playerInfoLabel.setBounds(20, 20, 200, 20);
@@ -146,6 +146,21 @@ public class TableWindow extends JFrame implements IObservable {
         playerInfoLabel.setForeground(Color.WHITE);
         this.theLayeredPane.add(playerInfoLabel, new Integer(1));
 
+        // Create a panel to hold the players
+        JPanel playersPanel = new JPanel();
+        GridLayout playersGridLayout = new GridLayout(2, 2);
+        playersGridLayout.setHgap(10); // Horizontal gap between players
+     
+        this.theLayeredPane.add(playersPanel, new Integer(1));
+
+        // Create player components and add them to the players panel
+        for (int i = 0; i < 4; i++) {
+        	
+            PlayerComponent playerComponent = new PlayerComponent(this.theLayeredPane, -1);
+            playersComponent.add(playerComponent);
+            playersPanel.add(playerComponent);
+        }
+        
         // Create a label for the dealer's name and cards
         this.dealerInfoLabel = new JLabel();
         dealerInfoLabel.setBounds(dealerX, dealerY, 200, 100);

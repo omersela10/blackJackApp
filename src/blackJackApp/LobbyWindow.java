@@ -31,8 +31,10 @@ public class LobbyWindow extends JFrame{
        
     public void createAndShowGUI() {
     	
+
         setTitle("Lobby Window");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
 
         // Create the panel with a BorderLayout
         panel = new JPanel() {
@@ -83,6 +85,7 @@ public class LobbyWindow extends JFrame{
     }
 
     private JPanel createTableButtonsPanel() {
+    	
         JPanel tableButtonsPanel = new JPanel();
         tableButtonsPanel.setOpaque(false);
         tableButtonsPanel.setLayout(new GridLayout(1, 3, 10, 0));
@@ -92,7 +95,8 @@ public class LobbyWindow extends JFrame{
         return tableButtonsPanel;
     }
 
-    private JButton createTableButton(String buttonText ) {
+    private JButton createTableButton(String buttonText) {
+    	
         JButton button = new JButton(buttonText);
         button.setFont(new Font("Arial", Font.BOLD, 18));
         button.setForeground(Color.WHITE);
@@ -111,6 +115,7 @@ public class LobbyWindow extends JFrame{
     }
 
     private JPanel createActionButtonPanel() {
+    	
         JPanel actionButtonPanel = new JPanel();
         actionButtonPanel.setOpaque(false);
         actionButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));

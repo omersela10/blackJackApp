@@ -94,19 +94,27 @@ public class FirstChoiceState implements HandState{
 		this.currentHand.getMoreCard();
 		
 		// If done
-		if(this.currentHand.getSumOfPlayingCards() >= 21) {
+		if(this.currentHand.getSumOfPlayingCards() > 21) {
 			
 				// Update State
 				this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
 				this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
+				return "Busted";
 				
-				
+		}
+		else if (this.currentHand.getSumOfPlayingCards() == 21) {
+			
+			// Update State
+			this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
+			this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
+			
 		}
 		else {
 			// Update State
 			this.thePlayer.setSecondChoice(new SecondChoiceState(this.thePlayer, this.currentHand));
 			this.thePlayer.setTheState(this.thePlayer.getSecondChoice());
 		}
+		
 		return "Hitted";
 		
 	}
@@ -127,7 +135,13 @@ public class FirstChoiceState implements HandState{
 		// Update State
 		this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
 		this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
-		return "Double down";
+		if(this.currentHand.getSumOfPlayingCards() > 21) {
+			return "Busted";
+		}
+		else {
+			return "Double down";
+		}
+		
 	}
 
 }

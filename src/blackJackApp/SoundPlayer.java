@@ -5,6 +5,7 @@ import javax.sound.sampled.*;
 import java.io.File;
 
 public class SoundPlayer {
+	
     private String filePath;
     private Clip clip;
 

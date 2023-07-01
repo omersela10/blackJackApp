@@ -178,6 +178,7 @@ public class TableController{
         public void actionPerformed(ActionEvent e) {
         	
             Player currentPlayer = table.getCurrentPlayer(); // Get the current player from the Table model
+            
             if(this.theWindow.getPlayer() != currentPlayer) {
             	theWindow.updateMessage("Its not your turn");
             	return;
@@ -185,6 +186,7 @@ public class TableController{
             
             String message = table.surrender(currentPlayer); // Player stands in the Table model
             theWindow.updateMessage(message);
+            
             // Notify all players of the updated game state
             notifyPlayersOfGameStateChange(theWindow.getMyPlayerComponent());
         }
@@ -194,7 +196,6 @@ public class TableController{
     	
     	private TableWindow theWindow;
     	private boolean isSeat = false;
-    	private PlayerComponent playerComponent;
     	
     	public SeatButtonListener(TableWindow theWindow) {
     		this.theWindow = theWindow;
@@ -206,35 +207,27 @@ public class TableController{
             Player currentPlayer = theWindow.getPlayer(); // Get the current player from the Table model
             String message = "";
             
+
             
             if(this.isSeat == false) {
             	this.isSeat = true;
             	
-            	playerComponent = new PlayerComponent(theWindow.theLayeredPane, theWindow.getPlayer().seatIndex);
-
             	message = table.addPlayer(currentPlayer);
-            	subscribePlayerComponent(playerComponent);
+            	subscribePlayerComponent(currentPlayer);
             	
             }
             else {
             	this.isSeat = false;
+            	unSubscribePlayerComponent(currentPlayer);
             	message = table.removePlayer(currentPlayer);
-            	unSubscribePlayerComponent(playerComponent);
+            	
             	
             }
             
-            
-            playerComponent.setSeat(theWindow.getPlayer().seatIndex);
-        
             theWindow.updateMessage(message);
-            
-            // Notify all players of the updated game state
-            notifyPlayersOfGameStateChange(playerComponent);
+ 
         }
 
-			
-		
-		
     }
  
     // Notify all players of the game state change
@@ -395,29 +388,33 @@ public class TableController{
 		 }
 	}
 
-    public void subscribePlayerComponent(PlayerComponent newPlayerComponent) {
+    public void subscribePlayerComponent(Player anyPlayer) {
+    	
+    	int seat = anyPlayer.seatIndex;
     	
     	for(TableWindow tableWindow : this.obsrevers) {
     		
-    	
-	    	tableWindow.playersComponent.add(newPlayerComponent);
-	
-    		tableWindow.theLayeredPane.add(newPlayerComponent, new Integer(1));
+    		PlayerComponent anyPlayerComponent = tableWindow.playersComponent.get(seat);
+    		anyPlayerComponent.setSeat(seat);
+    		anyPlayerComponent.updateComponents(anyPlayer);
     		tableWindow.theLayeredPane.repaint();
-    		System.out.println("added:" + newPlayerComponent.seatIndex);
+
     	}
     	
     }
-    public void unSubscribePlayerComponent(PlayerComponent anyPlayerComponent) {
+    public void unSubscribePlayerComponent(Player anyPlayer) {
+    	
+    	int seatBefore = anyPlayer.seatIndex; 
+    	int seatAfter = anyPlayer.seatIndex = -1;
     	
     	for(TableWindow tableWindow : this.obsrevers) {
  
-    			tableWindow.playersComponent.remove(anyPlayerComponent);
-    			tableWindow.theLayeredPane.remove(anyPlayerComponent);
-    			tableWindow.theLayeredPane.repaint();
-  
-    		System.out.println("removed:" + anyPlayerComponent.seatIndex);
+    		PlayerComponent anyPlayerComponent = tableWindow.playersComponent.get(seatBefore);
+    		anyPlayerComponent.setSeat(seatAfter);
+    		
+    		anyPlayerComponent.updateComponents(anyPlayer);
     		tableWindow.clearPlayerComponent(anyPlayerComponent);
+    		tableWindow.theLayeredPane.repaint();
     	}
     	  
     }

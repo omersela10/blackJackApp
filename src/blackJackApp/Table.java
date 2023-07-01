@@ -12,9 +12,9 @@ public abstract class Table{
 	
 	// Data Members:
 
-	//soundPlayers:
-	//private SoundPlayer cardDrawSound = new SoundPlayer("resources/sounds/cardDraw.wav");
-	//private SoundPlayer chipsSettleSound = new SoundPlayer("resources/sounds/chipsSettle.wav");
+	// Sounds:
+	private SoundPlayer cardDrawSound = new SoundPlayer("resources/sounds/cardDraw.wav");
+	private SoundPlayer chipsSettleSound = new SoundPlayer("resources/sounds/chipsSettle.wav");
 
 	private volatile Timer betTimer;
 	private static final int TIMEOUT = 8000;
@@ -302,7 +302,7 @@ public abstract class Table{
     		
     		dealer.getDealerHand().getMoreCard();
     		// TODO : Add Sound of drawing card
-			//cardDrawSound.play();
+			cardDrawSound.play();
     		try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -425,7 +425,7 @@ public abstract class Table{
 
 	public String hit(Player currentPlayer) {
 		// TODO : Add Sound of drawing card
-		//cardDrawSound.play();
+		cardDrawSound.play();
 		return currentPlayer.hit();
 		
 	}
@@ -438,14 +438,14 @@ public abstract class Table{
 
 	public String split(Player currentPlayer) {
 		// TODO : Add Sound of drawing card
-		//cardDrawSound.play();
+		cardDrawSound.play();
 		return currentPlayer.split();
 		
 	}
 
 	public String doubleDown(Player currentPlayer) {
 		// TODO : Add Sound of drawing card
-		//cardDrawSound.play();
+		cardDrawSound.play();
 		return currentPlayer.doubleDown();
 		
 	}
@@ -463,7 +463,7 @@ public abstract class Table{
 		
 		this.startBettingPhase(currentPlayer);
 		// TODO: add sound of betting
-		//chipsSettleSound.play();
+		chipsSettleSound.play();
 	}
 	 // Method to notify the controller of a game state change
     private void notifyControllerOnDealerChanged() {

@@ -51,6 +51,7 @@ public class SecondChoiceState implements HandState {
 				// Update State
 				this.thePlayer.setEndOfRoundHand(new EndHandRoundState(this.thePlayer, this.currentHand));
 				this.thePlayer.setTheState(this.thePlayer.getEndOfRoundHand());
+				return "Busted";
 				
 				
 		}
