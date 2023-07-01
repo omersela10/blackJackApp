@@ -2,6 +2,10 @@ package blackJackApp;
 
 
 import java.util.*;
+
+import javax.swing.SwingUtilities;
+
+
 public class MainClass {
 	
 	   public static void main(String[] args) {
@@ -19,8 +23,12 @@ public class MainClass {
 			//nTc.addWindow(wt);
 			//LobbyWindow lobby = new LobbyWindow(newPlayer);
 			
-			
-		   MainWindow blackJack = new MainWindow();
+	        SwingUtilities.invokeLater(new Runnable() {
+	            public void run() {
+	                new MainWindow();
+	            }
+	        });
+		   
 
 
 //		   //sound test

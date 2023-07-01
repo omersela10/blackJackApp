@@ -8,8 +8,10 @@ import java.util.Map;
 import javax.swing.*;
 
 public class MainWindow extends JFrame {
+	
     private static String backgroundIcon = "resources/mainWindow/blackJackMain.png";
 
+    
     public MainWindow() {
         setTitle("Blackjack main menu");
         
@@ -153,7 +155,12 @@ public class MainWindow extends JFrame {
 	            }
 	            else {
 	            	UserPlayer newPlayer = new UserPlayer(userDB.addNewUserToDB(name, password));
-	            	LobbyWindow guestLobby = new LobbyWindow(newPlayer,nTcOneHundred,nTFifty,nTcFive);
+	            	Thread thread = new Thread(() -> {
+	            	    LobbyWindow guestLobby = new LobbyWindow(newPlayer, nTcOneHundred, nTFifty, nTcFive);
+	            	    // Any other code you want to execute in the thread
+	            	});
+
+	            	thread.start();  // Start the thread
 	            }
 	            
 	        }
@@ -203,7 +210,13 @@ public class MainWindow extends JFrame {
 	            // User exists, proceed with the login
 	        	User logInUser = userDB.getUserFromDB(name, password);
 	            UserPlayer loggedInPlayer = new UserPlayer(logInUser);
-	            LobbyWindow loggedInLobby = new LobbyWindow(loggedInPlayer, nTcOneHundred, nTFifty, nTcFive);
+	            
+	        	Thread thread = new Thread(() -> {
+	        		LobbyWindow loggedInLobby = new LobbyWindow(loggedInPlayer, nTcOneHundred, nTFifty, nTcFive);
+	        	    // Any other code you want to execute in the thread
+	        	});
+
+	        	thread.start();  // Start the thread
 	        }
 	    }
 	}
@@ -211,7 +224,13 @@ public class MainWindow extends JFrame {
 	private void playAsGuest(TableController nTcOneHundred,TableController nTFifty,TableController nTcFive) {
 		
 		GuestPlayer newGuestPlayer = new GuestPlayer();
-		LobbyWindow guestLobby = new LobbyWindow(newGuestPlayer,nTcOneHundred,nTFifty,nTcFive);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+    		LobbyWindow guestLobby = new LobbyWindow(newGuestPlayer,nTcOneHundred,nTFifty,nTcFive);
+            }
+        });
+
 	}
 
 	private void leaderboard() {
