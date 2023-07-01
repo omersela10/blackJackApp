@@ -119,6 +119,7 @@ public class LobbyWindow extends JFrame{
                     case TABLESTRING50 -> tcFifty.addWindow(nTw);
                     case TABLESTRING5 -> tcFive.addWindow(nTw);
                 }
+                setVisible(false);
             }
         });
         return button;
@@ -144,10 +145,32 @@ public class LobbyWindow extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Handle button click event
-                // TODO: Add your logic here
+                addMoneyDialog();
             }
         });
         return button;
     }
+    public void addMoneyDialog() {
+        // Create a panel to hold the sign-up form components
+        JPanel addMoneyPanel = new JPanel();
+        addMoneyPanel.setLayout(new BoxLayout(addMoneyPanel, BoxLayout.Y_AXIS));
 
+        // Create labels and text fields for name and password
+        JLabel amountLabel = new JLabel("Amount to add:");
+        JTextField amountTextField = new JTextField(20);
+
+
+        // Add the components to the sign-up panel
+        addMoneyPanel.add(amountLabel);
+        addMoneyPanel.add(amountTextField);
+
+        // Show the sign-up panel and handle the button press
+        int result = JOptionPane.showConfirmDialog(this, addMoneyPanel, "Sign Up", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        // If the OK button is pressed
+        if (result == JOptionPane.OK_OPTION) {
+            //TODO: update player money in DB
+        }
+
+    }
 }
