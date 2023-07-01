@@ -350,14 +350,35 @@ public abstract class Table{
 				int difference = profit - sumOfTotalBetOnHand;
 				
 				if( difference > 0) {
-					//TODO: Update he win in DB if it is user
+					
+					// Update he win in user object
+					if (player instanceof UserPlayer) {
+						
+						User user = ((UserPlayer)player).getUser();
+						
+						// Update user number of wins
+						user.addOneToNumberOfWins();
+						
+					}
 					tableController.notifyToSpecificWindow("You win " + difference + "$", player);
+			
 				}
 				
 				else {
 					tableController.notifyToSpecificWindow("You lose " + (-1 * difference) + "$", player);
 				}
-				//TODO: Update += difference in DB if it is user
+				
+				// Update DB if it is user 
+				if (player instanceof UserPlayer) {
+					
+					User user = ((UserPlayer)player).getUser();
+					
+					// Update += difference in user object
+					user.addToTotalProfit(profit);;
+					
+					DBManager.updateUserValues(user);
+				}
+				
 				tableController.updatePlayerLabel(player);
 			}
 			
@@ -489,12 +510,8 @@ public abstract class Table{
 	public void placeBet(Player currentPlayer) {
 		
 		this.startBettingPhase(currentPlayer);
-		
-		if(timeToBet == true) {
-		
-			chipsSettleSound.play();
-		}
-		
+
+		chipsSettleSound.play();
 	}
 	 // Method to notify the controller of a game state change
     private void notifyControllerOnDealerChanged() {
