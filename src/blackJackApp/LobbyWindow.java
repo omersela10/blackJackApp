@@ -10,6 +10,9 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.*;
 
@@ -36,17 +39,17 @@ public class LobbyWindow extends JFrame{
         this.createAndShowGUI();
         
         // Update User is connected in DB
-        updateUserConnectInDB();
+        updateUserConnectInDB(true);
     }
 
 
     // Update user connect in DB
-    private void updateUserConnectInDB() {
+    private void updateUserConnectInDB(boolean connect) {
     	
          if (thePlayer instanceof UserPlayer) {
  			
  			User user = ((UserPlayer)thePlayer).getUser();
- 			DBManager.setconnectedToUser(user, true);
+ 			DBManager.setconnectedToUser(user, connect);
  		}
 	}
 
@@ -85,6 +88,24 @@ public class LobbyWindow extends JFrame{
         this.panel.add(createTableButtonsPanel(), BorderLayout.CENTER);
         this.panel.add(createActionButtonPanel(), BorderLayout.SOUTH);
 
+        WindowListener windowListener = new WindowAdapter(){
+            
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Handle the close event here
+            	updateUserConnectInDB(false);
+            }
+
+			
+        };
+        this.addWindowListener(windowListener);
+
+    			
+
+  
+	
+        
+        
         // Set the panel as the content pane of the frame
         this.setContentPane(panel);
         // Set the size of the window

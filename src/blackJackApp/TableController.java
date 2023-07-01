@@ -42,7 +42,7 @@ public class TableController{
     	anyWindow.addSplitButtonListener(new SplitButtonListener(anyWindow));
     	anyWindow.addDoubleButtonListener(new DoubleButtonListener(anyWindow));
     	anyWindow.addSurrenderButtonListener(new SurrenderButtonListener(anyWindow));
-    	anyWindow.addCloseButtonListener(new CloseButtonListener(anyWindow, anyWindow.getSeatButton()));
+    	anyWindow.addCloseButtonListener(new CloseButtonListener(anyWindow));
     	
     	for(Player player : table.getPlayers()) {
     		
@@ -247,6 +247,7 @@ public class TableController{
 
     }
     
+    // Close Button Listener class
     public class CloseButtonListener implements ActionListener {
     	
     	private TableWindow theWindow;
@@ -276,9 +277,9 @@ public class TableController{
 			
         };
         
-    	public CloseButtonListener(TableWindow newTableWindow, JButton seatOrUpButton) {
+    	public CloseButtonListener(TableWindow newTableWindow) {
     		this.theWindow = newTableWindow;
-			this.seatOrUpButton = seatOrUpButton;
+			this.seatOrUpButton = newTableWindow.getSeatButton();
 		}
     	
 		@Override
