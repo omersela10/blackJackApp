@@ -1,114 +1,100 @@
 package blackJackApp;
-
-import javax.swing.JFrame;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Map;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
+import java.awt.*;
 
 public class LeaderboardWindow extends JFrame {
-	
+
     private static LeaderboardWindow instance;
     private JTextArea outputArea;
     private JButton totalWinsButton;
     private JButton totalProfitButton;
     private DBManager usersDB;
-    
-    // Private constructor to prevent instantiation from outside the class
+
+    private static String backgroundIcon = "resources/leaderBoard/leaderBoardImage.png";
+
     private LeaderboardWindow() {
-    	
-    	usersDB = new DBManager();
-    	
-    	
+        usersDB = new DBManager();
     }
 
     private void printTotalProfitLeaderBoard() {
-    	
-    	String printStr = "TOTAL PTOFIT LEADER BOARD: \n";
-    	
-    	ArrayList<Map<String, String>> allUsers = usersDB.sortUsersByProfit();
-    	
-    	for (int i=0; i<allUsers.size() ; i++) {
-    		
-    		printStr += ("Name: " + allUsers.get(i).get("Name"));
-    		printStr += (", Number of wins: " + allUsers.get(i).get("Number of wins"));
-    		printStr += (", Total profit: "+allUsers.get(i).get("Total profit"));
-    		printStr += "\n";
-    	}
-    	
-    	outputArea.setText(printStr); 
-		
-	}
-
-	private void printTotalWinsLeaderBoard() {
-		
-    	String printStr = "TOTAL WINS LEADER BOARD: \n";
-    	
-    	ArrayList<Map<String, String>> allUsers = usersDB.sortUsersByWins();
-    	
-    	for (int i=0; i<allUsers.size() ; i++) {
-
-    		printStr += ("Name: " + allUsers.get(i).get("Name"));
-    		printStr += (", Number of wins: " + allUsers.get(i).get("Number of wins"));
-    		printStr += (", Total profit: "+ allUsers.get(i).get("Total profit"));
-    		printStr += "\n";
-    	}
-    	
-    	outputArea.setText(printStr); 
-		
-	}
-		
-	
-
-	// Method to get the instance of the LeaderboardWindow class
-    public static LeaderboardWindow getInstance() {
-    	
-    	if(instance == null) {
-    		instance = new LeaderboardWindow();
-    	}
-    	initialize();
-    	
-    	return instance;
-
+        String printStr = "            TOTAL PROFIT LEADER BOARD: \n";
+        ArrayList<Map<String, String>> allUsers = usersDB.sortUsersByProfit();
+        for (int i = 0; i < allUsers.size(); i++) {
+            printStr += ((i+1) + ") Name: " + allUsers.get(i).get("Name"));
+            printStr += (", Number of wins: " + allUsers.get(i).get("Number of wins"));
+            printStr += (", Total profit: " + allUsers.get(i).get("Total profit"));
+            printStr += "\n";
+        }
+        outputArea.setText(printStr);
     }
 
-	private static void initialize() {
-	
-		instance.setTitle("Leaderboard");
-		instance.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		instance.setPreferredSize(new Dimension(800, 600));
+    private void printTotalWinsLeaderBoard() {
+        String printStr = "            TOTAL WINS LEADER BOARD: \n";
+        ArrayList<Map<String, String>> allUsers = usersDB.sortUsersByWins();
+        for (int i = 0; i < allUsers.size(); i++) {
+            printStr += ((i+1) + ") Name: " + allUsers.get(i).get("Name"));
+            printStr += (", Number of wins: " + allUsers.get(i).get("Number of wins"));
+            printStr += (", Total profit: " + allUsers.get(i).get("Total profit"));
+            printStr += "\n";
+        }
+        outputArea.setText(printStr);
+    }
+
+    public static LeaderboardWindow getInstance() {
+        if (instance == null) {
+            instance = new LeaderboardWindow();
+        }
+        initialize();
+        return instance;
+    }
+
+    private static void initialize() {
+        instance.setTitle("Leaderboard");
+        instance.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        instance.setPreferredSize(new Dimension(800, 600));
+
+        JPanel mainPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Draw the background image
+                ImageIcon icon = new ImageIcon(backgroundIcon);
+                g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        mainPanel.setLayout(null); // Set layout manager to null for manual positioning
+        instance.setContentPane(mainPanel);
 
         // Create the output area on the right side
-		instance.outputArea = new JTextArea();
-		instance.outputArea.setEditable(false);
-		instance.add(instance.outputArea, BorderLayout.CENTER);
+        instance.outputArea = new TransparentTextArea();
+        instance.outputArea.setEditable(false);
+        instance.outputArea.setBounds(200, 150, 600, 230);
+        instance.outputArea.setForeground(Color.WHITE); // Set text color to white
+        mainPanel.add(instance.outputArea);
 
-        // Create the buttons on the left side
-		instance.totalWinsButton = new JButton("<html>Show total wins<br>leader board</html>");
-		instance.totalProfitButton = new JButton("<html>Show total profit<br>leader board</html>");
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(2, 1, 10, 10)); // Adjust the spacing between buttons
-        buttonPanel.add(instance.totalWinsButton);
-        buttonPanel.add(instance.totalProfitButton);
+        // Create buttons for total wins and total profit leaderboards
+        instance.totalWinsButton = new JButton("<html>Show total wins<br>leader board</html>");
+        instance.totalWinsButton.setBounds(125, 50, 150, 50);
+        mainPanel.add(instance.totalWinsButton);
 
-        instance.add(buttonPanel, BorderLayout.WEST);
+        instance.totalProfitButton = new JButton("<html>Show total profit<br>leader board</html>");
+        instance.totalProfitButton.setBounds(500, 50, 150, 50);
+        mainPanel.add(instance.totalProfitButton);
 
-        // Add ActionListener to totalWinsButton
+        // Add action listeners to the buttons
         instance.totalWinsButton.addActionListener(e -> {
-        	instance.printTotalWinsLeaderBoard(); // Call  desired function for sign up
+            instance.printTotalWinsLeaderBoard();
         });
-
-        // Add ActionListener to totalProfitButton
+        
         instance.totalProfitButton.addActionListener(e -> {
-        	instance.printTotalProfitLeaderBoard(); // Call  desired function for log in
+            instance.printTotalProfitLeaderBoard();
         });
         
         instance.pack();
         instance.setVisible(true);
-	}
+    }
 }
+
