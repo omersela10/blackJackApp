@@ -7,8 +7,12 @@ import java.util.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import blackJackApp.TableController.BetButtonListener;
+import blackJackApp.TableController.CloseButtonListener;
 import blackJackApp.TableController.DoubleButtonListener;
 import blackJackApp.TableController.HitButtonListener;
 import blackJackApp.TableController.SeatButtonListener;
@@ -48,6 +52,7 @@ public class TableWindow extends JFrame implements IObservable {
     private JButton splitButton;
     private JButton surrenderButton;
     private JButton doubleButton;
+    
     
 
 	// Constructor
@@ -213,9 +218,11 @@ public class TableWindow extends JFrame implements IObservable {
         this.betButton = new JButton("Bet");
         this.betButton.setBounds(940, 650, 100, 20);
         this.theLayeredPane.add(this.betButton, new Integer(1));
-        
+       
 
 	}
+	
+
 	// Update message in the table
 	public void updateMessage(String message) {
 		
@@ -264,8 +271,12 @@ public class TableWindow extends JFrame implements IObservable {
 		surrenderButton.addActionListener(surrenderButtonListener);
 		
 	}
+	public void addCloseButtonListener(CloseButtonListener closeButtonListener) {
+		this.addWindowListener(closeButtonListener.windowListener);
+	}
 
 	public void removeDealerComponent() {
+		
 		this.theDealerComponent.clearDealerComponent();
 		this.theLayeredPane.repaint();
 	}
@@ -315,5 +326,8 @@ public class TableWindow extends JFrame implements IObservable {
 		
 	}
 	
+	public JButton getSeatButton() {
+		return this.seatOrUpButton;
+	}
 
 }

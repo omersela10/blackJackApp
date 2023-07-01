@@ -73,6 +73,7 @@ public class DealerComponent extends JLabel {
     
     }
     public void clearDealerComponent() {
+    	
     	this.showCard = false;
     	this.thePane.remove(dealerPanel);
     	this.thePane.repaint();

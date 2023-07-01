@@ -1,7 +1,12 @@
 package blackJackApp;
 import java.awt.event.ActionEvent;
+
+import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 // Controller ->
@@ -37,6 +42,7 @@ public class TableController{
     	anyWindow.addSplitButtonListener(new SplitButtonListener(anyWindow));
     	anyWindow.addDoubleButtonListener(new DoubleButtonListener(anyWindow));
     	anyWindow.addSurrenderButtonListener(new SurrenderButtonListener(anyWindow));
+    	anyWindow.addCloseButtonListener(new CloseButtonListener(anyWindow, anyWindow.getSeatButton()));
     	
     	for(Player player : table.getPlayers()) {
     		
@@ -45,7 +51,7 @@ public class TableController{
     		}
     	}
     	
-    	if(table.anyPlayerBet() == true) {
+    	if(table.inRound() == true) {
     	  	anyWindow.updateDealerComponent(table.dealer);
     	}
   
@@ -96,6 +102,7 @@ public class TableController{
             
             String message = table.hit(currentPlayer); // Player hits in the Table model
             theWindow.updateMessage(message);
+            
             // Notify all players of the updated game state
             notifyPlayersOfGameStateChange(currentPlayer);
         }
@@ -239,7 +246,60 @@ public class TableController{
         }
 
     }
- 
+    
+    public class CloseButtonListener implements ActionListener {
+    	
+    	private TableWindow theWindow;
+    	private JButton seatOrUpButton;
+    	
+    	protected WindowListener windowListener = new WindowAdapter(){
+        
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Handle the close event here
+                performCloseAction();
+            }
+
+			private void performCloseAction() {
+				
+				// If seat
+				if(theWindow.getPlayer().seatIndex != -1) {
+	
+					// Handle DB that this player disconnect
+					updateDisconnectInDB(theWindow.getPlayer());
+					seatOrUpButton.doClick();
+				}
+			}
+
+		
+
+			
+        };
+        
+    	public CloseButtonListener(TableWindow newTableWindow, JButton seatOrUpButton) {
+    		this.theWindow = newTableWindow;
+			this.seatOrUpButton = seatOrUpButton;
+		}
+    	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			this.windowListener.windowClosing(null);
+			
+		}
+    	
+    }
+    
+    // Update disconnect
+	private void updateDisconnectInDB(Player anyPlayer) {
+		
+		if(anyPlayer instanceof UserPlayer) {
+			// Update disconnect and money
+			DBManager.setconnectedToUser(((UserPlayer)anyPlayer).getUser(), false);
+			DBManager.updateUserValues(((UserPlayer)anyPlayer).getUser());
+		}
+		
+		
+	}
     // Notify all players of the game state change
     private void notifyPlayersOfGameStateChange(Player anyPlayer) {
     	
@@ -339,6 +399,7 @@ public class TableController{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 		}
+		  
 		// Clean Dealer component
 		for(TableWindow windowTable : this.obsrevers) {
 			windowTable.removeDealerComponent();

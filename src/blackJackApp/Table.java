@@ -101,6 +101,10 @@ public abstract class Table{
 	// Leave player from the Table
 	public String removePlayer(Player toRemovePlayer) {
 	
+		if(toRemovePlayer.getHands() != null) {
+			toRemovePlayer.setTheState(new EndHandRoundState(toRemovePlayer, toRemovePlayer.getHands().get(0)));
+		}
+		
 		String returnMessage = toRemovePlayer.up(players);
 		int count = 0;
 		
@@ -113,6 +117,11 @@ public abstract class Table{
 		if(count == 0 ) {
 			this.anyPlayerSeat = false;
 		}
+		else {
+			this.anyPlayerSeat = true;
+		}
+		
+	
 		
 		return returnMessage;
 		
@@ -151,7 +160,7 @@ public abstract class Table{
 		
 		do {
 			// If player in endRound State
-			isWaitingForDealer = anyPlayer.getHandState() instanceof EndHandRoundState;
+			isWaitingForDealer = anyPlayer.getHandState() instanceof EndHandRoundState ;
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -283,6 +292,7 @@ public abstract class Table{
 		}
 		this.setInRound(false);
 		this.anyPlayerAlive = false;
+		this.anyPlayerBet = false;
 	}
 
    public void stopBettingPhase() {
@@ -397,6 +407,7 @@ public abstract class Table{
 
 	// Update money in DB
 	public void updaeMoneyInDB(Player anyPlayer, int profit) {
+		
 		// Update DB if it is user 
 		if (anyPlayer instanceof UserPlayer) {
 			

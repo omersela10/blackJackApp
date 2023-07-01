@@ -83,6 +83,7 @@ public abstract class Player implements HandState {
 		isPlay = false;
 		// Update leaving
 		for(int i = 0; i < places.size(); i++) {
+			
 			if(this.equals(places.get(i)) == true) {
 				places.set(i, null);
 				this.seatIndex = -1;
