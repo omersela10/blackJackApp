@@ -76,16 +76,17 @@ public class DBManager {
                 if (userName.equals(name)) {
                     // User exists in the XML file
                     String inGame =  userElement.getAttribute("connected");
-                    if ( inGame == "false") {
-                    	return false;
+                    System.out.print(inGame);
+                    if ( inGame.equals("true")) {
+                    	return true;
                     }
                     else {
-                    	return true;
+                    	return false;
                     }
                 }
 	        }
 	        
-	        return null;
+	        return false;
 	        
 		} catch (Exception e) {
 	        e.printStackTrace();

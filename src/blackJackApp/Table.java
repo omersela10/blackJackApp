@@ -301,7 +301,6 @@ public abstract class Table{
     	while(this.dealer.getSumOfDealerCards() < 17) {
     		
     		dealer.getDealerHand().getMoreCard();
-    		// TODO : Add Sound of drawing card
 			cardDrawSound.play();
     		try {
 				Thread.sleep(1000);
