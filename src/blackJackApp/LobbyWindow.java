@@ -33,6 +33,14 @@ public class LobbyWindow extends JFrame{
         this.tcFifty = nTcFifty;
         this.tcFive = nTcFive;
         this.createAndShowGUI();
+        
+        // Update User is connected in DB
+        DBManager userDB = new DBManager ();
+        if (newPlayer instanceof UserPlayer) {
+			
+			User user = ((UserPlayer)newPlayer).getUser();
+			DBManager.setconnectedToUser(user, true);
+		}
     }
 
 
@@ -101,6 +109,7 @@ public class LobbyWindow extends JFrame{
         tableButtonsPanel.add(createTableButton(TABLESTRING100));
         tableButtonsPanel.add(createTableButton(TABLESTRING50));
         tableButtonsPanel.add(createTableButton(TABLESTRING5));
+        
         return tableButtonsPanel;
     }
 
@@ -158,7 +167,8 @@ public class LobbyWindow extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Handle button click event
-                addMoneyDialog();
+                if(thePlayer instanceof UserPlayer) addMoneyDialog();
+                else JOptionPane.showMessageDialog(null, "Guest players can not add money :(");
             }
         });
         return button;
@@ -183,6 +193,8 @@ public class LobbyWindow extends JFrame{
         // If the OK button is pressed
         if (result == JOptionPane.OK_OPTION) {
             //TODO: update player money in DB
+            thePlayer.setTotalMoney(thePlayer.getTotalMoney() + Integer.parseInt(amountTextField.getText()));
+            DBManager.updateUserValues(((UserPlayer)thePlayer).getUser());
         }
 
     }
