@@ -76,7 +76,7 @@ public class TableWindow extends JFrame implements IObservable {
 	public void initializeComponents() throws IOException {
 		
 		setTitle("Blackjack Table");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         
         this.setPane();
@@ -114,6 +114,7 @@ public class TableWindow extends JFrame implements IObservable {
 	}
 	public void updateDealerComponent(Dealer anyDealer) {
 		
+
        this.theDealerComponent.updateComponent(anyDealer);
 	}
 
@@ -283,6 +284,7 @@ public class TableWindow extends JFrame implements IObservable {
     	
     	PlayerComponent thePlayerComponent = this.playersComponent.get(anyPlayer.seatIndex);
     	thePlayerComponent.updateComponents(anyPlayer);
+    	this.theLayeredPane.repaint();
 
         // Repaint Window
         System.out.println("after repaint Window" + this.thePlayingPlayer.getPlayerName());
@@ -312,6 +314,6 @@ public class TableWindow extends JFrame implements IObservable {
 		}
 		
 	}
-
+	
 
 }

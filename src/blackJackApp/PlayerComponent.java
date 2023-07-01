@@ -24,22 +24,15 @@ public class PlayerComponent extends JLabel {
     	
         this.thePane = anyPane;
         this.updateXYPlace(anySeat);
-        
-        if(isSeat == true) {
-	       
-	        this.createPlayerPanel();
-        }
+ 
+        this.createPlayerPanel();
+
        
     }
 
     public void setSeat(boolean isSeat) {
     	
     	this.isSeat = isSeat;
- 
-        if(isSeat == true) {
- 	       
-	        this.createPlayerPanel();
-        }
        
     }
 
@@ -87,6 +80,10 @@ public class PlayerComponent extends JLabel {
     		playerPanel.removeAll(); // Clear the player panel before updating
 
     	}
+    	else {
+    		
+    		return;
+    	}
     	
         
         updateNameComponent(player);
@@ -105,7 +102,7 @@ public class PlayerComponent extends JLabel {
 
     public void clearHandsComponent() {
     	
-    	if(this.playerPanel!=null) {
+    	if(this.playerPanel != null) {
     		this.playerPanel.remove(handsPanel);
     	}
 	}

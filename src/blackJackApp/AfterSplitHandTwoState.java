@@ -38,9 +38,8 @@ public class AfterSplitHandTwoState implements HandState {
 	@Override
 	public String hit() {
 	
-		if(this.currentHand.getSumOfCards() >= 21 || this.currentHand.getSumOfCardsWithAce() >= 21) {
+		if(this.currentHand.getSumOfPlayingCards() > 21) {
 			
-			// JOption : Cant Hit
 			return "Hand2 : Can't hit";
 		}
 		
@@ -49,7 +48,7 @@ public class AfterSplitHandTwoState implements HandState {
 		this.afterHit = true;
 		
 		// If done
-		if(this.currentHand.getSumOfCards() >= 21 || this.currentHand.getSumOfCardsWithAce() >= 21) {
+		if(this.currentHand.getSumOfPlayingCards() >= 21) {
 			
 			// Update State
 			this.thePlayer.setTheState(new EndHandRoundState(this.thePlayer, this.currentHand));

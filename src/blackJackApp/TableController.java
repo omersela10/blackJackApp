@@ -37,6 +37,18 @@ public class TableController{
     	anyWindow.addSplitButtonListener(new SplitButtonListener(anyWindow));
     	anyWindow.addDoubleButtonListener(new DoubleButtonListener(anyWindow));
     	anyWindow.addSurrenderButtonListener(new SurrenderButtonListener(anyWindow));
+    	
+    	for(Player player : table.getPlayers()) {
+    		
+    		if(player != null) {
+    			anyWindow.updatePlayersComponents(player);
+    		}
+    	}
+    	
+    	if(table.anyPlayerBet() == true) {
+    	  	anyWindow.updateDealerComponent(table.dealer);
+    	}
+  
 	}
 	
 
@@ -414,6 +426,10 @@ public class TableController{
     		tableWindow.theLayeredPane.repaint();
     	}
     	  
+    }
+    
+    public Table getTable() {
+    	return this.table;
     }
 
 

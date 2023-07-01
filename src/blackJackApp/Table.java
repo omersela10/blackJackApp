@@ -515,6 +515,7 @@ public abstract class Table{
 	}
 
 	public Player getCurrentPlayer() {
+		
 		return this.getCurrentTurn();
 	}
 
@@ -522,7 +523,9 @@ public abstract class Table{
 		
 		this.startBettingPhase(currentPlayer);
 
-		chipsSettleSound.play();
+		if(timeToBet == true) {
+			chipsSettleSound.play();
+		}
 	}
 	 // Method to notify the controller of a game state change
     private void notifyControllerOnDealerChanged() {

@@ -25,7 +25,9 @@ public class LobbyWindow extends JFrame{
     private final String TABLESTRING100 = "100$ Table";
     private final String TABLESTRING50 = "50$ Table";
     private final String TABLESTRING5 = "5$ Table";
+    
     public LobbyWindow(Player newPlayer, TableController nTcOneHundred,TableController nTcFifty,TableController nTcFive) {
+    	
         this.thePlayer = newPlayer;
         this.tcOneHundred = nTcOneHundred;
         this.tcFifty = nTcFifty;
@@ -81,13 +83,14 @@ public class LobbyWindow extends JFrame{
         this.setVisible(true);
     }
 
-    private JPanel createPlayerNamePanel() {
-        JPanel playerNamePanel = new JPanel();
-        playerNamePanel.setOpaque(false);
-        playerNamePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        playerNamePanel.add(new JLabel("Player Name:"));
-        playerNamePanel.add(playerNameField);
-        return playerNamePanel;
+    private JLabel  createPlayerNamePanel() {
+    	
+    	// Create a label for the player's name and total money
+    	JLabel playerInfoLabel = new JLabel("Name: " + thePlayer.getPlayerName() + " | Money: " + thePlayer.getTotalMoney() + "$");
+        playerInfoLabel.setBounds(20, 20, 500, 20);
+        playerInfoLabel.setForeground(Color.GRAY);
+        playerNameField.add(playerInfoLabel, new Integer(1));
+        return playerInfoLabel;
     }
 
     private JPanel createTableButtonsPanel() {
@@ -115,9 +118,18 @@ public class LobbyWindow extends JFrame{
                 // Handle button click event
                 TableWindow nTw = new TableWindow(thePlayer);
                 switch (buttonText) {
-                    case TABLESTRING100 -> tcOneHundred.addWindow(nTw);
-                    case TABLESTRING50 -> tcFifty.addWindow(nTw);
-                    case TABLESTRING5 -> tcFive.addWindow(nTw);
+                    case TABLESTRING100:
+                    	 tcOneHundred.addWindow(nTw);
+                    	 tcOneHundred.getTable().setTableController(tcOneHundred);
+                    	 break;
+                    case TABLESTRING50:
+                    	tcFifty.addWindow(nTw);
+                    	tcFifty.getTable().setTableController(tcFifty);
+                    	break;
+                    case TABLESTRING5:
+                    	tcFive.addWindow(nTw);
+                    	tcFive.getTable().setTableController(tcFive);
+                    	break;
                 }
                 setVisible(false);
             }
@@ -135,6 +147,7 @@ public class LobbyWindow extends JFrame{
     }
 
     private JButton createActionButton(String buttonText) {
+    	
         JButton button = new JButton(buttonText);
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setForeground(Color.WHITE);
