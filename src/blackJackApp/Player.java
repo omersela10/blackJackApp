@@ -52,7 +52,7 @@ public abstract class Player implements HandState {
 	public boolean bet(int betMoney) {
 		
 		if(betMoney > this.getTotalMoney()) {
-			// JOPtion "no enough money"
+	
 			return false;
 		}
 		// Set money

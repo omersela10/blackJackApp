@@ -52,7 +52,7 @@ public class AfterSplitHandOneState implements HandState {
 			
 			// Update State
 			this.thePlayer.setTheState(this.thePlayer.getAfterSplitHand2());
-			return this.thePlayer.getPlayerName() + "Hand2 : ";
+			return this.thePlayer.getPlayerName() + " Hand2 : ";
 		}
 		
 		// Else, stay in current state

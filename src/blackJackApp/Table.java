@@ -1,12 +1,17 @@
 package blackJackApp;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import javax.swing.*;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public abstract class Table{
 	
@@ -23,8 +28,9 @@ public abstract class Table{
 	private volatile boolean anyPlayerAlive = false;
 	private static volatile boolean inRound = false;
 	private static volatile boolean timeToBet = false; 
+	
 	private Object betLock = new Object();
-	protected final int MAXIMUMPLAYERS = 4;
+	protected static final int MAXIMUMPLAYERS = 4;
 	protected List<Player> players;
 	protected Dealer dealer;
 	protected volatile Player currentTurn = null;
@@ -116,6 +122,11 @@ public abstract class Table{
 	// Help method for get from player initial bet any create new cards.
 	public boolean betPlayer(Player anyPlayer) {
 		
+		if(anyPlayer.getTotalMoney() < this.getMinimumBet()) {
+			 JOptionPane.showMessageDialog(null, "You have no enough money");
+			 return false;
+		}
+
 		String inputBet = JOptionPane.showInputDialog("Insert money for play");
 		if(inputBet == null || inputBet.isBlank() || inputBet.matches("\\d+") == false) {
 			JOptionPane.showMessageDialog(null, "Invalid input");
@@ -131,8 +142,8 @@ public abstract class Table{
 		
 		// Start bet
 		return anyPlayer.bet(betMoney);
-		
-	}
+    }
+	
 	
 	public void playRound(Player anyPlayer) {
 		
@@ -382,7 +393,6 @@ public abstract class Table{
 		int sumOfHandCards = hand.getSumOfPlayingCards();
 		boolean blackJackHand = hand.hasBlackJack();
 		
-		// TODO: Check all cases and update
 		if(sumOfHandCards > 21) {
 			// If busted
 			return 0;
@@ -426,9 +436,14 @@ public abstract class Table{
 	}
 
 	public String hit(Player currentPlayer) {
-		// TODO : Add Sound of drawing card
-		cardDrawSound.play();
-		return currentPlayer.hit();
+		
+		String message = currentPlayer.hit();
+		
+		if(message.indexOf("Can't") == -1) {
+			cardDrawSound.play();
+		}
+		
+		return message;
 		
 	}
 
@@ -439,16 +454,27 @@ public abstract class Table{
 	}
 
 	public String split(Player currentPlayer) {
-		// TODO : Add Sound of drawing card
-		cardDrawSound.play();
-		return currentPlayer.split();
+	
+		String message = currentPlayer.split();
 		
+		if(message.indexOf("Can't") == -1) {
+			cardDrawSound.play();
+		}
+		
+		return message;
+
 	}
 
 	public String doubleDown(Player currentPlayer) {
-		// TODO : Add Sound of drawing card
-		cardDrawSound.play();
-		return currentPlayer.doubleDown();
+		
+		String message = currentPlayer.doubleDown();
+		
+		if(message.indexOf("Can't") == -1) {
+			cardDrawSound.play();
+		}
+		
+		return message;
+
 		
 	}
 	public String surrender(Player currentPlayer) {
@@ -462,10 +488,13 @@ public abstract class Table{
 
 	public void placeBet(Player currentPlayer) {
 		
-		
 		this.startBettingPhase(currentPlayer);
-		// TODO: add sound of betting
-		chipsSettleSound.play();
+		
+		if(timeToBet == true) {
+		
+			chipsSettleSound.play();
+		}
+		
 	}
 	 // Method to notify the controller of a game state change
     private void notifyControllerOnDealerChanged() {
@@ -473,6 +502,16 @@ public abstract class Table{
     }
 
 
+    private TableWindow getWindowFromController(Player anyPlayer) {
+    	
+    	for(TableWindow tableWindow : this.tableController.obsrevers) {
+    		
+    		if(tableWindow.getPlayer() == anyPlayer) {
+    			return tableWindow;
+    		}
+    	}
+    	return null;
+    }
     
     
 

@@ -123,7 +123,7 @@ public class FirstChoiceState implements HandState{
 	public String doubleDown() {
 
 		if(this.enoughMoneyForSplitOrDouble() == false) {
-			return "No enough money for double";
+			return "Can't, No enough money for double";
 		}
 		
 		// Update total money
