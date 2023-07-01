@@ -57,7 +57,7 @@ public class User{
 	}
 	
 	public void addOneToNumberOfWins() {
-		this.numberOfWins+=1;
+		this.numberOfWins += 1;
 	}
 
 	public void setTotalProfit(int anyTotalProfit) {
@@ -65,7 +65,7 @@ public class User{
 	}
 	
 	public void addToTotalProfit(int anyTotalProfit) {
-		this.totalProfit = +anyTotalProfit;
+		this.totalProfit += anyTotalProfit;
 	}
 	
 	

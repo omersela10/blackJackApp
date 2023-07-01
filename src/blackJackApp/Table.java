@@ -289,6 +289,7 @@ public abstract class Table{
 	  betTimer.cancel();
    }
 
+   // After bet method
     public void afterBetting() {
     	
        dealer.setDealerHand(new Hand(0));
@@ -298,7 +299,6 @@ public abstract class Table{
 		   if(playingPlayer(anyPlayer) == true) {
 			   anyPlayerBet = true;
 			   this.tableController.updatePlayerLabel(anyPlayer);
-			   return;
 		   }
 	   }
 	   
@@ -350,35 +350,19 @@ public abstract class Table{
 				int difference = profit - sumOfTotalBetOnHand;
 				
 				if( difference > 0) {
-					
-					// Update he win in user object
-					if (player instanceof UserPlayer) {
-						
-						User user = ((UserPlayer)player).getUser();
-						
-						// Update user number of wins
-						user.addOneToNumberOfWins();
-						
-					}
+					// Win
+					updateWinsInDB(player);
 					tableController.notifyToSpecificWindow("You win " + difference + "$", player);
 			
 				}
 				
 				else {
+					// Lose or draw
 					tableController.notifyToSpecificWindow("You lose " + (-1 * difference) + "$", player);
 				}
 				
-				// Update DB if it is user 
-				if (player instanceof UserPlayer) {
-					
-					User user = ((UserPlayer)player).getUser();
-					
-					// Update += difference in user object
-					user.addToTotalProfit(profit);;
-					
-					DBManager.updateUserValues(user);
-				}
 				
+				updaeMoneyInDB(player, profit);
 				tableController.updatePlayerLabel(player);
 			}
 			
@@ -387,6 +371,33 @@ public abstract class Table{
 		
 	}
 
+	// Update more win in DB
+	private void updateWinsInDB(Player player) {
+		// Update he win in user object
+		if (player instanceof UserPlayer) {
+			
+			User user = ((UserPlayer)player).getUser();
+			
+			// Update user number of wins
+			user.addOneToNumberOfWins();
+			
+		}
+		
+	}
+
+	// Update money in DB
+	public void updaeMoneyInDB(Player anyPlayer, int profit) {
+		// Update DB if it is user 
+		if (anyPlayer instanceof UserPlayer) {
+			
+			User user = ((UserPlayer)anyPlayer).getUser();
+			
+			// Update += difference in user object
+			user.addToTotalProfit(profit);
+			
+			DBManager.updateUserValues(user);
+		}
+	}
 
 	
 	
