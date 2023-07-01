@@ -9,6 +9,10 @@ public class UserPlayer extends Player{
 	// Data Members
 	private User user;
 	
+	public User getUser() {
+		return this.user;
+	}
+	
 	public UserPlayer(User newUser) {
 		this.user = newUser;
 	}

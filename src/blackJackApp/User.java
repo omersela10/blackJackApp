@@ -55,9 +55,17 @@ public class User{
 	public void setNumberOfWins(int anyNumberOfWins) {
 		this.numberOfWins = anyNumberOfWins;
 	}
+	
+	public void addOneToNumberOfWins() {
+		this.numberOfWins+=1;
+	}
 
 	public void setTotalProfit(int anyTotalProfit) {
 		this.totalProfit = anyTotalProfit;
+	}
+	
+	public void addToTotalProfit(int anyTotalProfit) {
+		this.totalProfit = +anyTotalProfit;
 	}
 	
 	
