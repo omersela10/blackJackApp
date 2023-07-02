@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 public class DealerComponent extends JLabel {
 	
+	// Data Members
 	private JLayeredPane thePane;    
 	private JPanel dealerPanel;
 	
@@ -17,6 +18,7 @@ public class DealerComponent extends JLabel {
 	private static int dealerX = 500;
 	private static int dealerY = 60;
 	
+	// Constructor
     public DealerComponent(JLayeredPane anyPane) {
     	
         this.thePane = anyPane;
@@ -33,6 +35,7 @@ public class DealerComponent extends JLabel {
        thePane.add(dealerPanel, new Integer(1));
     }
     
+   // Update Dealer Component
     public void updateComponent(Dealer dealer) {
 
  
@@ -75,6 +78,8 @@ public class DealerComponent extends JLabel {
         }
     
     }
+    
+    // Clear Dealer Component
     public void clearDealerComponent() {
     	
     	this.showCard = false;

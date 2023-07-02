@@ -76,19 +76,18 @@ public class PlayerComponent extends JLabel {
     // Update components
     public void updateComponents(Player player) {
     	
-    	if(playerPanel != null) {
-    		playerPanel.removeAll(); // Clear the player panel before updating
+    	if(playerPanel == null) {
+    		return; 
 
     	}
-    	else {
-    		
-    		return;
-    	}
     	
+    	// Clear the player panel before updating
+    	playerPanel.removeAll();
         
         updateNameComponent(player);
         updatePlayerIconComponent();
 
+        // If has Hands
         if (player.getHands() != null) {
             updateHandsComponent(player);
         }
@@ -96,8 +95,8 @@ public class PlayerComponent extends JLabel {
         	
         	clearHandsComponent();
         }
-
-        thePane.repaint(); // Repaint the panel
+        // Repaint the panel
+        thePane.repaint(); 
     }
 
     public void clearHandsComponent() {
