@@ -1,17 +1,10 @@
 package blackJackApp;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.*;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public abstract class Table{
 	
@@ -176,7 +169,7 @@ public abstract class Table{
 
 	public void playersTurn() {
 		
-		// If there are no players who bets
+		// If there are no players who bet
 	
 		if(this.anyPlayerBet == false) {	
 			this.anyPlayerAlive = false;
@@ -371,7 +364,7 @@ public abstract class Table{
 					tableController.notifyToSpecificWindow("You lose " + (-1 * difference) + "$", player);
 				}
 			
-				updaeMoneyInDB(player, profit);
+				updateMoneyInDB(player, profit);
 				tableController.updatePlayerLabel(player);
 			}
 			
@@ -395,7 +388,7 @@ public abstract class Table{
 	}
 
 	// Update money in DB
-	public void updaeMoneyInDB(Player anyPlayer, int profit) {
+	public void updateMoneyInDB(Player anyPlayer, int profit) {
 		
 		// Update DB if it is user 
 		if (anyPlayer instanceof UserPlayer) {
@@ -440,7 +433,7 @@ public abstract class Table{
 			return 0;
 		}
 		else if(blackJackHand == true && dealer.getDealerHand().hasBlackJack() == false) {
-			// If Black Jack and Dealer has'nt
+			// If Black Jack and Dealer hasn't
 			 return (int) (2.5 * hand.getBetMoney());
 		}
 		else if(dealerFail == true) {

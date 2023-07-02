@@ -27,7 +27,10 @@ public class LobbyWindow extends JFrame{
     private static final String TABLESTRING100 = "100$ Table";
     private static final String TABLESTRING50 = "50$ Table";
     private static final String TABLESTRING5 = "5$ Table";
-    
+    private JLabel playerNameField;
+    private final SoundPlayer chipSoundPlayer = new SoundPlayer("resources/sounds/chipsBuySound.wav");
+    private final SoundPlayer seatSoundPlayer = new SoundPlayer("resources/sounds/seatSound.wav");
+
     public LobbyWindow(Player newPlayer, TableController nTcOneHundred,TableController nTcFifty,TableController nTcFive) {
     	
         this.thePlayer = newPlayer;
@@ -72,8 +75,8 @@ public class LobbyWindow extends JFrame{
         this.panel.setLayout(new BorderLayout());
 
         // Create a label for the player's name and total money
-        JLabel playerNameField = new JLabel("Name: " + thePlayer.getPlayerName() + " | Money: " + thePlayer.getTotalMoney() + "$");
-        playerNameField.setForeground(Color.WHITE);
+        playerNameField = new JLabel("Name: " + thePlayer.getPlayerName() + " | Money: " + thePlayer.getTotalMoney() + "$");
+        playerNameField.setForeground(Color.BLACK);
 
 //        playerNameField.setHorizontalAlignment(SwingConstants.CENTER);
         playerNameField.setFont(new Font("Arial", Font.BOLD, 14));
@@ -137,6 +140,7 @@ public class LobbyWindow extends JFrame{
                 }
             }
             setVisible(false);
+            seatSoundPlayer.play();
         });
         return button;
     }
@@ -201,9 +205,11 @@ public class LobbyWindow extends JFrame{
         // If the OK button is pressed
         if (result == JOptionPane.OK_OPTION) {
             // Update player money in DB and update the UI
-            thePlayer.setTotalMoney(thePlayer.getTotalMoney() + amountSlider.getValue());
+            thePlayer.setTotalMoney(thePlayer.getTotalMoney() + (int)amountSlider.getValue());
             DBManager.updateUserValues(((UserPlayer) thePlayer).getUser());
-            panel.revalidate();
+            this.playerNameField.setText("Name: " + thePlayer.getPlayerName() + " | Money: " + thePlayer.getTotalMoney() + "$");
+            this.playerNameField.repaint();
+            if(amountSlider.getValue() > 0) chipSoundPlayer.play();
         }
     }
 
