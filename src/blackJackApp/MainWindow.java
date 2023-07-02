@@ -54,7 +54,7 @@ public class MainWindow extends JFrame {
         JButton logInButton = new JButton("Log in");
         JButton playAsGuestButton = new JButton("Play as guest");
         JButton leaderboardButton = new JButton("Leader board");
-		JButton muteButton = new JButton("Mute");
+		JButton muteButton = new JButton("Mute Music");
 
         // Set the location of the buttons using setBounds
         int buffer = 380;
@@ -62,7 +62,7 @@ public class MainWindow extends JFrame {
         logInButton.setBounds(buffer + 150, 500, 120, 30);
         playAsGuestButton.setBounds(buffer + 300, 500, 120, 30);
         leaderboardButton.setBounds(buffer + 150, 600, 120, 30);
-		muteButton.setBounds(buffer + 150, 700, 120, 30);
+		muteButton.setBounds(200, 100 , 120, 30);
 
         // Add buttons to the mainPanel
         mainPanel.add(signUpButton);
@@ -94,12 +94,13 @@ public class MainWindow extends JFrame {
 
 		// Add ActionListener to muteButton
 		muteButton.addActionListener(e -> {
+			
 			roomSoundPlayer.mute();
 				});
 
         pack();
         setVisible(true);
-
+        
 		// Play background sound
 		roomSoundPlayer.loop();
         
@@ -140,6 +141,7 @@ public class MainWindow extends JFrame {
 
 	    // If the OK button is pressed
 	    if (result == JOptionPane.OK_OPTION) {
+	    	
 	        String name = nameTextField.getText();
 	        String password = new String(passwordField.getPassword());
 

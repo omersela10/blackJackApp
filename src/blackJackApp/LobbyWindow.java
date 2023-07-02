@@ -56,6 +56,7 @@ public class LobbyWindow extends JFrame{
 
 
     public void createAndShowGUI() {
+    	
         setTitle("Lobby Window");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -120,7 +121,7 @@ public class LobbyWindow extends JFrame{
         JButton button = new JButton(buttonText);
         button.setFont(new Font("Arial", Font.BOLD, 18));
         button.setForeground(Color.BLACK);
-        button.setBackground(Color.DARK_GRAY);
+        button.setBackground(Color.GRAY);
         button.addActionListener(e -> {
 
             // Handle button click event
@@ -156,6 +157,7 @@ public class LobbyWindow extends JFrame{
     }
 
     private JButton createActionButton() {
+    	
         JButton button = new JButton("Add Money");
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setForeground(Color.BLACK);
@@ -172,6 +174,7 @@ public class LobbyWindow extends JFrame{
         return button;
     }
     public void addMoneyDialog() {
+    	
         // Create a panel to hold the slider and label
         JPanel addMoneyPanel = new JPanel();
         addMoneyPanel.setLayout(new BoxLayout(addMoneyPanel, BoxLayout.Y_AXIS));
@@ -209,7 +212,10 @@ public class LobbyWindow extends JFrame{
             DBManager.updateUserValues(((UserPlayer) thePlayer).getUser());
             this.playerNameField.setText("Name: " + thePlayer.getPlayerName() + " | Money: " + thePlayer.getTotalMoney() + "$");
             this.playerNameField.repaint();
-            if(amountSlider.getValue() > 0) chipSoundPlayer.play();
+            
+            if(amountSlider.getValue() > 0) {
+            	chipSoundPlayer.play();
+            }
         }
     }
 
