@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><users>
-<user connected="true" name="omersela10" number_of_wins="1" password="123456" total_amount="1000" total_profit="10000"/>
+<user connected="false" name="omersela10" number_of_wins="1" password="123456" total_amount="1000" total_profit="10000"/>
 <user connected="false" name="ahigadgenish1" number_of_wins="2" password="654321" total_amount="0" total_profit="1000"/>
 <user connected="false" name="yakov4" number_of_wins="3" password="123456" total_amount="0" total_profit="100"/>
 <user connected="false" name="shir3" number_of_wins="4" password="123456" total_amount="0" total_profit="10"/>
@@ -7,7 +7,10 @@
 <user connected="false" name="omersela12" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
 <user connected="false" name="yosi111" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
 <user connected="false" name="omersela1414" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
-<user connected="true" name="omer1234" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
+<user connected="false" name="omer1234" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
 <user connected="false" name="ahigad1234" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
-<user connected="true" name="ahigad1212" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
-<user connected="true" name="yoni123" number_of_wins="0" password="123456" total_amount="2000" total_profit="0"/></users>
+<user connected="false" name="ahigad1212" number_of_wins="0" password="123456" total_amount="0" total_profit="0"/>
+<user connected="false" name="yoni123" number_of_wins="0" password="123456" total_amount="2000" total_profit="0"/>
+<user connected="false" name="aaaaa" number_of_wins="0" password="bbbbbb" total_amount="5286" total_profit="0"/>
+<user connected="false" name="xxxxx" number_of_wins="0" password="yyyyyy" total_amount="1100" total_profit="0"/>
+<user connected="false" name="almog" number_of_wins="1" password="123456" total_amount="30537" total_profit="1000"/></users>

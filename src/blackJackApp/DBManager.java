@@ -15,8 +15,8 @@ import java.util.*;
 
 public class DBManager {
 
-	private static final String usersDBPath="resources\\usersDB\\usersDB.xml";
-	
+//	private static final String usersDBPath="resources\\usersDB\\usersDB.xml";//windows
+	private static final String usersDBPath="resources/usersDB/usersDB.xml"; //mac
 	public static String getUsersDBPath() {
 		return usersDBPath;
 	}

@@ -2,15 +2,12 @@ package blackJackApp;
 
 import java.util.regex.Pattern;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import javax.swing.*;
 
 public class MainWindow extends JFrame {
 	
-    private static String backgroundIcon = "resources/mainWindow/blackJackMain.png";
-
+    private static final String backgroundIcon = "resources/mainWindow/blackJackMain.png";
+	private static final SoundPlayer roomSoundPlayer = new SoundPlayer("resources/sounds/casinoAudienceSound.wav");
     
     public MainWindow() {
     	
@@ -57,6 +54,7 @@ public class MainWindow extends JFrame {
         JButton logInButton = new JButton("Log in");
         JButton playAsGuestButton = new JButton("Play as guest");
         JButton leaderboardButton = new JButton("Leader board");
+		JButton muteButton = new JButton("Mute");
 
         // Set the location of the buttons using setBounds
         int buffer = 380;
@@ -64,13 +62,14 @@ public class MainWindow extends JFrame {
         logInButton.setBounds(buffer + 150, 500, 120, 30);
         playAsGuestButton.setBounds(buffer + 300, 500, 120, 30);
         leaderboardButton.setBounds(buffer + 150, 600, 120, 30);
+		muteButton.setBounds(buffer + 150, 700, 120, 30);
 
         // Add buttons to the mainPanel
         mainPanel.add(signUpButton);
         mainPanel.add(logInButton);
         mainPanel.add(playAsGuestButton);
         mainPanel.add(leaderboardButton);
-
+		mainPanel.add(muteButton);
         
     	
         // Add ActionListener to signUpButton
@@ -92,10 +91,17 @@ public class MainWindow extends JFrame {
         leaderboardButton.addActionListener(e -> {
         	leaderboard(); // Call your desired function for displaying leaderboard
         });
-        
+
+		// Add ActionListener to muteButton
+		muteButton.addActionListener(e -> {
+			roomSoundPlayer.mute();
+				});
 
         pack();
         setVisible(true);
+
+		// Play background sound
+		roomSoundPlayer.loop();
         
     }
     
