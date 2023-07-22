@@ -18,7 +18,7 @@ public abstract class Table{
 	private SoundPlayer chipsSettleSound = new SoundPlayer("resources/sounds/chipsSettle.wav");
 
 	private volatile Timer betTimer;
-	private static final int TIMEOUT = 5000;
+	private static final int TIMEOUT = 10000;
 	private volatile boolean anyPlayerBet = false;
 	private volatile boolean anyPlayerSeat = false;
 	private volatile boolean anyPlayerAlive = false;
@@ -330,7 +330,9 @@ public abstract class Table{
     public void turnOfDealer() {
 
     	this.dealer.setDealerTurn(true);
+    	
     	notifyControllerOnDealerChanged();
+    	cardDrawSound.play();
     	
     	while(this.dealer.getSumOfDealerCards() < 17) {
     		
@@ -350,7 +352,6 @@ public abstract class Table{
 
     
     	notifyControllerOnDealerChanged();
-    	
 
     	this.dealer.setDealerTurn(false);
 

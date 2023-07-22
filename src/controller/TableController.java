@@ -448,7 +448,7 @@ public class TableController{
 	public void updateDealerComponent() {
 	
 		for(TableWindow anyWindow : obsrevers) {
-	
+			
 			 anyWindow.updateDealerComponent(this.table.getDealer());
 		 }
 
