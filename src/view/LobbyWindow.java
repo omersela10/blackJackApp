@@ -86,8 +86,9 @@ public class LobbyWindow extends JFrame{
         // Create a label for the player's name and total money
         playerNameField = new JLabel("Name: " + thePlayer.getPlayerName() + " | Money: " + thePlayer.getTotalMoney() + "$");
         playerNameField.setForeground(Color.BLACK);
+  
 
-//        playerNameField.setHorizontalAlignment(SwingConstants.CENTER);
+
         playerNameField.setFont(new Font("Arial", Font.BOLD, 14));
         this.panel.add(playerNameField, BorderLayout.PAGE_START);
 
